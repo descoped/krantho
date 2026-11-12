@@ -17,7 +17,7 @@ on:
       ref:
         description: Tag, branch or commit to deploy
         required: true
-        default: master
+        default: main
       environment:
         description: Target environment
         required: true

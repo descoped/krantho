@@ -4,7 +4,7 @@ name: Pull production content
 # they changed (GET /api/changes), pushes it as a branch and opens an issue with the
 # link that turns it into a pull request, so git keeps every edit. It presents the
 # job's GitHub identity token to the site, which trusts it through auth.workload in
-# krantho-site/krantho.config.ts (runs on master only); no secret is stored. Merge the branch like any other; the next release imports the files.
+# krantho-site/krantho.config.ts (runs on main only); no secret is stored. Merge the branch like any other; the next release imports the files.
 # (Opening the pull request itself needs a repository that lets Actions create
 # pull requests; the issue's link works either way.)
 

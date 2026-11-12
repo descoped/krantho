@@ -33,6 +33,5 @@ A project created with `create-krantho` registers the marketplace and turns the 
 
 ## Limits
 
-- The plugin is distributed from the krantho repository, which is private for now. Until it is public, installing it works for collaborators on the repository.
 - The skills are written for Claude Code. They follow the Agent Skills format, but other agents are not tested.
 - A skill is only as current as the krantho version it names. Update the plugin when you update krantho.

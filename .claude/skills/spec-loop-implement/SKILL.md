@@ -1,6 +1,6 @@
 ---
 name: spec-loop-implement
-description: Implements exactly one slice of a spec loop's spec in a fresh context — reads the spec + position store, implements only the targeted acceptance condition, runs the slice's area gate and returns the diff. Never commits, never touches master. Use as the implement step of a /kt-spec-loop cycle (Phase 4). Trigger for the implement step of a spec-loop cycle.
+description: Implements exactly one slice of a spec loop's spec in a fresh context — reads the spec + position store, implements only the targeted acceptance condition, runs the slice's area gate and returns the diff. Never commits, never touches main. Use as the implement step of a /kt-spec-loop cycle (Phase 4). Trigger for the implement step of a spec-loop cycle.
 ---
 
 # spec-loop-implement — one slice, fresh context
@@ -30,7 +30,7 @@ Governed by `.claude/rules/spec-driven-loop.md`. You run inside the loop's goal 
    `/kt-spec-loop` → "Per-slice area gates"). For TS slices always include
    **workspace-wide `pnpm run typecheck`** — a per-package check is blind to downstream
    consumers of a changed type. Run `pnpm run format` before checking format.
-5. **Do not commit. Do not push. Do not touch master.** The driver commits on verify
+5. **Do not commit. Do not push. Do not touch main.** The driver commits on verify
    PASS; you only produce the change.
 
 ## Hand back

@@ -24,7 +24,7 @@ A few decisions shape everything else:
 
 ## Where it stands
 
-Krantho is in active development. Its packages are not yet published to npm, and its repository is private for now. [The project status page](/docs/project-status) explains what that means and how to run krantho from source today.
+Krantho's code is open on GitHub, under the MIT licence. Its packages are not yet published to npm. [The project status page](/docs/project-status) explains what that means and how to run krantho from source today.
 
 ## This site
 

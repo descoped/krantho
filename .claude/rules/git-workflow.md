@@ -3,15 +3,15 @@
 ## Branching Model
 
 ```
-master (protected — changes land through reviewed PRs)
+main (protected — changes land through reviewed PRs)
   └── feature/issue-N or fix/description (working branch)
         ├── worktree: fix-error-boundary (agent A)
         ├── worktree: fix-react-hooks (agent B)
         └── worktree: refactor-schema (agent C)
 ```
 
-- Never commit directly to `master`. Work on feature/fix branches.
-- Merge to `master` only through a PR. The developer does not review PRs: the automated
+- Never commit directly to `main`. Work on feature/fix branches.
+- Merge to `main` only through a PR. The developer does not review PRs: the automated
   review (`.github/workflows/claude.yml`) reviews every PR, Claude fixes or answers each
   finding on the PR, and squash-merges once CI is green and every finding is addressed.
   The review must have posted first: no comment yet means it has not run.
@@ -21,7 +21,7 @@ master (protected — changes land through reviewed PRs)
 - Releases are separate: nothing is released or deployed to production without the
   developer's explicit approval (`.claude/rules/releases.md`).
 - Never push without explicit request.
-- Always use **squash merge** (`gh pr merge --squash`) — one clean commit per PR on master.
+- Always use **squash merge** (`gh pr merge --squash`) — one clean commit per PR on main.
 - Use conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
 
 ## Titles and Commit Messages
@@ -40,9 +40,9 @@ Code manages, gitignored. Never in a sibling directory of the checkout.
 - **Work for the current branch** (parallel agents, an isolated fix or experiment): `EnterWorktree`
   with `name`, or `isolation: "worktree"` on an agent. `.claude/settings.json` sets
   `worktree.baseRef: "head"`, so the worktree branches off the current working branch, and its
-  changes merge back to that branch — never directly to master.
+  changes merge back to that branch — never directly to main.
 - **Independent work with its own PR** (a spec loop, a fix unrelated to the current branch):
-  `git worktree add .claude/worktrees/<name> -b <branch> origin/master`, then `EnterWorktree` with
+  `git worktree add .claude/worktrees/<name> -b <branch> origin/main`, then `EnterWorktree` with
   the absolute `path` (`<repository root>/.claude/worktrees/<name>`) to move the session into it,
   before any `cd` into it. A relative `path`, or one given after a `cd` has already moved the
   session, resolves to a nested folder outside `.claude/worktrees/` and asks for a permission
@@ -69,7 +69,7 @@ Code manages, gitignored. Never in a sibling directory of the checkout.
 Every push that relates to an open PR or issue MUST be documented:
 
 - **Push to PR branch** (review fixes, CI fixes, follow-up changes) → comment on the PR summarizing what was pushed
-- **Push to master referencing an issue** (`refs #N`, `fixes #N`, follow-up fixes) → comment on both the PR and the issue
+- **Push to main referencing an issue** (`refs #N`, `fixes #N`, follow-up fixes) → comment on both the PR and the issue
 - **Post-merge follow-ups** → comment on both the original PR and the issue
 
 This is not optional. If there's no comment documenting a push, the push is incomplete. Do this immediately after pushing, not when reminded.

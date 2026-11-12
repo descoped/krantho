@@ -15,7 +15,7 @@ merge once CI is green, and for the publish.
 ```bash
 git fetch --tags origin
 last=$(git tag -l 'v*' --sort=-v:refname | head -1)
-git log --oneline "$last"..origin/master
+git log --oneline "$last"..origin/main
 ```
 
 Pick the bump from the conventional commits (rules: major `0` → `feat:`/breaking is minor, the
@@ -23,7 +23,7 @@ rest patch). An explicit argument wins. Say which version and why.
 
 ## 2. Version PR
 
-On a branch `chore/release-vX.Y.Z` from `origin/master`:
+On a branch `chore/release-vX.Y.Z` from `origin/main`:
 
 1. `pnpm run release:version set X.Y.Z`
 2. Write the release's changelog entry at the top of `CHANGELOG.md`: a
@@ -46,9 +46,9 @@ On a branch `chore/release-vX.Y.Z` from `origin/master`:
 After the PR merged:
 
 ```bash
-git checkout master && git pull
+git checkout main && git pull
 pnpm run release:version check vX.Y.Z
-gh release create vX.Y.Z --target master --title vX.Y.Z --notes "…"
+gh release create vX.Y.Z --target main --title vX.Y.Z --notes "…"
 ```
 
 Notes: what changed for users, one line per change with its PR number; say whether the release

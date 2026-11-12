@@ -26,9 +26,7 @@ In Claude Code:
 /plugin install krantho@krantho
 ```
 
-The marketplace lives in the `descoped/krantho` GitHub repository, so adding it needs read
-access to that repository. The repository is private while krantho is in active development:
-for now only its collaborators can add the marketplace.
+The marketplace lives in the public `descoped/krantho` GitHub repository.
 
 A project can register the marketplace for everyone who opens it, in `.claude/settings.json`:
 

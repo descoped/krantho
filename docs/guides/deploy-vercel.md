@@ -74,7 +74,7 @@ Releasing:
 ```bash
 pnpm run release:version check v0.7.7
 node krantho-site/scripts/check-release-entry.mjs v0.7.7
-gh release create v0.7.7 --target master --title v0.7.7 --notes "…"
+gh release create v0.7.7 --target main --title v0.7.7 --notes "…"
 ```
 
 The job summary and the release notes record the deployment URL. To roll back, promote an earlier deployment with `vercel promote <url>`.

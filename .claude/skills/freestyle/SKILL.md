@@ -129,13 +129,13 @@ When fixing a React component, check BOTH server/ and client/ variants.
 ### Branch Gate (mandatory)
 
 Before ANY edits, check `git branch --show-current`. If you are on
-`master`, create a working branch first:
+`main`, create a working branch first:
 
 ```
 git checkout -b feature/<description> or fix/<description>
 ```
 
-This is not optional. Never edit files on master. The worktree decision
+This is not optional. Never edit files on main. The worktree decision
 below is separate from this requirement.
 
 ### Worktree Isolation
@@ -153,11 +153,11 @@ The worktree is created in `.claude/worktrees/<name>` and branches off the curre
 
 ### Branching Model
 
-The developer works on a branch (not master). Worktrees branch off that
+The developer works on a branch (not main). Worktrees branch off that
 working branch for individual fixes or explorations:
 
 ```
-master (protected — changes land through reviewed PRs)
+main (protected — changes land through reviewed PRs)
   └── feature/issue-N or fix/description (working branch)
         ├── worktree: fix-content-loader (agent A)
         ├── worktree: fix-react-hooks (agent B)
@@ -166,7 +166,7 @@ master (protected — changes land through reviewed PRs)
 
 Multiple agents can work in parallel on different worktrees. Each worktree
 merges back to the working branch when verified. The working branch merges
-to master through a PR, per `.claude/rules/git-workflow.md`.
+to main through a PR, per `.claude/rules/git-workflow.md`.
 
 ### When to Skip the Worktree
 
@@ -277,7 +277,7 @@ Present results and hand control back to the developer.
 - **Branch to ceremony** — use `/kt-start`, `/kt-issue`, or `/kt-review`
 - **Run QA** — use `/kt-qa` to verify the current phase before PR
 - **Create PR** — per `way-of-work.md`: one PR per lean fix or tracked issue
-- **Merge to master** — through the PR, once CI and the automated review pass
+- **Merge to main** — through the PR, once CI and the automated review pass
 - **Abandon** — discard the worktree, no harm done
 
 ## Branching to Formal Workflows

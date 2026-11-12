@@ -22,7 +22,7 @@ Sequential implementation of a range of issues. Each issue runs unattended throu
 
 ```
 Repo: descoped/krantho
-Main branch: master
+Main branch: main
 ```
 
 ## Argument Parsing
@@ -38,9 +38,9 @@ Parse the argument and build the ordered issue list.
 
 Before starting the pipeline:
 
-1. **Verify on master**: `git branch --show-current` must be `master`
+1. **Verify on main**: `git branch --show-current` must be `main`
 2. **Clean working tree**: `git status` must show no uncommitted changes (untracked files OK)
-3. **Pull latest**: `git pull origin master`
+3. **Pull latest**: `git pull origin main`
 4. **Verify all issues exist and are open**:
    ```bash
    gh issue view N --repo descoped/krantho --json state -q .state
@@ -63,7 +63,7 @@ For each issue N in the list, execute this complete cycle:
 1. Read the issue: `gh issue view N --repo descoped/krantho`
 2. Read the design doc: `<notes directory>/issues/issue-N/design.md`
 3. Assign: `gh issue edit N --repo descoped/krantho --add-assignee @me`
-4. Create branch from master: `feature/issue-N-short-description`
+4. Create branch from main: `feature/issue-N-short-description`
 5. Create/verify `task.md` in `<notes directory>/issues/issue-N/`
 6. Implement all tasks from the design doc
 7. Run verification: `pnpm run format:check && pnpm run typecheck && pnpm run test:run && pnpm run build`
@@ -124,7 +124,7 @@ Run a clean code review on ALL packages that changed:
 ### Step 7: Post-Merge Cleanup (kt-start Phase 8)
 
 1. Confirm the merge: `gh pr view PR_NUMBER --repo descoped/krantho --json state -q .state` must print `MERGED`
-2. Switch to master: `git checkout master && git pull origin master`
+2. Switch to main: `git checkout main && git pull origin main`
 3. Update issue body: mark all checkboxes as `[x]`
 4. Verify issue body: no unchecked boxes
 5. The design and task documents stay where they are, in the notes directory; nothing is archived
@@ -152,7 +152,7 @@ Print progress after each issue:
 - Issue doesn't exist or is already closed → **skip** (continue to next)
 - Design doc missing → **abort pipeline** (cannot implement without spec)
 - CI fails 3 times → **abort pipeline** (needs human intervention)
-- `master` has merge conflicts → **abort pipeline**
+- `main` has merge conflicts → **abort pipeline**
 
 When aborting, print:
 ```
@@ -172,7 +172,7 @@ Remaining: #30, #31, ..., #38
 - Every GitHub review comment must be addressed before merge
 - Post-merge cleanup is required — never skipped
 - One issue at a time, sequential, no parallelism between issues
-- Each issue starts from a clean master with latest changes
+- Each issue starts from a clean main with latest changes
 - design.md and task.md are required per issue
 - Runs unattended through the merge; the developer does not review PRs
 - If an issue depends on another issue that hasn't been implemented yet, check if the dependency is in the pipeline and will be done first. If not, skip with a note.

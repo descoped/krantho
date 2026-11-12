@@ -1,5 +1,5 @@
 # Krantho the product, on every page of the site. No offers, price or ratings:
-# krantho is not released and has no pricing. The explicit @id keeps it apart
+# krantho has no pricing. The explicit @id keeps it apart
 # from the Organization, which a site entity without an @id would replace.
 "@type": SoftwareApplication
 "@id": https://krantho.com/#software

@@ -28,12 +28,12 @@ export default defineKranthoConfig({
     requireAuthForReads: true,
     // The repository's workflows read what editors changed in production (GET /api/changes)
     // with their GitHub identity token, so edits made between releases come back to git.
-    // Only runs on master and on release tags are trusted, not feature branches or pull requests
+    // Only runs on main and on release tags are trusted, not feature branches or pull requests
     workload: {
       issuer: 'https://token.actions.githubusercontent.com',
       audience: 'https://krantho.com',
       subjects: [
-        'repo:descoped/krantho:ref:refs/heads/master',
+        'repo:descoped/krantho:ref:refs/heads/main',
         'repo:descoped/krantho:ref:refs/tags/v*',
       ],
     },

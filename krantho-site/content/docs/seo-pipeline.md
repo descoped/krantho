@@ -14,7 +14,7 @@ status: published
 The build-time SEO pipeline (`@krantho/tools`) turns YAML business data into Schema.org structured data, FAQ markup and `llms.txt`, and uses an LLM to enrich content. It runs alongside the runtime archetype system: archetypes are configured in `krantho.config.ts` and Studio, and pages render them with `resolveSeoContent()` and `<SeoJsonLd>`, which read in-process from the published version of each document — see [Add SEO](/docs/add-seo).
 
 > [!NOTE]
-> `@krantho/tools` is a private package, and its commands are scripts at the root of the krantho repository. The repository is private while krantho is in development; [Project status](/docs/project-status) explains how to work from source today.
+> `@krantho/tools` is a private package, and its commands are scripts at the root of the krantho repository. [Project status](/docs/project-status) explains how to work from source today.
 
 ## How it works
 

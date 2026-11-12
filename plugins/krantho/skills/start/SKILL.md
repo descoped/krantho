@@ -47,9 +47,9 @@ is no page builder: content is fields plus a markdown body, and layout stays in 
 
 ## Status — read this first
 
-krantho is in active development. **Its packages are not published to npm**, and the
-`descoped/krantho` repository is private. The `pnpm add @krantho/...` and `npx create-krantho`
-commands below are the ones the first release will use; today they fail with a 404. Say so to
+**krantho's packages are not published to npm yet**; the code is in the public
+`descoped/krantho` repository. The `pnpm add @krantho/...` and `npx create-krantho`
+commands below are the ones publishing will make work; today they fail with a 404. Say so to
 the user whenever you show one, and link https://krantho.com/docs/project-status.
 
 To use krantho before the first release, work from a checkout of the repository (collaborators

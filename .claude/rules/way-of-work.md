@@ -9,7 +9,7 @@ orchestration, horizon picks the long-horizon loop.
 1. **Working documents.** Design and task documents, analyses and plans are written to the
    notes directory outside the repository (`CLAUDE.md`, Documentation Conventions) and are
    never committed here. Everything in the repository — code, `docs/`, `.claude/rules/`,
-   `CLAUDE.md` — goes through a branch + PR. Nothing is committed directly to master.
+   `CLAUDE.md` — goes through a branch + PR. Nothing is committed directly to main.
 2. **Lean fix.** An in-session code change whose scope is known — asked for by the
    developer, or found in the session (a review or audit finding, a bug traced to its
    code): branch → fix → full TS pipeline → PR → CI + automated review → **merge**. No
@@ -50,7 +50,7 @@ orchestration, horizon picks the long-horizon loop.
   run unattended through the merge.
 - **Nothing goes out the door without the developer's explicit approval.** A release
   (`/kt-release`, `.claude/rules/releases.md`) runs only on the developer's instruction,
-  which is also the go for its own version PR's merge. Never commit directly to master.
+  which is also the go for its own version PR's merge. Never commit directly to main.
 
 ## Per-area quality gates
 

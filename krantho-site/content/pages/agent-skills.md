@@ -14,7 +14,7 @@ In Claude Code, add the krantho marketplace and install the plugin from it:
 {{sample:plugin-install}}
 
 > [!NOTE]
-> The plugin is distributed from the krantho repository, which is private for now. Until it is public, these commands work for collaborators on the repository.
+> The plugin is distributed from the krantho repository on GitHub.
 
 A project created with `create-krantho` prepares this for you: its `.claude/settings.json` registers the marketplace and turns the plugin on. Claude Code reads it once you trust the folder, and each person installs the plugin on their own machine the first time.
 

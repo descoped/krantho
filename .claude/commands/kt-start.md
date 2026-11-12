@@ -25,7 +25,7 @@ Full issue-to-PR workflow for krantho. Takes an issue number as argument: `/kt-s
 
 ```
 Repo: descoped/krantho
-Main branch: master
+Main branch: main
 ```
 
 ### Workspace Areas
@@ -160,7 +160,7 @@ is private.
 
 When bugs or issues are found after merge that relate to the same issue:
 
-1. Fix on master (or a new branch if non-trivial)
+1. Fix on main (or a new branch if non-trivial)
 2. Commit with `refs #N` in the message
 3. Push
 4. **Comment on the PR** documenting the follow-up fix
@@ -176,5 +176,5 @@ When bugs or issues are found after merge that relate to the same issue:
 - Conventional commit format
 - design.md and task.md are required for every issue
 - Post-merge issue update is required — closed issues carry no unchecked boxes
-- **Every push gets a comment** — PR branch pushes → PR comment; master pushes referencing issues → issue comment + PR comment
+- **Every push gets a comment** — PR branch pushes → PR comment; main pushes referencing issues → issue comment + PR comment
 - **Runs unattended through the merge** — a green gate proceeds to commit + PR with no confirmation stop; the PR merges once CI is green and the automated review's findings are addressed. Escalate only on a gate failure or genuine ambiguity.

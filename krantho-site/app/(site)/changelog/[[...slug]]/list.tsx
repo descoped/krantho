@@ -13,7 +13,7 @@ import '../../../styles/product.css'
 // The changelog, one page: the `changelog` page document introduces it, and every
 // published release sits on one timeline, newest first — version, date, what it
 // is about, its highlights and its full notes. Each release has an anchor
-// (/changelog#v0.7.7), and links to its release on GitHub once that is public.
+// (/changelog#v0.7.7), and links to its release on GitHub.
 
 export async function ReleaseList(): Promise<React.ReactElement> {
   const [intro, releases] = await Promise.all([maybe('pages', 'changelog'), releasesNewestFirst()])

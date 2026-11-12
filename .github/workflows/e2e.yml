@@ -8,7 +8,7 @@ name: E2E (Browser tests)
 # over several jobs. The suite drops every krantho, sign-in and language-model
 # variable from the environment it starts a target with, so it needs no secrets.
 #
-# It runs on every pull request that changes code, and on master after each merge: two
+# It runs on every pull request that changes code, and on main after each merge: two
 # changes that pass alone can fail together, and the merged commit is what ships. It also
 # builds every example, so no separate example build runs.
 on:
@@ -28,7 +28,7 @@ on:
       - '.github/workflows/e2e.yml'
   push:
     branches:
-      - master
+      - main
     paths:
       - 'packages/**'
       - 'examples/**'
@@ -39,7 +39,7 @@ on:
       - 'tsconfig*.json'
       - '.github/workflows/e2e.yml'
 
-# A newer push to a pull request replaces its running suite; every commit on master
+# A newer push to a pull request replaces its running suite; every commit on main
 # is run in full.
 concurrency:
   group: e2e-${{ github.event_name == 'pull_request' && github.ref || github.sha }}

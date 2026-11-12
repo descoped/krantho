@@ -65,14 +65,14 @@ honest about limits. The reader should finish a page knowing more, not feeling s
 - **Understatement over claims.** *"It keeps each page cached until an editor changes it"* beats
   *"Instant pages, always fresh."*
 - **Short sentences. Active voice. Concrete nouns.** One idea per sentence.
-- **Honest status.** krantho is in active development and not published to npm; the repository is
-  not public yet. Never imply otherwise. No pricing and no licence statements until decided.
+- **Honest status.** krantho's packages are not published to npm yet; the repository is public,
+  under the MIT licence. Never imply otherwise. No pricing statements.
 - **No external proof exists.** Don't cite customers, users or numbers. The site's own running on
   krantho, code and facts are the proof.
 - **English only**, US spelling (behavior, color, organize) — matching the code and docs.
 - **The name:** *krantho* in lowercase inside a sentence, as the wordmark writes it; *Krantho* only
   where English capitalizes any word — the start of a sentence, a title or a heading.
-- **Accuracy is part of the voice.** Every technical statement matches the code on master. When
+- **Accuracy is part of the voice.** Every technical statement matches the code on main. When
   unsure, read the code or the docs page; do not guess.
 
 ## Where copy lives
@@ -89,7 +89,7 @@ described in the `website-design` skill.
 - [ ] Every claim has proof on the page or a link to it.
 - [ ] No banned words, no exclamation marks, no invented numbers.
 - [ ] Limits are named where the reader is deciding.
-- [ ] Status is honest (development, not on npm, private repository).
+- [ ] Status is honest (not on npm yet, public repository, MIT).
 - [ ] No pricing, licence, customer or usage claims.
 - [ ] Technical statements verified against the code or docs.
 - [ ] Reads calmly aloud; nothing sounds like it is raising its voice.

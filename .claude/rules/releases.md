@@ -20,8 +20,8 @@ publish wait for the operator's go.
 - **The bump follows the conventional commits since the last release.** While the major is `0`:
   `feat:` or a breaking change → minor, anything else → patch. From `1.0.0`: a breaking change
   (`!` or `BREAKING CHANGE:`) → major, `feat:` → minor, `fix:`/other → patch.
-- **The version change lands on master through a PR** like any other change
-  (`chore: release vX.Y.Z`), then the release is published from master at that commit.
+- **The version change lands on main through a PR** like any other change
+  (`chore: release vX.Y.Z`), then the release is published from main at that commit.
 - **Published tags never move or get deleted** — a GitHub tag ruleset enforces it. A broken
   release is followed by a new patch release, never retagged.
 - **Changelog: every release gets an entry** in `CHANGELOG.md`, written in the version PR, before

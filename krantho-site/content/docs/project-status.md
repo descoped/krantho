@@ -14,11 +14,11 @@ Krantho is in active development. This page says plainly what that means for you
 
 ## Where the project stands
 
-- **The code is in one repository.** The packages, Studio, the example apps and this site live in the `descoped/krantho` repository on GitHub. The repository is private for now.
+- **The code is in one repository.** The packages, Studio, the example apps and this site live in the `descoped/krantho` repository on GitHub. The repository is public, under the MIT licence.
 - **The packages are not published.** `create-krantho` and the `@krantho/*` packages are not on npm yet, so `pnpm add @krantho/next` and `npx create-krantho` do not work today.
 - **The site you are reading runs on krantho.** Every page here, these docs included, is content in krantho's own content templates, edited in its Studio.
 
-APIs can still change before the first release. These docs describe the code as it is now, and are updated with it.
+These docs describe the code as it is now, and are updated with it.
 
 ## What the install commands mean
 

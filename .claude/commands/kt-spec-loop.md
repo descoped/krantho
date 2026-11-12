@@ -32,7 +32,7 @@ mechanics.**
 
 ```
 Repo: descoped/krantho
-Main branch: master
+Main branch: main
 Position store: ~/.krantho/loops/issue-<N>.json   (out-of-band, NEVER git-tracked)
 Goal worktree:  .claude/worktrees/issue-<N>
 Goal branch:    loop/issue-<N>-<slug>
@@ -63,7 +63,7 @@ judgment the loop cannot self-make.
 
 On approval:
 
-1. Worktree + branch: `git worktree add .claude/worktrees/issue-<N> -b loop/issue-<N>-<slug> origin/master`,
+1. Worktree + branch: `git worktree add .claude/worktrees/issue-<N> -b loop/issue-<N>-<slug> origin/main`,
    then `EnterWorktree` with the absolute `path` `<repository root>/.claude/worktrees/issue-<N>`
    so the session works inside it. Enter it straight after `git worktree add`, before any `cd`
    into it: a `cd` already moves the session there, and a relative `path` then resolves to a
@@ -159,7 +159,7 @@ When the acceptance conditions are satisfied:
 - While a goal PR is open, **never push to the goal branch** — a push grows the open PR.
   Cycles may continue locally in the worktree; the commits push at the next gate.
 - After a non-final goal PR squash-merges: `git -C <worktree> fetch origin && git reset
-  --hard origin/master` (the group's content is preserved in master via the squash),
+  --hard origin/main` (the group's content is preserved in main via the squash),
   delete the remote goal branch, and re-push it at the next gate — this keeps every goal
   PR's diff scoped to its own group. Tick the merged group's checkboxes on the issue.
 

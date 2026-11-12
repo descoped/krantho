@@ -15,7 +15,7 @@ status: published
 Two commands are local instead: `krantho dev` and `krantho build` run your framework's own dev server and production build.
 
 > [!NOTE]
-> The CLI is not distributed yet. It is a Go program in the `cli/` directory of the krantho repository, which is private for now; you build it from a checkout. [Project status](/docs/project-status) explains how to work with krantho from source today.
+> The CLI is not distributed yet. It is a Go program in the `cli/` directory of the krantho repository; you build it from a checkout. [Project status](/docs/project-status) explains how to work with krantho from source today.
 
 ## Build it from source
 

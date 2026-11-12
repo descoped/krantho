@@ -15,7 +15,7 @@
 The contract for long-horizon autonomous work (`/kt-spec-loop`, way-of-work mode 5). The
 command owns the lifecycle mechanics; this rule owns the contract — the gates, the cycle,
 the guards, and the isolation. Its isolation and merge provisions are hard guarantees
-while a loop is active: a loop that pushes to master, opens per-cycle PRs, or merges a
+while a loop is active: a loop that pushes to main, opens per-cycle PRs, or merges a
 goal PR before CI is green and its review findings are addressed is a defect, not a
 trade-off.
 
@@ -109,8 +109,8 @@ A loop with no guards does not start:
 ## Isolation
 
 - The loop lives in its own worktree (`.claude/worktrees/issue-N`) on branch
-  `loop/issue-N-<slug>` cut from `origin/master`.
-- **The only master contact is the goal PR.** No per-cycle PRs, no `/kt-start` ceremony
+  `loop/issue-N-<slug>` cut from `origin/main`.
+- **The only main contact is the goal PR.** No per-cycle PRs, no `/kt-start` ceremony
   inside the loop, no merge outside the goal gate — the loop's lifecycle is authoritative
   while it runs.
 - **Sweep check each cycle:** the main checkout's working tree stays clean. A stalled or
@@ -133,7 +133,7 @@ The spec names which apply; the verifier checks them. Autonomy never routes arou
 
 ## Smell markers — fix on sight
 
-- A loop pushing to master, opening a per-cycle PR, or merging a goal PR with CI red or
+- A loop pushing to main, opening a per-cycle PR, or merging a goal PR with CI red or
   review findings unaddressed.
 - Loop code sitting uncommitted in the main checkout's working tree.
 - The live position living in design.md or any git-tracked file.

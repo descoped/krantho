@@ -68,7 +68,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
-        # Full history: the review diffs the PR against master, and a shallow
+        # Full history: the review diffs the PR against main, and a shallow
         # checkout of a PR with many commits has no merge base to diff from.
         with:
           fetch-depth: 0

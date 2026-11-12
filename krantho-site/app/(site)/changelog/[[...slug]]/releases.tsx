@@ -61,16 +61,14 @@ export function releaseTag(doc: Doc): string | undefined {
 }
 
 /**
- * The GitHub page that lists krantho's releases. Each entry links to its release
- * there once this is set — leave it empty while the repository is private, where
- * the link would answer 404 to every visitor.
+ * The GitHub page that lists krantho's releases; each entry links to its release there.
  */
-export const GITHUB_RELEASES_URL = ''
+export const GITHUB_RELEASES_URL = 'https://github.com/descoped/krantho/releases'
 
-/** The release on GitHub, once GITHUB_RELEASES_URL is set */
+/** The release on GitHub */
 export function GithubRelease({ doc }: { doc: Doc }): React.ReactElement | null {
   const tag = releaseTag(doc)
-  if (!GITHUB_RELEASES_URL || !tag) return null
+  if (!tag) return null
   return (
     <a href={`${GITHUB_RELEASES_URL}/tag/${tag}`} className="link-arrow timeline__more">
       {tag} on GitHub

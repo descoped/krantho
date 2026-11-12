@@ -79,8 +79,8 @@ Opening paragraph: what this page helps you do.
 
 ## Honesty rules
 
-- krantho is in active development and **not published to npm**; the repository is private.
-  Install commands describe the published packages the first release will use — the
+- krantho is **not published to npm** yet; the repository is public.
+  Install commands describe the published packages publishing will provide — the
   `project-status` page says so, and `installation` links to it. Never imply a command works today
   when it does not.
 - No pricing and no licence statements.
@@ -125,6 +125,6 @@ tabs, callouts, snippets and links working.
 ## Verification (every new or migrated page)
 
 Use the #299 pattern for anything wider than one page: writers → independent accuracy verifiers
-(each claim, signature, default, command and path checked against the code on master) →
+(each claim, signature, default, command and path checked against the code on main) →
 a completeness critic. A single page gets at least one independent verification pass. A page is
 not done while any claim is unverified.

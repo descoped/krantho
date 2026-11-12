@@ -49,7 +49,7 @@ digraph qa {
 ## Phase 1: Derive and Present Test Scope
 
 ```bash
-git diff --name-only master...HEAD | grep -E '\.tsx?$' | grep -v test/
+git diff --name-only main...HEAD | grep -E '\.tsx?$' | grep -v test/
 ```
 
 Map changed files to test targets using `scope-map.md`. Then **present the test plan before executing**:
