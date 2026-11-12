@@ -34,10 +34,10 @@ function resolveStudioDist(): string | undefined {
 function findStudioDistFromCwd(): string {
   let dir = process.cwd()
   while (dir !== resolve(dir, '..')) {
-    const candidate = join(dir, 'node_modules', '@krantho', 'admin', 'dist', 'index.html')
+    const candidate = join(dir, 'node_modules', '@krantho', 'studio', 'dist', 'index.html')
     if (existsSync(candidate)) return join(candidate, '..')
     // Also check sibling packages (monorepo symlink layout)
-    const sibling = join(dir, 'packages', 'admin', 'dist', 'index.html')
+    const sibling = join(dir, 'packages', 'studio', 'dist', 'index.html')
     if (existsSync(sibling)) return join(sibling, '..')
     dir = resolve(dir, '..')
   }
