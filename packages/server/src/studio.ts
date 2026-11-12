@@ -5,27 +5,30 @@ import { MIME_TYPES } from './mime-types.js'
 
 /** Error message when Studio SPA is not built — shared across all server adapters */
 export const STUDIO_NOT_AVAILABLE_MESSAGE =
-  'Studio not available. Build it with: pnpm --filter @krantho/studio run build'
+  'Studio not available: @krantho/studio is not installed or its dist/ is missing. In the krantho repository, build it with: pnpm --filter @krantho/studio run build'
 
 let studioDistDir: string | undefined
 
 /**
  * Resolve the path to @krantho/studio's dist directory.
  *
- * Resolves from the app's own dependencies first: the app installs @krantho/studio,
- * and resolving from the app root (not from this module) keeps working when a
- * bundler inlines this package. Walking up from cwd covers a workspace checkout,
- * or a deployed function where the SPA was traced under `packages/studio/dist`.
+ * From this package first: @krantho/server depends on @krantho/studio, so this
+ * finds it under any package manager, pnpm's strict layout included, where the
+ * app root cannot see a dependency of a dependency. Then from the app root, for a
+ * bundler that inlines this package. Walking up from cwd covers a workspace
+ * checkout, or a deployed function where the SPA was traced under `packages/studio/dist`.
  */
 function getStudioDistDir(): string {
-  studioDistDir ??= resolveStudioDist() ?? findStudioDistFromCwd()
+  studioDistDir ??=
+    resolveStudioDist(import.meta.url) ??
+    resolveStudioDist(join(process.cwd(), 'package.json')) ??
+    findStudioDistFromCwd()
   return studioDistDir
 }
 
-function resolveStudioDist(): string | undefined {
+function resolveStudioDist(from: string): string | undefined {
   try {
-    const require = createRequire(join(process.cwd(), 'package.json'))
-    return dirname(require.resolve('@krantho/studio/dist/index.html'))
+    return dirname(createRequire(from).resolve('@krantho/studio/dist/index.html'))
   } catch {
     return undefined
   }

@@ -905,6 +905,9 @@ importers:
       '@krantho/seo-shared':
         specifier: workspace:*
         version: link:../seo-shared
+      '@krantho/studio':
+        specifier: workspace:*
+        version: link:../studio
       chokidar:
         specifier: ^5.0.0
         version: 5.0.0
