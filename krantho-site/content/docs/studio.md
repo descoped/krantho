@@ -23,9 +23,6 @@ pnpm --filter @krantho/studio run build
 
 Until it is built, `/studio` answers `503` with that command in the message.
 
-> [!NOTE]
-> Krantho is not yet published to npm, so today you run it from a checkout of the repository. See [Project status](/docs/project-status).
-
 Then add a Studio route to your server and pass it your configuration, so `/studio` can apply the sign-in gate when you turn it on (see [Gate /studio behind sign-in](#gate-studio-behind-sign-in)):
 
 ```ts title="app/studio/[[...slug]]/route.ts" stack="next"

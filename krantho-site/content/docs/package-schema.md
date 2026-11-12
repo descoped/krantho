@@ -14,9 +14,6 @@ Define your content structure in code. Collections declare their fields with Zod
 
 ## Install
 
-> [!NOTE]
-> Krantho is in active development and its packages are not on npm yet. The command below is the one the first release will use. To run krantho today, see [Project status](/docs/project-status).
-
 ```bash
 pnpm add @krantho/schema
 ```

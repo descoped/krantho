@@ -7,7 +7,7 @@ description: >
   seed content; to publish, unpublish, preview or roll back a document; to bulk-edit content with
   a script; or when edited markdown files do not show up on the site. Explains drafts versus the
   published (live) version, version history, preview, and how files reach the database.
-compatibility: krantho 0.1.x; Claude Code
+compatibility: krantho 1.x; Claude Code
 metadata:
   krantho-version: 1.0.0
   docs: https://krantho.com/docs/content-authoring

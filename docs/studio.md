@@ -9,7 +9,7 @@ Every krantho site needs a way to create, edit, and publish content without touc
 ## Rationale
 
 - **Separate package**: Studio is a React SPA regardless of what framework the site uses. Keeping it in its own package means SvelteKit sites get the same Studio experience as Next.js sites.
-- **Private package**: Distributed as pre-built static assets (`dist/`), not published to npm. Server packages bundle the dist directory.
+- **Published prebuilt**: The npm package holds only the built static assets (`dist/`). `@krantho/server` depends on it and resolves the dist directory through its own dependencies.
 - **React + React Router**: Chosen for the mature form handling and routing ecosystem needed by a CMS Studio. The host site's framework is irrelevant since Studio is a separate SPA.
 - **No direct persistence imports**: All data flows through `/api/*` endpoints. Studio has zero knowledge of whether content lives on the filesystem, in SQLite, or in Postgres.
 - **Vite build**: Produces a single-page app with hashed assets. The server serves `index.html` for all `/studio/*` routes and static assets from `/studio/assets/`.

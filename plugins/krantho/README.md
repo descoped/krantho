@@ -41,9 +41,8 @@ A project can register the marketplace for everyone who opens it, in `.claude/se
 
 ## Status
 
-krantho is in active development. Its packages are not published to npm yet, so the install
-commands the skills show are the ones the first release will use. The `start` skill says how to
-run krantho from source meanwhile; see also https://krantho.com/docs/project-status.
+krantho's packages are published to npm, and the install commands the skills show work as
+written. Each skill names the krantho release it describes (`krantho-version`).
 
 ## Versions
 

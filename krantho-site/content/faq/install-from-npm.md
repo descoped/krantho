@@ -1,11 +1,9 @@
 ---
-title: 'Can I install krantho from npm today?'
+title: 'Can I install krantho from npm?'
 topic: product
 order: 1
-docs-page: project-status
+docs-page: installation
 status: published
 ---
 
-Not yet. Krantho's packages are not yet published to npm: installing `create-krantho` or any `@krantho/` package fails today. The install commands in the documentation describe what publishing will make work.
-
-Until then, krantho runs from source: you build the packages in the krantho repository on GitHub and run one of its example apps. The project status page has the steps.
+Yes. Every krantho package is published to npm: `npx create-krantho` starts a new project, and `pnpm add @krantho/next` (or `@krantho/sveltekit`, `@krantho/node`) adds krantho to an existing one. The installation page has the steps for each framework.

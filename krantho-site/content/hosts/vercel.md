@@ -26,8 +26,6 @@ Vercel runs a krantho site as functions. A function has a read-only filesystem a
 - **Next.js.** In `next.config.ts`, add the content files and the Studio build to `outputFileTracingIncludes`, since krantho reads them at runtime where Next's file tracing cannot see them. Give the API route `maxDuration = 60` for the first boot.
 - **SvelteKit.** Build with `@sveltejs/adapter-vercel`, add `@vercel/functions`, and pass its `waitUntil` to `createApiHandlers` so purges finish after the response.
 
-Krantho is not on npm yet, so a deployment today builds from a checkout of the repository. [Project status](/docs/project-status) has the details.
-
 ## Configure
 
 Set these in the project's environment variables. Secrets stay there, never in `krantho.config.ts`.

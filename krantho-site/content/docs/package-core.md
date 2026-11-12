@@ -14,9 +14,6 @@ The content engine. It loads markdown, parses YAML frontmatter into `fields`, sp
 
 ## Install
 
-> [!NOTE]
-> Krantho is in active development and its packages are not on npm yet. The command below is the one the first release will use. To run krantho today, see [Project status](/docs/project-status).
-
 ```bash
 pnpm add @krantho/core
 ```

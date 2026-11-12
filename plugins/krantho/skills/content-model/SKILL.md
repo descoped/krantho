@@ -8,7 +8,7 @@ description: >
   glossary or changelog, to add reference or media pickers, tags, enums or ordering, to decide
   between fields, the markdown body and ## sections, or to build the page that shows a
   collection. Ships starter templates for common site sections.
-compatibility: krantho 0.1.x; Claude Code
+compatibility: krantho 1.x; Claude Code
 metadata:
   krantho-version: 1.0.0
   docs: https://krantho.com/docs/content-model

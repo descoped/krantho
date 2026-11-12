@@ -13,9 +13,6 @@ Generate Schema.org structured data that conforms to the vocabulary. The package
 
 ## Install
 
-> [!NOTE]
-> Krantho is in active development and its packages are not on npm yet. The command below is the one the first release will use. To run krantho today, see [Project status](/docs/project-status).
-
 ```bash
 pnpm add @krantho/seo
 ```
@@ -107,7 +104,7 @@ const docsPageArchetype = defineArchetype({ schemas: ['Article', 'FAQPage'] })
     sequence: { partOf: { name: 'Get started', url: '/docs#area-get-started' }, position: 2 },
   }}
   faq={[
-    { question: 'Can I install krantho from npm?', answer: 'Not yet. Krantho is in active development and runs from source today.' },
+    { question: 'Can I install krantho from npm?', answer: 'Yes. Every krantho package is published to npm under the @krantho scope.' },
   ]}
 />
 ```

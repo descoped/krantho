@@ -13,7 +13,7 @@ status: published
 Your content starts as markdown files in git. A deploy imports them into the database, and from then on editors change pages in Studio. Those edits live in the database only. This guide brings them back to the repository, so a rebuilt database or a new environment loses nothing and your files stay the source of truth.
 
 > [!NOTE]
-> krantho's packages and the `krantho` command line tool are not yet published, so you build the CLI from a checkout. [Project status](/docs/project-status) explains how to run krantho from source.
+> The `krantho` command line tool is not distributed as a binary yet, so you build it from a checkout of the repository; see [CLI](/docs/cli).
 
 ## How it works
 

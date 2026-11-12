@@ -12,9 +12,6 @@ status: published
 
 Krantho is a CMS you install as a library in the site you already build. It adds content storage, a REST API, an admin for editors and Schema.org structured data to a Next.js, SvelteKit or Express/Vite app — on the host and the database you choose. This page explains the parts and how they fit together.
 
-> [!NOTE]
-> Krantho's packages are not yet published to npm. The code is open on GitHub, and [Project status](/docs/project-status) explains how to run it from source today.
-
 ## A library in your app
 
 Krantho is not a hosted service and does not run beside your site. You add its packages to your app, and your app serves everything:

@@ -22,7 +22,6 @@ One bundle, `@krantho/sveltekit`, pulls in the SvelteKit adapter, the Svelte com
 
 {{sample:install}}
 
-The packages are not on npm yet; this is the install the first release will use. [Project status](/docs/project-status) explains how to run krantho from source today.
 
 ## Wire
 

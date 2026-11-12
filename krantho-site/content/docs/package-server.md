@@ -15,9 +15,6 @@ The server runtime. One function sets up persistence, the content engine, the AP
 
 ## Install
 
-> [!NOTE]
-> Krantho is in active development and its packages are not on npm yet. The commands below are the ones the first release will use. To run krantho today, see [Project status](/docs/project-status).
-
 Add the server and the adapter for your framework:
 
 ```bash stack="next"

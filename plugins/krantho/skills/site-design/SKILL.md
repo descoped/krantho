@@ -7,7 +7,7 @@ description: >
   switch, typography, layout, components, motion, accessibility (WCAG 2.2 AA) or performance
   (Core Web Vitals) for a krantho site — or when a page looks wrong, flashes the wrong theme,
   shifts on load, or fails an accessibility or Lighthouse check.
-compatibility: krantho 0.1.x; Claude Code
+compatibility: krantho 1.x; Claude Code
 metadata:
   krantho-version: 1.0.0
 ---

@@ -19,9 +19,6 @@ The one-install bundles (`@krantho/next`, `@krantho/sveltekit`, `@krantho/node`)
 pnpm add @krantho/seo
 ```
 
-> [!NOTE]
-> The krantho packages are not yet published to npm; this is the command the first release will use. [Project status](/docs/project-status) explains how to run krantho from source today.
-
 ## Seed archetypes from code
 
 Add a `seo` section to `krantho.config.ts`. The first request seeds it into the SEO configuration, whether it reaches the API route or a page, so the first page a fresh database renders already carries the archetypes. With the default `seo.seedMode: 'seed'`, rows already in the database are kept, so edits made in Studio survive a restart.

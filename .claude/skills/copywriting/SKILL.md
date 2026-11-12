@@ -65,8 +65,8 @@ honest about limits. The reader should finish a page knowing more, not feeling s
 - **Understatement over claims.** *"It keeps each page cached until an editor changes it"* beats
   *"Instant pages, always fresh."*
 - **Short sentences. Active voice. Concrete nouns.** One idea per sentence.
-- **Honest status.** krantho's packages are not published to npm yet; the repository is public,
-  under the MIT licence. Never imply otherwise. No pricing statements.
+- **Honest status.** krantho is released (1.0) and published to npm; the repository is public,
+  under the MIT licence. No pricing statements.
 - **No external proof exists.** Don't cite customers, users or numbers. The site's own running on
   krantho, code and facts are the proof.
 - **English only**, US spelling (behavior, color, organize) — matching the code and docs.
@@ -89,7 +89,7 @@ described in the `website-design` skill.
 - [ ] Every claim has proof on the page or a link to it.
 - [ ] No banned words, no exclamation marks, no invented numbers.
 - [ ] Limits are named where the reader is deciding.
-- [ ] Status is honest (not on npm yet, public repository, MIT).
+- [ ] Status is honest (released, on npm, public repository, MIT).
 - [ ] No pricing, licence, customer or usage claims.
 - [ ] Technical statements verified against the code or docs.
 - [ ] Reads calmly aloud; nothing sounds like it is raising its voice.

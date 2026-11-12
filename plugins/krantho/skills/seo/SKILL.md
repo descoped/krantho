@@ -8,7 +8,7 @@ description: >
   model through @krantho/ai (Anthropic by default, or OpenAI, Gemini, OpenRouter, Ollama). Use
   when asked about SEO, structured data, JSON-LD, rich results, meta descriptions, Open Graph,
   sitemaps, llms.txt, AEO, or configuring the LLM a krantho site uses for enrichment.
-compatibility: krantho 0.1.x; Claude Code
+compatibility: krantho 1.x; Claude Code
 metadata:
   krantho-version: 1.0.0
   docs: https://krantho.com/docs/add-seo

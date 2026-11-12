@@ -8,7 +8,6 @@ status: published
 ---
 
 ```bash
-# Needs access to the repository, which is private during development
 git clone https://github.com/descoped/krantho.git
 cd krantho
 pnpm install

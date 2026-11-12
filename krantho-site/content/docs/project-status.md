@@ -1,6 +1,6 @@
 ---
 title: Project status
-description: Where krantho stands today, how to run it from source, and what the install commands in these docs refer to.
+description: Where krantho stands, what is published and how to run it from source.
 area: get-started
 order: 15
 level: beginner
@@ -10,25 +10,20 @@ related: [first-page, studio, configuration]
 status: published
 ---
 
-Krantho is in active development. This page says plainly what that means for you: what exists, what is not available yet, and how to run krantho today.
+Krantho 1.0 is released. This page says what is published, where the code lives, and how to run krantho from source.
 
 ## Where the project stands
 
-- **The code is in one repository.** The packages, Studio, the example apps and this site live in the `descoped/krantho` repository on GitHub. The repository is public, under the MIT licence.
-- **The packages are not published.** `create-krantho` and the `@krantho/*` packages are not on npm yet, so `pnpm add @krantho/next` and `npx create-krantho` do not work today.
+- **The packages are on npm.** `create-krantho` and every `@krantho/*` package are published, so `npx create-krantho my-site` and `pnpm add @krantho/next` work as [Installation](/docs/installation) describes. Each release publishes all of them at one version.
+- **The code is in one repository.** The packages, Studio, the example apps and this site live in the public `descoped/krantho` repository on GitHub, under the MIT licence.
+- **The command line tool is built from source.** The `krantho` CLI is a Go program in the repository and is not distributed as a binary yet; see [CLI](/docs/cli).
 - **The site you are reading runs on krantho.** Every page here, these docs included, is content in krantho's own content templates, edited in its Studio.
 
-These docs describe the code as it is now, and are updated with it.
-
-## What the install commands mean
-
-The installation steps in these docs use the published packages the first release will provide — for example `pnpm add @krantho/next` or `npx create-krantho my-site`. They show how a project will install krantho, and the install pages link back here.
-
-Until the first release, the packages exist only inside the repository, where the example apps use them from the workspace. The code you write — `krantho.config.ts`, `krantho.collections.ts`, the API and Studio routes, your page templates — is the same either way. To try it now, run it from source.
+These docs describe the latest release, and are updated with each one. [The changelog](/changelog) lists what changed.
 
 ## Run krantho from source
 
-You need Node.js 22.9.0 or later, pnpm 10 (`corepack enable` provides it) and access to the repository.
+Running from source is for working on krantho itself, or trying the examples. You need Node.js 22.9.0 or later and pnpm 10 (`corepack enable` provides it).
 
 {{sample:run-from-source}}
 
@@ -65,7 +60,3 @@ Start one from its directory with `pnpm dev`, passing the port as `-p <port>` fo
 ### Changing a package
 
 Package source lives in `packages/*/src`. After a change, run `pnpm run build` again (or build the one package with `pnpm --filter @krantho/<name> run build`); the running examples pick up the new output.
-
-## What comes next
-
-The first release is planned to publish the packages and the scaffolder to npm. From then on, the install commands in these docs work as written, and this page changes to say so.

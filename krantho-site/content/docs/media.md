@@ -13,9 +13,6 @@ status: published
 
 The media library lets you upload, organize and edit images in Studio. Media metadata — alt text, tags, folder, crop, hotspot — is versioned in your database, SQLite or Postgres. The file bytes go to a **file store** you pick: local disk, Vercel Blob, an S3-compatible bucket or Google Cloud Storage.
 
-> [!NOTE]
-> krantho's packages are not yet published to npm. The `pnpm add` commands on this page are the ones the first release will use; [Project status](/docs/project-status) explains how to run krantho from source today.
-
 ## Enable media
 
 Media is on when `media.provider` is set, and off when it is not — there is no default store. Pick the store in `krantho.config.ts` and install its package:

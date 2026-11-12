@@ -79,10 +79,9 @@ Opening paragraph: what this page helps you do.
 
 ## Honesty rules
 
-- krantho is **not published to npm** yet; the repository is public.
-  Install commands describe the published packages publishing will provide — the
-  `project-status` page says so, and `installation` links to it. Never imply a command works today
-  when it does not.
+- krantho is released and every `@krantho/*` package and `create-krantho` is on npm; the
+  repository is public. Install commands use the published packages. The `krantho` CLI is built
+  from source, not distributed as a binary — never imply a command works when it does not.
 - No pricing and no licence statements.
 
 ## Sources of truth

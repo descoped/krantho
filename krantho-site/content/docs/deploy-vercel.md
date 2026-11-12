@@ -15,9 +15,6 @@ A krantho site runs on Vercel Functions like any other Next.js app. A function h
 
 This guide covers Next.js. SvelteKit on Vercel caches pages at Vercel's CDN instead; see [SvelteKit on Vercel](#sveltekit-on-vercel) below.
 
-> [!NOTE]
-> krantho's packages are not yet published to npm, so a deployment today builds from a checkout of the repository. The package names on this page are the ones the first release will use; [Project status](/docs/project-status) explains how to run krantho from source.
-
 ## What serves what
 
 One Vercel project serves the whole site:

@@ -15,9 +15,6 @@ React bindings for krantho. Server components and server utilities read publishe
 
 ## Install
 
-> [!NOTE]
-> Krantho is in active development and its packages are not on npm yet. The command below is the one the first release will use. To run krantho today, see [Project status](/docs/project-status).
-
 ```bash
 pnpm add @krantho/ui-react
 ```

@@ -19,15 +19,15 @@ Studio is a React single-page app served at `/studio` by the krantho server. It 
 
 ## Build Studio
 
-The server serves Studio from its built `dist/` directory. It finds that directory through your app's dependencies (the one-install bundles `@krantho/next`, `@krantho/sveltekit` and `@krantho/node` list `@krantho/studio`), or, in the krantho repository, at `packages/studio/dist`.
+`@krantho/studio` is published to npm already built: its `dist/` directory holds the app, and `@krantho/server` depends on it, so installing krantho installs Studio. The server finds it through its own dependencies, under npm, pnpm and Yarn alike.
 
-When you run krantho from source (see [Project status](/docs/project-status)), build Studio once before you serve it:
+In the krantho repository, build Studio once before you serve it:
 
 ```bash
 pnpm --filter @krantho/studio run build
 ```
 
-This writes static assets to `packages/studio/dist/`. Until they exist, `/studio` answers 503 with the build command.
+This writes static assets to `packages/studio/dist/`. Until they exist, `/studio` answers 503 and says what is missing.
 
 ## Destinations
 

@@ -33,7 +33,7 @@ Most content sites are built by developers and written by other people.
 
 ## Where it stands
 
-Krantho is in active development.
+Krantho 1.0 is released.
 ```
 
 The frontmatter sits between `---` markers. It defines the structured fields the site uses for titles, navigation, meta tags and more. The markdown body below it is the page's main content. The first paragraph before any heading serves as the lead, or intro, text.

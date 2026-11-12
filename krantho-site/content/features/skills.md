@@ -11,7 +11,7 @@ status: published
 
 ## Problem
 
-Coding agents write code from what they have seen before. A library in active development is mostly new to them, so they guess: an outdated import, an invented option, a route shape that breaks page caching. You then spend the time you hoped to save correcting it.
+Coding agents write code from what they have seen before. A new library is mostly new to them, so they guess: an outdated import, an invented option, a route shape that breaks page caching. You then spend the time you hoped to save correcting it.
 
 ## Approach
 

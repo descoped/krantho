@@ -8,7 +8,7 @@ related: [project-status, installation, glossary]
 status: published
 ---
 
-Krantho is a CMS library you add to the site you already build. Your pages read content from your own database, editors work in an admin served by your app, and Schema.org structured data comes from archetypes you configure. These pages cover everything from the first install to running a site in production. Krantho is in active development and its packages are not yet published — [Project status](/docs/project-status) explains what that means and how to run it from source today.
+Krantho is a CMS library you add to the site you already build. Your pages read content from your own database, editors work in an admin served by your app, and Schema.org structured data comes from archetypes you configure. These pages cover everything from the first install to running a site in production. Install it from npm, as [Installation](/docs/installation) shows.
 
 ## Get started
 

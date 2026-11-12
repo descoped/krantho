@@ -13,9 +13,6 @@ status: published
 
 All content storage in krantho goes through one interface, `IPersistenceAdapter`. You choose where content lives in the `persistence` section of `krantho.config.ts`, and the server creates the adapter for you. Without a `persistence` section, content lives in SQLite.
 
-> [!NOTE]
-> Krantho is not yet published to npm. The `pnpm add` command on this page is the one the first release will use; until then, run krantho from source as [Project status](/docs/project-status) describes.
-
 ## Choose a provider
 
 SQLite needs no setup, Postgres suits production and several instances, and the filesystem provider serves markdown files straight from disk.

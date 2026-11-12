@@ -25,7 +25,6 @@ One bundle, `@krantho/node`, pulls in the Node adapter, Studio, the local media 
 
 {{sample:install}}
 
-The packages are not on npm yet; this is the install the first release will use. [Project status](/docs/project-status) explains how to run krantho from source today.
 
 ## Wire
 

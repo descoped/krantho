@@ -13,7 +13,7 @@ status: published
 The krantho plugin for Claude Code gives your coding agent krantho's own guidance. With it, the agent adds krantho to a project, designs content templates and the pages that render them, writes content and sets up SEO the way krantho expects — from the code of the release the plugin targets, not from a guess at an API it has not seen.
 
 > [!NOTE]
-> The plugin is distributed from the `descoped/krantho` repository on GitHub. The krantho packages are not on npm yet: the skills say so whenever they show an install command, and point to [Project status](/docs/project-status) for running krantho from source.
+> The plugin is distributed from the `descoped/krantho` repository on GitHub, and the krantho packages it installs are on npm.
 
 ## What the plugin gives your agent
 
@@ -87,5 +87,4 @@ The skills use only the Agent Skills frontmatter fields, so other tools that rea
 
 ## Status
 
-- The packages are not on npm. The `start` skill installs from a local build of krantho meanwhile — see [Project status](/docs/project-status).
-- The skills describe krantho's code as it is today, and change with it until the first release.
+- The skills describe krantho's code as it is in each release, and carry that release's version.

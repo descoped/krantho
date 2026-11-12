@@ -13,9 +13,6 @@ The media file store for `media.provider: 'gcs'`. It writes each uploaded file t
 
 ## Install
 
-> [!NOTE]
-> Krantho is in active development and its packages are not on npm yet. The command below is the one the first release will use. To run krantho today, see [Project status](/docs/project-status).
-
 ```bash
 pnpm add @krantho/media-gcs
 ```

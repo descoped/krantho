@@ -11,9 +11,6 @@ related: [configuration, persistence, media, package-server]
 status: published
 ---
 
-> [!NOTE]
-> The krantho packages are not yet published to npm. The `pnpm add` and `npx create-krantho` commands on this page are the ones the first release will use. To run krantho today, follow [Project status](/docs/project-status).
-
 Start with a single bundle package per framework. It pulls in the server adapter, UI, Studio, local media store and SEO tooling — everything a typical project needs. SQLite persistence is included; media stays off until you pick a file store, and SEO is installed but renders nothing until your pages use it.
 
 ## Prerequisites
@@ -44,6 +41,20 @@ pnpm add @krantho/sveltekit @krantho/server-sveltekit @krantho/core @krantho/con
 # plus your UI choice
 pnpm add @krantho/node @krantho/server-node @krantho/ui-react @krantho/config @krantho/schema zod
 ```
+
+### Allow SQLite's native build
+
+The default SQLite store runs on `better-sqlite3`, whose install step fetches or builds its native binary. pnpm 10 and npm 12 skip install steps until you allow them, and SQLite then fails to load. Allow it once per project:
+
+```bash
+# pnpm 10: approve better-sqlite3 when asked, which records it in package.json
+pnpm approve-builds
+
+# npm 12: review the pending install steps and allow better-sqlite3
+npm approve-scripts --allow-scripts-pending
+```
+
+A site on Postgres only does not need it.
 
 `@krantho/node` does not bundle a UI library on purpose — pick one yourself: `@krantho/ui-react`, `@krantho/ui-svelte`, `@krantho/ui-mui` or `@krantho/ui-tailwind`.
 

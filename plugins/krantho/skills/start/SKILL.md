@@ -8,7 +8,7 @@ description: >
   turn on page caching, or deploy a krantho site. Covers krantho.config.ts, krantho.collections.ts,
   the API and /studio routes, the in-process content loader, persistence, media, page caching,
   authentication and hosting, per framework.
-compatibility: krantho 0.1.x; Claude Code
+compatibility: krantho 1.x; Claude Code
 metadata:
   krantho-version: 1.0.0
   docs: https://krantho.com/docs/installation
@@ -47,33 +47,19 @@ is no page builder: content is fields plus a markdown body, and layout stays in 
 
 ## Status — read this first
 
-**krantho's packages are not published to npm yet**; the code is in the public
-`descoped/krantho` repository. The `pnpm add @krantho/...` and `npx create-krantho`
-commands below are the ones publishing will make work; today they fail with a 404. Say so to
-the user whenever you show one, and link https://krantho.com/docs/project-status.
+krantho is released: `create-krantho` and every `@krantho/*` package are on npm, and the code
+is in the public `descoped/krantho` repository. All packages share one version.
 
-To use krantho before the first release, work from a checkout of the repository (collaborators
-only while it is private):
-
-1. `git clone https://github.com/descoped/krantho.git && cd krantho`
-2. `pnpm install` then `pnpm run build` (Node.js 22.9.0 or later, pnpm 10 via `corepack enable`).
-3. Put the site inside the workspace, as the repository's example apps and its own website do:
-   add the site's directory to `packages:` in `pnpm-workspace.yaml`, depend on krantho packages
-   as `"@krantho/<name>": "workspace:*"`, and run `pnpm install` from the repository root.
-4. After a change to a package, `pnpm --filter @krantho/<name> run build` again.
-
-A Next.js site in the workspace that deploys to a serverless host also sets
-`outputFileTracingRoot` to the workspace root and traces the Studio build from
-`../packages/studio/dist/**/*` — see `${CLAUDE_SKILL_DIR}/references/hosting.md`.
-
-The code you write — configuration, collections, routes, pages — is the same either way.
+The default SQLite store runs on `better-sqlite3`, whose install step pnpm 10 and npm 12 skip
+until it is allowed: run `pnpm approve-builds` (or `npm approve-scripts --allow-scripts-pending`)
+and allow it. A site on Postgres only does not need it.
 
 ## Workflow
 
 1. **Inspect the project.** Read `package.json`: `next` → Next.js, `@sveltejs/kit` → SvelteKit,
    `express` or `vite` without a meta-framework → Express/Vite. Note the package manager, the
    TypeScript setup, the existing routes, and where content lives today. For a new project, ask
-   which framework, or suggest `create-krantho` once it is published.
+   which framework, or suggest `npx create-krantho`.
 2. **Load the stack reference** and follow it for every file:
    - Next.js (App Router): `${CLAUDE_SKILL_DIR}/references/next.md`
    - SvelteKit 2: `${CLAUDE_SKILL_DIR}/references/sveltekit.md`

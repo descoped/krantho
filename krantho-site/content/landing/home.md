@@ -14,7 +14,7 @@ status: published
 
 ## Install
 
-Krantho is in active development and not on npm yet: these are the commands of the first release. Until then, [run it from source](/docs/project-status#run-krantho-from-source).
+Krantho is on npm. Start a new project, or add it to the one you have.
 
 ### Add the krantho skills to Claude Code
 
@@ -101,8 +101,7 @@ Editors work in one Studio, the same for every framework, served by your app at 
 - You want a hosted service that someone else runs. Krantho runs inside your app, on your infrastructure.
 - The site must be purely static files. The API and Studio need a Node.js server runtime.
 - Your frontend is built on a framework krantho has no adapter for.
-- You need to install from npm today. Krantho is in active development and not yet published.
 
 ## Get started
 
-The documentation starts with what krantho is and walks you through a first page on your stack. Krantho is not on npm yet: [the project status page](/docs/project-status) explains how to run it from source today.
+The documentation starts with what krantho is and walks you through a first page on your stack.

@@ -1,7 +1,7 @@
 ---
 title: Announcement
-message: 'Krantho is in active development and not yet published to npm. Read what that means today.'
-message-href: /docs/project-status
+message: 'Krantho 1.0 is out, and on npm. See what is in it.'
+message-href: /changelog
 status: published
 ---
 
