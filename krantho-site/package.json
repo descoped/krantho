@@ -1,0 +1,41 @@
+{
+  "name": "krantho-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../scripts/with-env.mjs ../.env node_modules/next/dist/bin/next dev",
+    "build": "node scripts/content-dates.mjs && pnpm -w run seo validate --config --root krantho-site && next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@krantho/studio": "workspace:*",
+    "@krantho/api": "workspace:*",
+    "@krantho/config": "workspace:*",
+    "@krantho/core": "workspace:*",
+    "@krantho/media-vercel-blob": "workspace:*",
+    "@krantho/persistence": "workspace:*",
+    "@krantho/persistence-fs": "workspace:*",
+    "@krantho/persistence-postgres": "workspace:*",
+    "@krantho/schema": "workspace:*",
+    "@krantho/seo": "workspace:*",
+    "@krantho/server": "workspace:*",
+    "@krantho/server-next": "workspace:*",
+    "@krantho/ui-react": "workspace:*",
+    "@plausible-analytics/tracker": "^0.4.6",
+    "marked": "^18.0.7",
+    "minisearch": "^7.2.0",
+    "next": "~16.4.0",
+    "postgres": "^3.4.9",
+    "react": "^19.2.9",
+    "react-dom": "^19.2.9",
+    "shiki": "^4.4.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "typescript": "^6.0.3"
+  },
+  "note": "Dogfooding project \u2014 the krantho website built with krantho. Part of the workspace during development. Will be extracted to descoped/krantho-site when packages are published to npm."
+}

@@ -1,0 +1,5 @@
+# Feature pages describe the product, which the site-level SoftwareApplication
+# already carries; they add only their place in the site.
+"@type": BreadcrumbList
+role: navigation
+properties: {}

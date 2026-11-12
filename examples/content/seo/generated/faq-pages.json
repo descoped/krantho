@@ -1,0 +1,128 @@
+{
+  "/": [
+    {
+      "@type": "Question",
+      "name": "What does Acme Consulting do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting is a strategy and digital transformation firm that helps mid-market and enterprise organizations navigate change. Services include market strategy, platform modernization, and fractional executive leadership."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is Acme Consulting located?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting is based at 100 Example Street, Suite 400, in the Financial District of San Francisco, CA."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I book a consultation with Acme Consulting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can book a consultation via phone (+1 555-0100), email (hello@acme-consulting.example.com), or the online booking link at acme-consulting.example.com."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What industries does Acme Consulting serve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting works across technology, finance, and healthcare sectors, serving companies ranging from $5M to $500M in revenue."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long has Acme Consulting been in business?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting was founded in 2010 and has over 15 years of experience helping 200+ organizations navigate critical transitions."
+      }
+    }
+  ],
+  "/services": [
+    {
+      "@type": "Question",
+      "name": "What services does Acme Consulting offer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting offers three core services: strategy consulting (market analysis, growth roadmaps), digital transformation (platform modernization, data strategy), and advisory/fractional leadership (interim CTO/COO, board guidance)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Acme Consulting offer fractional CTO services?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Acme Consulting offers fractional CTO and COO engagements, typically 2-3 days per week, for organizations that need experienced leadership for a defined period."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Acme Consulting help with cloud migration?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, digital transformation services include legacy platform migration, cloud migration and infrastructure optimization, and data platform architecture."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Acme Consulting do M&A due diligence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, commercial due diligence is part of the strategy consulting practice, helping companies evaluate market opportunities during mergers and acquisitions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What size companies does Acme Consulting work with?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting primarily works with mid-market companies ($5M-$500M revenue) and enterprise organizations navigating growth, digital transformation, or leadership transitions."
+      }
+    }
+  ],
+  "/about": [
+    {
+      "@type": "Question",
+      "name": "Who founded Acme Consulting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting was founded in 2010 by former executives from global consulting firms and technology companies."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Acme Consulting's approach?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting follows three principles: start with the problem (not the solution), work alongside the client team (not above), and measure what matters with clear success criteria."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Acme Consulting differ from other consulting firms?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme consultants embed with client teams and focus on hands-on execution and knowledge transfer, not slide decks. Every engagement has collaboratively defined success criteria."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What backgrounds do Acme Consulting team members have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The team includes former executives, product leaders, and engineers from global consultancies, technology companies and fast-growing startups, bringing diverse perspectives and a bias toward action."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Acme Consulting offer ongoing support after an engagement ends?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Acme Consulting builds knowledge transfer into every engagement so client teams can sustain results independently. Follow-on advisory engagements are available when needed."
+      }
+    }
+  ]
+}

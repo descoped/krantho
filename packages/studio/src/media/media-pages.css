@@ -1,0 +1,13 @@
+/* Previous and Next, centred, with where the page is in the code face */
+.media-pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.media-pages-where {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}

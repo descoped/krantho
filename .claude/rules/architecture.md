@@ -1,0 +1,31 @@
+# Architecture Rules
+
+- pnpm workspace monorepo: all packages under `packages/`. Root is workspace orchestrator only.
+- `@krantho/core` has zero UI framework imports. No React, no MUI, no Tailwind, no Svelte.
+- All persistence operations go through `IPersistenceAdapter` (`@krantho/persistence`). No direct `fs` calls outside persistence packages.
+- UI packages (`@krantho/ui-react`, `@krantho/ui-mui`, `@krantho/ui-tailwind`, `@krantho/ui-svelte`) are parallel alternatives — they don't depend on each other.
+- No adapter layer. Components render plain HTML with semantic CSS classes directly.
+- Each package declares its own dependencies — self-contained for npm publishing.
+- Cross-package imports use `@krantho/*`. Internal imports within a package use relative paths.
+- New modules must export through the appropriate `index.ts` barrel file.
+- Schema system (`@krantho/schema`) provides type inference, validation, and runtime schema merging.
+- `@krantho/ai` is a zero-dependency LLM client. Used by API (runtime enrichment) and tools (CLI).
+- Configuration is one typed tree (`@krantho/config`): defaults, then `krantho.config.ts`, then the environment, resolved once at startup by the server and the tools. Environment values reach package code only through `resolveConfig(code, process.env)`; handlers read `ctx.config`, never `process.env`. The direct reads that remain are deliberate: `NODE_ENV`, the scaffolder's package-manager detection, and a media store's platform identity when config holds no credentials (the AWS SDK default chain, the GCP metadata server). Config is data, wiring (collections, pages, plugins) is code; the media file store is chosen by `media.provider`. Secret leaves never reach a browser: only `PublicConfig` is serialized.
+- SEO archetype system: four scopes (site → collection → route → document). Site, collection and route config live in the `seo_config` table; a document's own SEO is versioned with the document, in its metadata (`metadata.seo`). `composeFromConfig()` generates unified `@graph`. Developer seeds config via the `seo` section of `krantho.config.ts`.
+- Archetype catalog covers Google rich result types, business subtypes, and core Schema.org types. Smart resolution derives properties from CMS metadata.
+- Frontend SEO: `resolveSeoContent()` for meta tags + OG + Twitter, `<SeoJsonLd>` for JSON-LD. Both read in-process through the content loader: the published version's fields and its versioned metadata, which holds the document's own SEO (`metadata.seo`).
+- Page caching: `cache.pages` picks the strategy — `none` renders every request, `next-isr` keeps each Next.js page until a change invalidates it, `cdn` has the CDN in front of a SvelteKit or Express site keep each page until a change purges it. Every committed write announces a `ContentChange`; `invalidationsFor()` in `@krantho/core` maps it to cache tags, and `@krantho/server-next` is the only package that touches `unstable_cache` and `revalidateTag`. `cache.shared: 'database'` lets several Next.js instances share one cache: `@krantho/server-next/cache-handler`, set in `next.config.ts`, keeps Next's cache in the site's database through `IPageCacheStore`, opened from the environment alone (`resolvePersistence`). The build never reads the database: content routes are dynamic segments whose `generateStaticParams` returns nothing, and the root layout reads no content.
+- CDN page caching is provider-neutral: `cache.cdn.provider` names the CDN (CloudFront, Cloud CDN or Vercel), none is preferred, and the app's code is the same for each. Pages render inside `runPageRequest()`, which collects the tags of every read; `servePageRequest()` in `@krantho/server` holds the one set of rules for which responses a CDN may keep — the SvelteKit hook (`createPageCacheHandle`) and the Express helper (`renderCachedPage`) are thin wrappers over it. The header shapes are pure functions in `@krantho/core` (`cdnCacheHeaders`, `previewHeaders`); the purge clients live in `@krantho/server` (`createCdnInvalidator`), load their SDKs by dynamic import, and run as a change listener the handler wires from configuration: by tag under `cdn`, every path under `next-isr` behind CloudFront or Cloud CDN. A purge never fails a write.
+- Studio's Structure destination is organised in tabs: Graph, Scopes & archetypes, Rich results, Crawlers & assistants. Per-page SEO lives in the editor: the side panel's Search and sharing block and Data mode.
+- SEO tools (`@krantho/tools`) include both legacy build-time scripts and the unified `seo` CLI.
+- CMS does not depend on SEO. `site-config.json` is for `@krantho/tools` only — never import from CMS/studio/API.
+- Studio is a single React SPA (`@krantho/studio`) served at `/studio` by all server packages. Framework-agnostic — one build, all frameworks.
+- Server packages (`server-next`, `server-sveltekit`, `server-node`) adapt framework request/response to the krantho handler. Thin wrappers only.
+- `@krantho/server` is the core — creates adapter, engine, API handlers, serves Studio, runs auto-import.
+- Content model: frontmatter (files) = fields (CMS). ## headings = sections. Collections for list→detail, globals for site-wide data. No page composition/builder.
+- Standard fields: `title`, `description`. Services add `ingress`, `order`. SEO uses `meta-description` (separate from `description`). Publication state is a system field, so `status`, `locale` and the other reserved names are never author fields (`assertAuthorProperty`).
+- Four concerns separated: SiteConfig (code) for identity, globals (CMS) for layout, seo_config (persistence) for shared archetype config, site-config.json (tools) for legacy SEO.
+- OpenAPI spec auto-generated from router at `/api/openapi.json`. Scalar docs at `/api/docs`.
+- Postgres is the production store: content, versions, locks, settings, SEO config and auth all work on it, and migrations are serialized with an advisory lock. Media metadata and folders, and webhook delivery logging and retries, work on both databases.
+- Plugins extend via `createApiHandlers({ plugins: [...] })`. Routes prefixed under `/api/plugins/:name/`, hooks chained.
+- Schema ownership: code-defined Zod schemas are read-only. Runtime fields are additive-only. Code always wins.

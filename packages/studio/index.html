@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>krantho studio</title>
+    <script>
+      // Theme guard: set data-theme before first paint, so the page never flashes the
+      // wrong theme. "system" (also when nothing is stored) follows the OS through the
+      // prefers-color-scheme rules in styles/tokens.css.
+      ;(function () {
+        var t = 'system'
+        try {
+          var s = localStorage.getItem('krantho-studio-theme')
+          if (s === 'light' || s === 'dark') t = s
+        } catch (e) {}
+        document.documentElement.setAttribute('data-theme', t)
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

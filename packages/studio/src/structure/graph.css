@@ -1,0 +1,168 @@
+/* Structure › Graph — the legend, the nodes, the canvas and the list */
+/* Legend */
+.structure-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  list-style: none;
+}
+
+.structure-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.structure-legend-text {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Nodes: a coloured edge for the eye, the kind chip for every reader */
+.structure-node {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--node-kind, var(--color-border-strong));
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.structure-node:hover {
+  background: var(--color-hover);
+}
+
+.structure-node[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+.structure-node[data-kind="site"] {
+  --node-kind: var(--color-accent);
+}
+
+.structure-node[data-kind="collection"] {
+  --node-kind: var(--color-violet);
+}
+
+.structure-node[data-kind="route"] {
+  --node-kind: var(--color-amber);
+}
+
+.structure-node[data-kind="document"] {
+  --node-kind: var(--color-accent-strong);
+}
+
+.structure-node[data-kind="derived"] {
+  --node-kind: var(--color-border-strong);
+  border-style: dashed solid dashed solid;
+}
+
+.structure-node-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.structure-node-type {
+  overflow: hidden;
+  font-size: var(--text-sm);
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.structure-node-id {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.structure-node-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Canvas: 380px high, scrolled when the graph is larger */
+.structure-canvas {
+  height: 380px;
+  overflow: auto;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.structure-canvas-stage {
+  position: relative;
+}
+
+.structure-canvas-edges {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.structure-canvas-edge {
+  fill: none;
+  stroke: var(--color-border-strong);
+  stroke-width: 1.5;
+}
+
+.structure-canvas-arrow {
+  fill: var(--color-border-strong);
+}
+
+.structure-canvas-label {
+  fill: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  paint-order: stroke;
+  stroke: var(--color-bg-subtle);
+  stroke-width: 4px;
+}
+
+.structure-node--canvas {
+  position: absolute;
+  overflow: hidden;
+}
+
+/* List: the graph below 1200px */
+.structure-graph-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.structure-graph-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.structure-node--list {
+  width: 100%;
+}
+
+.structure-graph-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  padding-left: var(--space-4);
+  list-style: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}

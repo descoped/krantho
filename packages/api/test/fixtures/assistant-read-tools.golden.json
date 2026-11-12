@@ -1,0 +1,22 @@
+{
+  "list": {
+    "ok": true,
+    "hasMore": true,
+    "items": "<untrusted-content id=\"ID\" source=\"pages list\">\n[{\"collection\":\"pages\",\"slug\":\"deep\",\"locale\":\"en\",\"version\":1,\"status\":\"draft\",\"title\":\"Deep\"}]\n</untrusted-content id=\"ID\">"
+  },
+  "listAll": {
+    "ok": true,
+    "hasMore": false,
+    "items": "<untrusted-content id=\"ID\" source=\"pages list\">\n[{\"collection\":\"pages\",\"slug\":\"deep\",\"locale\":\"en\",\"version\":1,\"status\":\"draft\",\"title\":\"Deep\"},{\"collection\":\"pages\",\"slug\":\"early\",\"locale\":\"en\",\"version\":1,\"status\":\"published\",\"title\":\"Early\"}]\n</untrusted-content id=\"ID\">"
+  },
+  "search": {
+    "ok": true,
+    "hasMore": false,
+    "items": "<untrusted-content id=\"ID\" source=\"search results\">\n[{\"collection\":\"pages\",\"slug\":\"deep\",\"locale\":\"en\",\"version\":1,\"status\":\"draft\",\"title\":\"Deep\",\"snippet\":\"sum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. The quartz sits deep in the text. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem \"},{\"collection\":\"pages\",\"slug\":\"early\",\"locale\":\"en\",\"version\":1,\"status\":\"published\",\"title\":\"Early\",\"snippet\":\"Quartz appears at the very start. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet\"}]\n</untrusted-content id=\"ID\">"
+  },
+  "searchPaged": {
+    "ok": true,
+    "hasMore": true,
+    "items": "<untrusted-content id=\"ID\" source=\"search results\">\n[{\"collection\":\"pages\",\"slug\":\"deep\",\"locale\":\"en\",\"version\":1,\"status\":\"draft\",\"title\":\"Deep\",\"snippet\":\"sum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. The quartz sits deep in the text. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem \"}]\n</untrusted-content id=\"ID\">"
+  }
+}

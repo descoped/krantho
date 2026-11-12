@@ -1,0 +1,170 @@
+/* "How this page is made" — a quiet disclosure at the end of every page */
+
+.how-made {
+  margin-top: var(--space-8);
+}
+
+.how-made__details {
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  transition: border-color var(--duration-base) var(--ease-out);
+}
+
+.how-made__details[open] {
+  border-style: solid;
+  background: var(--color-surface);
+}
+
+.how-made__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.how-made__summary::-webkit-details-marker {
+  display: none;
+}
+
+.how-made__summary::after {
+  content: '+';
+  margin-left: auto;
+  font-family: var(--font-mono);
+  color: var(--color-text-subtle);
+}
+
+.how-made__details[open] .how-made__summary::after {
+  content: '−';
+}
+
+.how-made__summary:hover {
+  color: var(--color-text);
+}
+
+.how-made__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+}
+
+.how-made__body {
+  display: grid;
+  gap: var(--space-5);
+  padding: 0 var(--space-5) var(--space-5);
+  font-size: var(--text-sm);
+}
+
+.how-made__intro {
+  max-width: 44rem;
+  color: var(--color-text-muted);
+}
+
+.how-made__intro code,
+.how-made__meta code,
+.how-made__source-title code {
+  font-size: 0.85em;
+  padding: 0.05em 0.35em;
+  border-radius: var(--radius-sm);
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+}
+
+.how-made__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+}
+
+.how-made__meta dt {
+  color: var(--color-text-subtle);
+}
+
+.how-made__meta dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.how-made__source {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.how-made__source-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.how-made__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.how-made__field {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-subtle);
+}
+
+.how-made__field dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-accent-ink);
+}
+
+.how-made__field dd {
+  margin: 0;
+  color: var(--color-text);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow-wrap: anywhere;
+}
+
+.how-made__jsonld {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.how-made__jsonld pre {
+  margin: 0;
+  max-height: 24rem;
+  padding: var(--space-4);
+  overflow: auto;
+  border: 1px solid var(--color-code-border);
+  border-radius: var(--radius-md);
+  background: var(--color-code-bg);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.how-made__jsonld pre code {
+  font-size: inherit;
+}

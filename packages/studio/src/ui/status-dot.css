@@ -1,0 +1,28 @@
+/*
+ * Status dot — the §2 status model, told by shape as well as colour: Live is
+ * filled, Unpublished changes half-filled, Not published a hollow ring. Each
+ * colour meets 3:1 against the surfaces it sits on.
+ */
+.ui-status-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-full);
+}
+
+.ui-status-dot--live {
+  border-color: var(--color-live);
+  background: var(--color-live);
+}
+
+.ui-status-dot--ahead {
+  border-color: var(--color-ahead);
+  background: linear-gradient(90deg, var(--color-ahead) 50%, transparent 50%);
+}
+
+.ui-status-dot--draft {
+  border-color: var(--color-draft);
+  background: transparent;
+}

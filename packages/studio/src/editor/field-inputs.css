@@ -1,0 +1,155 @@
+/* The field inputs that are more than one control: checkbox, colour, tags and media */
+.editor-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+.editor-color {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.editor-color-swatch {
+  width: 34px;
+  height: 34px;
+  padding: 2px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+}
+
+/* Tags: each a quiet pill with Remove, then the input that adds one */
+.editor-tags {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.editor-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  list-style: none;
+}
+
+.editor-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 26px;
+  padding: 0 2px 0 var(--space-2);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+}
+
+.editor-tag-remove {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.editor-tag-remove:hover {
+  background: var(--color-hover);
+  color: var(--color-text);
+}
+
+.editor-tag-remove svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* A media field: thumbnail, name, size and alt text, then Change and Clear */
+.editor-media {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.editor-media-thumb {
+  width: 64px;
+  height: 48px;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: var(--color-bg-subtle);
+  border-radius: 4px;
+}
+
+.editor-media-thumb--empty {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-subtle);
+}
+
+.editor-media-thumb--empty svg {
+  width: 18px;
+  height: 18px;
+}
+
+.editor-media-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 160px;
+}
+
+.editor-media-name {
+  overflow-wrap: anywhere;
+  font-weight: 550;
+}
+
+.editor-media-meta {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.editor-media-alt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-live-ink);
+  font-size: var(--text-xs);
+}
+
+.editor-media-alt--missing {
+  color: var(--color-ahead-ink);
+}
+
+.editor-media-alt svg {
+  width: 13px;
+  height: 13px;
+}
+
+.editor-media-actions {
+  display: flex;
+  gap: var(--space-1);
+}
+.editor-timestamp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.editor-timestamp-shown {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}

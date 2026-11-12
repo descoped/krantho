@@ -1,0 +1,135 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "NoOps Configuration: Auto-merge minor/patch updates, PRs for major versions and critical frameworks",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":automergeDigest",
+    ":automergeBranch",
+    ":automergeMinor",
+    ":automergePatch",
+    ":automergePr"
+  ],
+  "schedule": ["before 4am on monday"],
+  "timezone": "Europe/Oslo",
+  "labels": ["dependencies"],
+  "assignees": [],
+  "reviewers": [],
+  "ignorePaths": [".claude/**", "docs/**", "scripts/**"],
+  "ignoreDeps": [],
+  "platformAutomerge": true,
+  "prCreation": "immediate",
+  "rebaseWhen": "behind-base-branch",
+  "branchConcurrentLimit": 10,
+  "prConcurrentLimit": 5,
+  "recreateWhen": "always",
+  "dependencyDashboard": true,
+  "dependencyDashboardAutoclose": true,
+  "dependencyDashboardApproval": false,
+  "packageRules": [
+    {
+      "description": "NoOps: Auto-merge ALL minor, patch, and digest updates by default",
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin"],
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Major updates require manual review via PR",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major-update"]
+    },
+    {
+      "description": "Critical frameworks - require manual review even for minor/patch",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["react", "react-dom", "next", "typescript"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false,
+      "labels": ["dependencies", "framework-critical"],
+      "prPriority": 10
+    },
+    {
+      "description": "Group React ecosystem updates together",
+      "groupName": "React ecosystem",
+      "groupSlug": "react-ecosystem",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["/^react/", "/^@types\\/react/"]
+    },
+    {
+      "description": "Group Next.js ecosystem updates together",
+      "groupName": "Next.js ecosystem",
+      "groupSlug": "nextjs-ecosystem",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["/^next/", "/^@next//", "/^eslint-config-next/"]
+    },
+    {
+      "description": "Group MUI ecosystem updates together",
+      "groupName": "MUI ecosystem",
+      "groupSlug": "mui-ecosystem",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["/^@mui//", "/^@emotion//"]
+    },
+    {
+      "description": "Group testing tooling together",
+      "groupName": "Testing",
+      "groupSlug": "testing",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["/^vitest/", "/^@vitest//"]
+    },
+    {
+      "description": "Security updates auto-merge immediately",
+      "matchCategories": ["security"],
+      "prCreation": "immediate",
+      "minimumReleaseAge": "0 days",
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true,
+      "schedule": ["at any time"],
+      "prPriority": 20,
+      "labels": ["dependencies", "security"]
+    },
+    {
+      "description": "Use bump ranges for devDependencies",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "Keep Node.js on v22 LTS — v24 not yet validated",
+      "matchDatasources": ["node-version"],
+      "allowedVersions": "<24.0.0"
+    },
+    {
+      "description": "Hold pnpm packageManager at v10 — v11 enforces a default minimumReleaseAge policy that rejects freshly-published packages (breaks install/CI whenever a dependency was published within the cutoff, e.g. a same-day vite bump). Adopting v11 needs a deliberate minimumReleaseAge policy decision in pnpm-workspace.yaml plus CI validation; the earlier pnpm.overrides blocker is already resolved (overrides removed).",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["packageManager"],
+      "matchPackageNames": ["pnpm"],
+      "allowedVersions": "<11.0.0"
+    },
+    {
+      "description": "Hold TypeScript at v6 — v7 waits for TypeScript 7.1 and for ESLint support of TypeScript 7 (svelte-check also needs TypeScript 6 beside 7 and --tsgo). Lift this rule by hand once both are out.",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7.0.0"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["dependencies", "security"],
+    "automerge": true,
+    "automergeType": "branch",
+    "schedule": ["at any time"]
+  },
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "prHourlyLimit": 10,
+  "commitMessagePrefix": "fix(deps):",
+  "commitMessageAction": "bump",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "from {{currentVersion}} to {{newVersion}}",
+  "prBodyTemplate": "This PR contains the following updates:\n\n| Package | Type | Update | Change |\n|---------|------|--------|---------|\n{{#each upgrades as |upgrade|}}\n| {{upgrade.depName}} | {{upgrade.depType}} | {{upgrade.updateType}} | `{{upgrade.currentVersion}}` → `{{upgrade.newVersion}}` |\n{{/each}}\n\n---\n\n### Release Notes\n{{#each upgrades as |upgrade|}}\n{{#if upgrade.hasReleaseNotes}}\n<details>\n<summary>{{upgrade.depName}}</summary>\n\n{{upgrade.releaseNotes}}\n</details>\n{{/if}}\n{{/each}}\n\n---\n\n### Configuration\n- 📦 Auto-merge: {{#if automerge}}✅ Enabled{{else}}❌ Disabled (manual review required){{/if}}\n- 🔄 CI Status: Required for merge\n\n---\n\n🤖 This PR has been generated by [Renovate Bot](https://github.com/renovatebot/renovate).",
+  "baseBranchPatterns": ["master"],
+  "automergeStrategy": "merge-commit"
+}

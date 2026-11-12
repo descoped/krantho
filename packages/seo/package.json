@@ -1,0 +1,33 @@
+{
+  "name": "@krantho/seo",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "vocabulary": "node scripts/generate-vocabulary.mjs"
+  },
+  "dependencies": {
+    "@krantho/core": "workspace:*",
+    "@krantho/seo-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@adobe/structured-data-validator": "^1.7.0",
+    "@types/node": "^25.9.9",
+    "@types/react": "^19.2.18",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0"
+  }
+}

@@ -1,0 +1,59 @@
+# Acme Consulting LLC
+
+> Acme Consulting is a strategy and digital transformation firm based in San Francisco. We help mid-market and enterprise organizations navigate change — from market entry and competitive positioning to platform modernization and fractional executive leadership.
+
+Founded in 2010, Acme Consulting brings 15+ years of experience across technology, finance, and healthcare sectors. Our team includes former executives from global consultancies, technology companies and fast-growing startups. We combine rigorous analysis with hands-on execution, embedding with client teams to deliver lasting results — not slide decks.
+
+## Services
+
+- [Services Overview](https://acme-consulting.example.com/services): Acme Consulting offers three core service lines: strategy consulting, digital transformation, and advisory/fractional leadership for mid-market and enterprise organizations.
+- [Strategy Consulting](https://acme-consulting.example.com/services#strategy): Market entry and expansion strategy, competitive analysis, growth planning, OKR design, and M&A commercial due diligence for companies with $5M-$500M revenue.
+- [Digital Transformation](https://acme-consulting.example.com/services#digital-transformation): Legacy platform migration, data platform architecture, cloud optimization, and AI/ML readiness assessment for CTOs and technology leaders.
+- [Advisory & Fractional Leadership](https://acme-consulting.example.com/services#advisory): Fractional CTO/COO engagements, board advisory, investor readiness, post-acquisition integration, and crisis management for boards and executive teams.
+
+## About
+
+- [About Acme Consulting](https://acme-consulting.example.com/about): Founded in 2010 by former consulting and technology leaders. 200+ organizations served across technology, finance, and healthcare. Team of strategists, technologists, and operators.
+- [Our Approach](https://acme-consulting.example.com/about#our-approach): Three principles: start with the problem, work alongside (not above), and measure what matters. Every engagement has clear success criteria defined collaboratively.
+
+## Contact
+
+- [Contact & Booking](https://acme-consulting.example.com/contact): Book a consultation at Acme Consulting, 100 Example Street, San Francisco. Available Monday-Friday 9am-5pm PT. Phone +1 555-0100, email hello@acme-consulting.example.com.
+
+## Contact Details
+
+- Phone: +1 555-0100
+- Email: hello@acme-consulting.example.com
+- Address: Acme Consulting, 100 Example Street, Suite 400, San Francisco, CA 94105
+- Hours: Monday-Friday 09:00-17:00 / Weekends by appointment
+
+## Pricing
+
+We offer flexible engagement models tailored to your needs and budget.
+
+- Strategy Workshop: Half-day: $2,500, Full-day: $4,500
+- Digital Transformation Assessment: 2 weeks: $15,000, 4 weeks: $28,000
+- Fractional Leadership: 1 day/week: $5,000/month, 2 days/week: $9,000/month
+
+Payment: Net 30 invoicing. Major credit cards and wire transfer accepted.
+Insurance: Professional liability insurance up to $2M per engagement.
+Cancellation: 48-hour cancellation policy. Rescheduling available at no charge with 24-hour notice.
+
+## Expertise and Methods
+
+- Corporate Strategy
+- Digital Transformation
+- Go-to-Market Strategy
+- Platform Modernization
+- Data Strategy
+- Fractional Leadership
+- M&A Due Diligence
+- Organizational Change Management
+
+## Credentials
+
+- Title: Managing Partner
+- Education: Example School of Business
+- Licensed management consulting firm, State of California
+- Certified management consultants on staff
+- Vendor-neutral: no reseller or partner agreements

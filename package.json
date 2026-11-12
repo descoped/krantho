@@ -1,0 +1,45 @@
+{
+  "name": "krantho-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-site content framework with agentic SEO \u2014 pnpm workspace monorepo",
+  "type": "module",
+  "license": "MIT",
+  "author": "oranheim",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/descoped/krantho.git"
+  },
+  "scripts": {
+    "release:version": "node scripts/release-version.mjs",
+    "build": "pnpm -r --filter './packages/**' run build",
+    "build:all": "pnpm -r run build",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "pnpm --filter @krantho/e2e run test",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome check .",
+    "clean": "pnpm -r run clean",
+    "seo": "tsx packages/tools/src/seo/cli.ts --root examples/nextjs-shadcn",
+    "seo:generate": "tsx packages/tools/src/seo/index.ts --root examples/nextjs-shadcn",
+    "seo:generate:dry": "tsx packages/tools/src/seo/index.ts --root examples/nextjs-shadcn --dry-run",
+    "seo:enrich:faq": "tsx packages/tools/src/seo/enrich-faq.ts --root examples/nextjs-shadcn",
+    "seo:enrich:services": "tsx packages/tools/src/seo/enrich-services.ts --root examples/nextjs-shadcn",
+    "seo:enrich:llms": "tsx packages/tools/src/seo/enrich-llms.ts --root examples/nextjs-shadcn",
+    "seo:enrich:meta": "tsx packages/tools/src/cms/generate-meta-descriptions.ts --root examples/nextjs-shadcn"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10",
+    "vite": "^8.3.2"
+  },
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "packageManager": "pnpm@10.34.5"
+}

@@ -1,0 +1,79 @@
+# dependencies
+node_modules
+
+# zitadel test environment
+.zitadel/
+.env.zitadel
+
+# build output
+dist
+*.tsbuildinfo
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# IDE
+.idea/
+.vscode/
+
+# krantho database (auto-imported from .md files)
+.krantho/
+
+# media uploads (user-generated content)
+**/public/uploads/
+**/static/uploads/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# non-pnpm lockfiles
+bun.lock
+package-lock.json
+yarn.lock
+
+# backup files
+**/*.bak
+
+# Claude Code worktrees
+.claude/worktrees/
+
+# MCP
+.playwright-mcp/
+
+# superpowers
+.superpowers/
+
+# test screenshots
+*.png
+# the site's own images
+!krantho-site/public/**/*.png
+
+# svelte-kit
+.svelte-kit/
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+next-env.d.ts
+
+# Claude Code auto-memory must never be committed
+.claude/projects/
+
+# Content dates and manifest written from git at build (generateContentDates, generateManifest)
+krantho-site/content/dates.json
+krantho-site/content/manifest.json

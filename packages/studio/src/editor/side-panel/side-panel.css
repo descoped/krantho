@@ -1,0 +1,348 @@
+/* The side panel: calm cards with hairline borders beside the canvas; no shadows in flow */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.side-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 32px;
+}
+
+.side-panel-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 650;
+  line-height: var(--leading-snug);
+}
+
+.side-panel-title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.side-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.side-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.side-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.side-card-title {
+  font-size: var(--text-sm);
+  font-weight: 650;
+  line-height: var(--leading-snug);
+}
+
+.side-note {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-dense);
+}
+
+.side-subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+/* Facts: label beside value */
+.side-facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.side-fact {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.side-fact dt {
+  color: var(--color-text-muted);
+}
+
+.side-fact dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text);
+}
+
+.side-panel code {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+/* A length against the configured limits: figure, meter, state in words */
+.side-length {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+}
+
+.side-length-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.side-length-label {
+  font-weight: 600;
+}
+
+.side-length-figure {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.side-length-state {
+  font-weight: 550;
+}
+
+.side-length--within .side-length-state {
+  color: var(--color-live-ink);
+}
+
+.side-length--under .side-length-state {
+  color: var(--color-ahead-ink);
+}
+
+.side-length--over .side-length-state {
+  color: var(--color-danger-strong);
+}
+
+.side-length--missing .side-length-state,
+.side-length-note {
+  color: var(--color-text-muted);
+}
+
+/* Advice, each with an Edit that focuses the field */
+.side-advice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-ahead-soft);
+  border-radius: var(--radius-sm);
+  color: var(--color-ahead-ink);
+  font-size: var(--text-xs);
+  line-height: var(--leading-dense);
+  list-style: none;
+}
+
+.side-advice li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.side-link {
+  flex-shrink: 0;
+  min-height: 24px;
+  padding: 0 var(--space-1);
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* The body's sections: designed present or missing (dashed), then prose */
+.side-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+}
+
+.side-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 32px;
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-xs);
+  text-align: left;
+  cursor: pointer;
+}
+
+.side-row:hover {
+  background: var(--color-hover);
+}
+
+.side-row--missing {
+  border-style: dashed;
+  border-color: var(--color-border-input);
+  color: var(--color-text-muted);
+}
+
+.side-row:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.side-row-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 550;
+}
+
+.side-row-state {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.side-row-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.side-row-icon--present {
+  color: var(--color-live);
+}
+
+/* Reach: each locale with its status */
+.side-locales {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+  font-size: var(--text-xs);
+}
+
+.side-locale {
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 32px;
+}
+
+.side-locale a,
+.side-locale-name {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.side-locale a {
+  color: var(--color-accent-ink);
+}
+
+.side-locale a[aria-current="true"] {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.side-locale-state {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.side-locale-state--quiet {
+  color: var(--color-text-muted);
+}
+
+.side-refreshes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+}
+
+.side-refreshes .editor-impact {
+  margin-top: 0;
+}
+
+/* Editable bits: a section's meta description, a media file's alt text */
+.side-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.side-field-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.side-field-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.side-field-optional {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.side-field :disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.side-media {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.side-media-name {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+
+.side-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

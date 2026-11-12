@@ -1,0 +1,54 @@
+/* One SEO finding: in Data mode's groups and in the publish confirmation */
+.editor-finding {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  line-height: var(--leading-dense);
+}
+
+.editor-finding-icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+
+.editor-finding--error .editor-finding-icon {
+  color: var(--color-danger-strong);
+}
+
+.editor-finding--warning .editor-finding-icon {
+  color: var(--color-ahead-ink);
+}
+
+.editor-finding--info .editor-finding-icon {
+  color: var(--color-text-subtle);
+}
+
+.editor-finding-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.editor-finding-text code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+.editor-finding-reader {
+  font-weight: 600;
+}
+
+.editor-finding-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: var(--space-1);
+  color: var(--color-accent-ink);
+}
+
+.editor-finding-source svg {
+  width: 10px;
+  height: 10px;
+}

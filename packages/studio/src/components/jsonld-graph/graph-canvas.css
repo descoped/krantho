@@ -1,0 +1,149 @@
+/* Graph browser — the canvas view: xyflow's panels in Studio's tokens, and the entity nodes */
+/* --- Canvas View --- */
+.graph-canvas-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 500px;
+}
+
+.graph-canvas-reset-btn {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.graph-canvas-flow {
+  height: calc(100vh - 380px);
+  min-height: 400px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.graph-canvas-flow .react-flow__controls {
+  bottom: 12px;
+  left: 12px;
+  margin: 0;
+}
+
+.graph-canvas-flow .react-flow__minimap {
+  bottom: 12px;
+  right: 12px;
+  margin: 0;
+}
+
+/* xyflow panels follow the theme tokens */
+.graph-canvas-flow .react-flow__controls {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.graph-canvas-flow .react-flow__controls button {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+  fill: var(--color-text);
+}
+
+.graph-canvas-flow .react-flow__controls button:hover {
+  background: var(--color-bg-subtle);
+}
+
+.graph-canvas-flow .react-flow__controls button svg {
+  fill: var(--color-text);
+}
+
+.graph-canvas-flow .react-flow__minimap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.graph-canvas-flow .react-flow__minimap-mask {
+  fill: color-mix(in srgb, var(--color-bg-subtle) 60%, transparent);
+}
+
+.graph-canvas-flow .react-flow__minimap-node {
+  fill: var(--color-text-subtle);
+  stroke: none;
+}
+
+/* Canvas entity node */
+.canvas-entity-node {
+  padding: 10px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  min-width: 180px;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.canvas-entity-node--selected {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.canvas-entity-node--business {
+  border-left: 4px solid var(--color-graph-business);
+}
+
+.canvas-entity-node--content {
+  border-left: 4px solid var(--color-graph-content);
+}
+
+.canvas-entity-node--commerce {
+  border-left: 4px solid var(--color-graph-commerce);
+}
+
+.canvas-entity-node--people {
+  border-left: 4px solid var(--color-graph-people);
+}
+
+.canvas-entity-node--navigation {
+  border-left: 4px solid var(--color-graph-navigation);
+}
+
+.canvas-entity-node--reviews {
+  border-left: 4px solid var(--color-graph-reviews);
+}
+
+.canvas-entity-node-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.canvas-entity-node-type {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.canvas-entity-node-id {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.canvas-entity-node-meter {
+  font-size: 11px;
+  color: var(--color-danger);
+  margin-top: 4px;
+}
+
+.canvas-entity-node-meter--complete {
+  color: var(--color-live-ink);
+}
+
+.canvas-handle {
+  width: 8px;
+  height: 8px;
+  background: var(--color-border);
+  border: 1px solid var(--color-surface);
+}

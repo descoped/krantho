@@ -1,0 +1,29 @@
+{
+  "name": "@krantho/tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@krantho/ai": "workspace:*",
+    "@krantho/config": "workspace:*",
+    "@krantho/core": "workspace:*",
+    "@krantho/persistence": "workspace:*",
+    "@krantho/persistence-sqlite": "workspace:*",
+    "@krantho/schema": "workspace:*",
+    "@krantho/seo": "workspace:*",
+    "@krantho/seo-shared": "workspace:*",
+    "gray-matter": "^4.0.3",
+    "p-limit": "^7.3.0",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.9.9",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,28 @@
+packages:
+  - 'packages/*'
+  - 'examples/*'
+  - 'krantho-site'
+
+# Approve build scripts for trusted native modules so pnpm runs their install
+# step. better-sqlite3's install script is `prebuild-install || node-gyp rebuild`,
+# so approving it lets pnpm fetch the matching prebuilt binary (all platforms/ABIs
+# published upstream) in ~2s instead of compiling SQLite from source (~90s).
+# cpu-features is deliberately NOT approved — it is an optional ssh2 accelerator
+# that falls back to pure JS when absent.
+onlyBuiltDependencies:
+  - better-sqlite3
+
+# Patched releases of transitive dependencies that their parents' ranges still allow
+# unpatched versions of. Each line stays within the major its parents use.
+overrides:
+  '@sveltejs/kit': ^2.70.2
+  baseline-browser-mapping: ^2.11.0
+  body-parser: ^2.3.0
+  cookie@^0.6.0: ^0.7.0
+  devalue: ^5.9.3
+  js-yaml@^3: ^3.15.2
+  js-yaml@^4: ^4.3.2
+  nanoid@^3: ^3.3.20
+  proxy-addr: ^2.0.8
+  qs: ^6.16.0
+  source-map-js: ^1.2.2

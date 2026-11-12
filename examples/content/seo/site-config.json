@@ -1,0 +1,45 @@
+{
+  "domain": "localhost",
+  "siteName": "Krantho Example",
+  "language": "en",
+  "siteDescription": "a strategy and digital transformation consultancy",
+  "serviceIds": ["strategy", "digital-transformation", "advisory"],
+  "servicesSlug": "services",
+  "routeToSlug": {
+    "/": "home",
+    "/services": "services",
+    "/about": "about",
+    "/fees": "fees",
+    "/contact": "contact"
+  },
+  "routeToSection": {},
+  "pageCompositions": {},
+  "slugCompositions": {},
+  "appRoutes": [
+    "/",
+    "/services",
+    "/services/strategy",
+    "/services/digital-transformation",
+    "/services/advisory",
+    "/about",
+    "/contact",
+    "/fees"
+  ],
+  "serviceFeeMapping": {
+    "strategy": 1,
+    "digital-transformation": 2,
+    "advisory": 3
+  },
+  "priceCurrency": "USD",
+  "addressCountry": "US",
+  "dayNameMapping": {
+    "Monday": "Monday",
+    "Tuesday": "Tuesday",
+    "Wednesday": "Wednesday",
+    "Thursday": "Thursday",
+    "Friday": "Friday",
+    "Saturday": "Saturday",
+    "Sunday": "Sunday"
+  },
+  "enrichSkipRoutes": []
+}

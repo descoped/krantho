@@ -1,0 +1,221 @@
+/*
+ * Data table — dense and calm: hairline row separators, a sticky header under
+ * the top bar, figures in tabular mono. No overflow clipping on the table or
+ * its frame, so the header can stick to the page as it scrolls.
+ */
+.ui-data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+}
+
+/* Column headers stick under the top bar; their height is a token, so the page's scroll padding can clear both */
+.ui-data-table thead th {
+  position: sticky;
+  top: var(--topbar-height);
+  z-index: 2;
+  height: var(--table-header-height);
+  padding: 0 var(--space-3);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Body cells — the primary column is the row's header (`th scope="row"`), set as a data cell */
+.ui-data-table tbody th,
+.ui-data-table tbody td {
+  height: 48px;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: inherit;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ui-data-table tbody tr:last-child > * {
+  border-bottom: none;
+}
+
+.ui-data-table tr > :first-child {
+  padding-left: var(--space-4);
+}
+
+.ui-data-table tr > :last-child {
+  padding-right: var(--space-4);
+}
+
+.ui-data-table tbody tr {
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.ui-data-table tbody tr:hover,
+.ui-data-table tbody tr[data-selected] {
+  background: var(--color-hover);
+}
+
+.ui-data-table-row--link {
+  cursor: pointer;
+}
+
+.ui-data-table tbody .ui-data-table-numeric {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ui-data-table thead .ui-data-table-numeric {
+  text-align: right;
+}
+
+/* The selection column: a 16px native checkbox in a 40px column */
+.ui-data-table .ui-data-table-select {
+  width: 40px;
+  padding-right: 0;
+}
+
+.ui-data-table-check {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.ui-data-table-check:disabled {
+  cursor: not-allowed;
+}
+
+/* Below 640px: a stacked card per row, each cell labelled with its column */
+@media (max-width: 639.98px) {
+  .ui-data-table,
+  .ui-data-table tbody,
+  .ui-data-table tbody th,
+  .ui-data-table tbody td {
+    display: block;
+  }
+
+  .ui-data-table thead tr {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* The column headers are read from each cell's label; only Select all stays */
+  .ui-data-table thead th:not(.ui-data-table-select) {
+    display: none;
+  }
+
+  .ui-data-table thead th.ui-data-table-select {
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: auto;
+    height: auto;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
+  .ui-data-table thead th.ui-data-table-select::after {
+    content: "Select all";
+  }
+
+  .ui-data-table tbody tr {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ui-data-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .ui-data-table tbody td,
+  .ui-data-table tbody tr > :first-child,
+  .ui-data-table tbody tr > :last-child {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--space-3);
+    height: auto;
+    padding: 0;
+    border: none;
+    text-align: left;
+  }
+
+  .ui-data-table tbody td::before {
+    content: attr(data-label);
+    color: var(--color-text-muted);
+    font-family: var(--font-text);
+    font-size: var(--text-xs);
+    font-weight: 600;
+  }
+
+  /* The row's header leads the card, with room for the checkbox at its top right */
+  .ui-data-table tbody th.ui-data-table-primary {
+    display: block;
+    height: auto;
+    padding: 0 var(--space-6) 0 0;
+    border: none;
+  }
+
+  .ui-data-table tbody td.ui-data-table-select::before {
+    content: none;
+  }
+
+  .ui-data-table tbody td.ui-data-table-select {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-4);
+    display: block;
+    width: auto;
+  }
+}
+
+/* Loading placeholders, sized as the rows they stand for */
+.ui-data-table-skeleton-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.ui-data-table-skeleton-row:first-child {
+  border-top: none;
+}
+
+.ui-data-table-skeleton-bar {
+  display: block;
+  width: 60%;
+  height: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-subtle);
+  animation: ui-data-table-pulse 1.6s var(--ease-in-out) infinite;
+}
+
+.ui-data-table-skeleton-bar--short {
+  width: 30%;
+}
+
+@keyframes ui-data-table-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}

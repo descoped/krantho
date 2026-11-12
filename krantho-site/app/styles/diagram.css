@@ -1,0 +1,90 @@
+/*
+ * A diagram from a page body's {{diagram:name}} (lib/diagrams.ts): inline SVG
+ * drawn with the theme's tokens, framed like a code block.
+ */
+
+.diagram {
+  margin: 0;
+  padding: clamp(var(--space-2), 3vw, var(--space-5));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.prose .diagram {
+  margin-block: var(--space-6);
+}
+
+.diagram__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.diagram__svg text {
+  font-family: var(--font-text);
+  font-size: 13px;
+}
+
+.diagram__flow {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.diagram__flow--quiet {
+  stroke: var(--color-border-strong);
+}
+
+.diagram__arrowhead {
+  fill: var(--color-accent);
+}
+
+.diagram__node {
+  fill: var(--color-bg-subtle);
+  stroke: var(--color-border-strong);
+}
+
+.diagram__node--accent {
+  fill: var(--color-accent-soft);
+  stroke: var(--color-accent);
+}
+
+.diagram__pill {
+  fill: var(--color-surface-raised);
+  stroke: var(--color-border-strong);
+}
+
+.diagram__label {
+  fill: var(--color-surface);
+  stroke: var(--color-accent);
+}
+
+.diagram__svg .diagram__title {
+  fill: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.diagram__svg .diagram__title--small {
+  font-size: 14px;
+}
+
+.diagram__svg .diagram__code,
+.diagram__svg .diagram__label-text {
+  fill: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.diagram__svg .diagram__label-text {
+  fill: var(--color-accent-ink);
+  font-weight: 600;
+}
+
+.diagram__svg .diagram__note {
+  fill: var(--color-text-muted);
+  font-size: 12px;
+}

@@ -1,0 +1,39 @@
+/* Empty state — centred, quiet, on the page's surface; no border of its own */
+.ui-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+}
+
+.ui-empty-state-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--color-live-soft);
+  color: var(--color-live-ink);
+}
+
+.ui-empty-state-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ui-empty-state-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.ui-empty-state-body {
+  max-width: 44ch;
+  color: var(--color-text-muted);
+}
+
+.ui-empty-state-action {
+  margin-top: var(--space-2);
+}

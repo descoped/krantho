@@ -1,0 +1,331 @@
+/* Graph browser — the import modal and the diff it shows before applying */
+/* ============================================================
+   Import Modal + Diff Panel
+   ============================================================ */
+.import-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.import-modal-scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.import-modal {
+  position: relative;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 720px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.import-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.import-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.import-modal-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-subtle);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.import-modal-close:hover {
+  background: var(--color-hover);
+}
+
+.import-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.import-modal-hint {
+  font-size: 13px;
+  color: var(--color-text-subtle);
+  margin-bottom: 12px;
+}
+
+.import-modal-textarea {
+  width: 100%;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  resize: vertical;
+}
+
+.import-modal-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.import-modal-error {
+  padding: 16px;
+  background: var(--color-danger-soft);
+  border: 1px solid var(--color-danger);
+  border-radius: 8px;
+  color: var(--color-danger);
+  font-size: 14px;
+}
+
+.import-modal-error p {
+  margin: 0 0 12px;
+}
+
+.import-modal-summary {
+  font-size: 13px;
+  color: var(--color-text-subtle);
+  padding: 8px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.import-modal-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  background: var(--color-ahead-soft);
+  border: 1px solid var(--color-ahead);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.import-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.import-modal-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+}
+
+.import-modal-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.import-modal-btn--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  border-color: var(--color-accent);
+}
+
+.import-modal-btn--primary:hover:not(:disabled) {
+  background: var(--color-accent);
+  filter: brightness(1.1);
+}
+
+.import-modal-btn--secondary {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.import-modal-btn--secondary:hover:not(:disabled) {
+  background: var(--color-hover);
+}
+
+/* --- Diff Panel --- */
+.import-diff-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.import-diff-empty {
+  color: var(--color-text-subtle);
+  font-size: 13px;
+  padding: 16px;
+  text-align: center;
+}
+
+.import-diff-entity {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.import-diff-entity--disabled {
+  opacity: 0.6;
+}
+
+.import-diff-entity-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+}
+
+.import-diff-entity-type {
+  font-weight: 600;
+}
+
+.import-diff-entity-role {
+  color: var(--color-text-subtle);
+}
+
+.import-diff-entity-badge--disabled {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.import-diff-entity-count {
+  margin-left: auto;
+  color: var(--color-text-subtle);
+  font-size: 12px;
+}
+
+.import-diff-disabled-reason {
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+  background: var(--color-surface);
+}
+
+.import-diff-changes {
+  display: flex;
+  flex-direction: column;
+}
+
+.import-diff-change {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.import-diff-change:last-child {
+  border-bottom: none;
+}
+
+.import-diff-change:hover {
+  background: var(--color-hover);
+}
+
+.import-diff-checkbox {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.import-diff-change-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.import-diff-change-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.import-diff-property {
+  font-weight: 500;
+}
+
+.import-diff-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--color-ahead-ink);
+}
+
+.import-diff-icon--added {
+  color: var(--color-live-ink);
+}
+
+.import-diff-icon--changed {
+  color: var(--color-accent);
+}
+
+.import-diff-icon--removed {
+  color: var(--color-danger);
+}
+
+.import-diff-change-values {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+}
+
+.import-diff-old-value {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.import-diff-arrow {
+  color: var(--color-text-subtle);
+  flex-shrink: 0;
+}
+
+.import-diff-new-value {
+  color: var(--color-live-ink);
+}
+
+.import-diff-removed-value {
+  text-decoration: line-through;
+  color: var(--color-danger);
+}

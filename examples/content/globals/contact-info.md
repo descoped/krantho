@@ -1,0 +1,16 @@
+---
+phone-title: 'Phone'
+phone-number: '+1 555-0100'
+phone-subtitle: 'Mon-Fri, 9am-5pm PT'
+email-title: 'Email'
+email-address: 'hello@acme-consulting.example.com'
+email-subtitle: 'We respond within 24 hours'
+location-title: 'Office'
+location-address: '100 Example Street, Suite 400, San Francisco, CA 94105'
+location-subtitle: 'Financial District'
+hours-title: 'Business Hours'
+hours-line1: 'Monday - Friday: 9:00 AM - 5:00 PM'
+hours-line2: 'Weekends: By appointment'
+booking-url: 'https://acme-consulting.example.com/book'
+booking-button-text: 'Book a Consultation'
+---

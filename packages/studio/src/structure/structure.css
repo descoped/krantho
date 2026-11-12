@@ -1,0 +1,293 @@
+/*
+ * Structure — how search engines and assistants read the site: a header, the
+ * intro band's figures, the tabs, then calm cards on hairlines. Ids, values
+ * and figures in the code face; where a node comes from is a chip with an
+ * icon and a word, never colour alone.
+ */
+.structure,
+.structure-panel,
+.structure-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.structure-panel {
+  gap: var(--space-4);
+}
+
+/* Header */
+.structure-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.structure-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: 72ch;
+}
+
+.structure-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 650;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.015em;
+}
+
+.structure-lead,
+.structure-tab-lead,
+.structure-modal-lead {
+  max-width: 72ch;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+
+.structure-modal-lead {
+  margin-bottom: var(--space-3);
+}
+
+.structure-actions,
+.structure-row,
+.structure-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.structure-row {
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* Intro band */
+.structure-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.structure-intro-title {
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.structure-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.structure-figure dt {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.structure-figure dd {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.structure-figure-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.structure-figure-detail {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Cards */
+.structure-card,
+.structure-cascade {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  scroll-margin-top: calc(var(--topbar-height) + var(--space-4));
+}
+
+.structure-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+}
+
+.structure-card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 650;
+  line-height: var(--leading-snug);
+}
+
+.structure-card-sub {
+  color: var(--color-text-muted);
+  font-family: var(--font-text);
+  font-weight: 500;
+}
+
+.structure-note,
+.structure-muted {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-dense);
+}
+
+.structure-note--error {
+  color: var(--color-danger-strong);
+}
+
+.structure-label {
+  font-size: var(--text-xs);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.structure-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-accent-ink);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.structure-link svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Form controls */
+.structure-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 480px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.structure-select,
+.structure-textarea {
+  min-height: 36px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 400;
+}
+
+.structure-textarea {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-dense);
+  resize: vertical;
+}
+
+.structure-textarea[readonly] {
+  background: var(--color-bg-subtle);
+}
+
+.structure-text {
+  max-height: 360px;
+  overflow: auto;
+  padding: var(--space-3);
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-dense);
+}
+
+.structure-text pre {
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.structure-disclosure summary {
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.structure-disclosure[open] summary {
+  margin-bottom: var(--space-2);
+}
+
+/* Missing requirements: an icon and words, with Fix */
+.structure-missing-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.structure-missing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-danger-soft);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+.structure-missing-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--color-danger-strong);
+}
+
+.structure-missing-text {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+/* Rich results */
+.structure-rich-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-4);
+}
+
+.structure-rich-count {
+  font-size: var(--text-sm);
+}

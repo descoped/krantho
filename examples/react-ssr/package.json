@@ -1,0 +1,36 @@
+{
+  "name": "@krantho/example-react-ssr",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=../../.env --import tsx server.ts",
+    "build": "vite build --outDir dist/client && vite build --outDir dist/server --ssr src/entry-server.tsx",
+    "preview": "cross-env NODE_ENV=production tsx server.ts",
+    "verify:cache": "node scripts/verify-cache.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@krantho/config": "workspace:*",
+    "@krantho/core": "workspace:*",
+    "@krantho/media-local": "workspace:*",
+    "@krantho/schema": "workspace:*",
+    "@krantho/server-node": "workspace:*",
+    "@krantho/ui-react": "workspace:*",
+    "express": "^5.1.0",
+    "react": "^19.2.9",
+    "react-dom": "^19.2.9",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.9",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.0.5",
+    "cross-env": "^10.1.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.2"
+  }
+}

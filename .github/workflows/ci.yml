@@ -1,0 +1,123 @@
+name: CI (Build & Test)
+
+# A change runs CI unless every file it touches is inert: documentation, the harness,
+# and the examples (the E2E workflow builds and drives every example). Patterns apply in
+# order, so what follows the exclusions takes files back in: everything under packages/
+# (test fixtures are markdown), and the configuration reference, which a test requires to
+# equal the one generated from the configuration tree.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - '**'
+      - '!**.md'
+      - '!.claude/**'
+      - '!docs/**'
+      - '!examples/**'
+      - '!LICENSE'
+      - '!.gitignore'
+      - 'packages/**'
+      - 'docs/configuration.md'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '**'
+      - '!**.md'
+      - '!.claude/**'
+      - '!docs/**'
+      - '!examples/**'
+      - '!LICENSE'
+      - '!.gitignore'
+      - 'packages/**'
+      - 'docs/configuration.md'
+
+# A newer push to a pull request replaces its running checks; every commit on master
+# is checked in full.
+concurrency:
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run format:check
+      - run: pnpm run lint
+      - name: Harness script tests
+        run: sh scripts/claude/finish-worktree-removal.test.sh
+
+  # Build and typecheck run beside the tests: the typecheck needs the packages' built
+  # declarations, the tests the packages' built dist, so each job builds them itself (the
+  # build is short) and none waits for another.
+  build-typecheck:
+    name: Build & Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      # native modules (better-sqlite3) are built during install via the
+      # onlyBuiltDependencies allowlist in pnpm-workspace.yaml — prebuild-install
+      # fetches the prebuilt binary, no source compile needed.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run typecheck
+
+  # The suite is spread over shards (a job's setup, the build, is about a minute, so
+  # there is little to gain from many more): Studio's component tests are most of its time, and
+  # a runner has few cores, so the files of a run split across jobs instead of queueing.
+  # Docker runs the postgres tests' containers.
+  test:
+    name: Test (${{ matrix.shard }}/${{ strategy.job-total }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm exec vitest run --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+
+  # A screen asks the API for its data and draws it when the answers arrive. A test that
+  # passes only when the answers come fast is a flaky test; here every answer of Studio
+  # tests' fake API takes 100 ms, so such a test fails on every run instead of now and then.
+  studio-slow-api:
+    name: Studio tests (slow API)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm exec vitest run packages/studio
+        env:
+          KRANTHO_TEST_API_DELAY_MS: '100'

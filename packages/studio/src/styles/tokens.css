@@ -1,0 +1,251 @@
+/*
+ * krantho Studio design tokens — the only place a colour is defined.
+ *
+ * The type, space, radius, motion and colour tokens copy krantho.com's names and values
+ * (krantho-site/app/styles/tokens.css): snow and birch surfaces by day, fjord night by
+ * dark, aurora teal as the accent and violet as its companion. Studio adds its own tokens
+ * below them, defined from the site's: status, danger, interaction, graph categories and
+ * the application layout. Every text/background pair defined here meets WCAG 2.2 AA in
+ * both themes.
+ *
+ * Theme: `data-theme` on <html> is set before first paint by the inline guard in
+ * index.html — "light", "dark", or "system" to follow the OS.
+ */
+
+:root {
+  /* Type — the fonts are bundled with Studio (see main.tsx), no third-party request */
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-text:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);
+  --text-3xl: clamp(2.125rem, 1.6rem + 2.2vw, 3rem);
+  --text-4xl: clamp(2.5rem, 1.7rem + 3.6vw, 4.25rem);
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-body: 1.65;
+
+  /* Space (4px grid) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* Shape */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 420ms;
+
+  /* Studio: a dense application reads at a tighter line height than the site's prose */
+  --leading-dense: 1.5;
+
+  /* Studio: layout */
+  --nav-width: 236px;
+  --nav-width-collapsed: 66px;
+  --topbar-height: 56px;
+  --table-header-height: 36px;
+  /* What sticks to the top of the page as it scrolls: the top bar and a table's header row */
+  --sticky-offset: calc(var(--topbar-height) + var(--table-header-height));
+  --panel-width: 380px;
+
+  /* Light theme (default) */
+  color-scheme: light;
+  --color-bg: #fafaf7;
+  --color-bg-subtle: #f3f2ed;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-border: #e3e1d9;
+  --color-border-strong: #cfccc1;
+  /* An input's boundary: 3:1 or more against the surfaces and backgrounds it sits on (WCAG 1.4.11) */
+  --color-border-input: #8a8578;
+  --color-text: #0e1726;
+  --color-text-muted: #4a5466;
+  --color-text-subtle: #5e677b;
+  --color-accent: #0f766e;
+  --color-accent-strong: #0b5c56;
+  --color-accent-soft: #e0f2ef;
+  --color-accent-contrast: #ffffff;
+  --color-accent-ink: #0b5c56;
+  --color-violet: #6d28d9;
+  --color-violet-soft: #ede7fb;
+  --color-amber: #b45309;
+  --color-amber-soft: #fdf1e1;
+  --color-rose: #be123c;
+  --color-rose-soft: #fde8ec;
+  --color-code-bg: #f6f5f0;
+  --color-code-border: #e7e4da;
+  --color-selection: #b8e6df;
+  --color-focus: #0f766e;
+  --shadow-sm: 0 1px 2px rgba(14, 23, 38, 0.06);
+  --shadow-md: 0 4px 16px -4px rgba(14, 23, 38, 0.1), 0 1px 3px rgba(14, 23, 38, 0.06);
+  --shadow-lg: 0 24px 48px -16px rgba(14, 23, 38, 0.18), 0 2px 6px rgba(14, 23, 38, 0.06);
+
+  /* Studio: status (§2 status model) and danger, defined from the site palette */
+  --color-live: var(--color-accent);
+  --color-live-soft: var(--color-accent-soft);
+  --color-live-ink: var(--color-accent-ink);
+  --color-ahead: var(--color-amber);
+  --color-ahead-soft: var(--color-amber-soft);
+  --color-ahead-ink: #92400e;
+  --color-draft: var(--color-text-subtle);
+  --color-danger: var(--color-rose);
+  --color-danger-soft: var(--color-rose-soft);
+  --color-danger-strong: #9f1239;
+  --color-danger-contrast: #ffffff;
+
+  /* Studio: interaction */
+  --color-hover: rgba(14, 23, 38, 0.04);
+  --color-overlay: rgba(14, 23, 38, 0.5);
+  --shadow-focus: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-focus);
+
+  /* Studio: JSON-LD graph category accents, each with its tinted background */
+  --color-graph-business: #1d4ed8;
+  --color-graph-business-soft: #e8edfb;
+  --color-graph-content: #6d28d9;
+  --color-graph-content-soft: #f0eafb;
+  --color-graph-commerce: #065f46;
+  --color-graph-commerce-soft: #e6efed;
+  --color-graph-people: #155e75;
+  --color-graph-people-soft: #e8eff1;
+  --color-graph-navigation: #92400e;
+  --color-graph-navigation-soft: #f4ece7;
+  --color-graph-reviews: #be185d;
+  --color-graph-reviews-soft: #f9e8ef;
+}
+
+/* Dark theme — chosen explicitly */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0a1120;
+  --color-bg-subtle: #0e1729;
+  --color-surface: #111b30;
+  --color-surface-raised: #16223b;
+  --color-border: #1f2c46;
+  --color-border-strong: #2b3a58;
+  --color-border-input: #5d7091;
+  --color-text: #e8edf5;
+  --color-text-muted: #a3afc2;
+  --color-text-subtle: #8f99ac;
+  --color-accent: #2dd4bf;
+  --color-accent-strong: #5eead4;
+  --color-accent-soft: #0f2f33;
+  --color-accent-contrast: #062a26;
+  --color-accent-ink: #2dd4bf;
+  --color-violet: #a78bfa;
+  --color-violet-soft: #221a3d;
+  --color-amber: #fbbf24;
+  --color-amber-soft: #2e2410;
+  --color-rose: #fb7185;
+  --color-rose-soft: #331520;
+  --color-code-bg: #0d1628;
+  --color-code-border: #1c2942;
+  --color-selection: #134e4a;
+  --color-focus: #5eead4;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px -4px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  --color-ahead-ink: var(--color-amber);
+  --color-danger-strong: #fda4af;
+  --color-danger-contrast: var(--color-bg);
+  --color-hover: rgba(232, 237, 245, 0.06);
+  --color-overlay: rgba(0, 0, 0, 0.65);
+
+  --color-graph-business: #60a5fa;
+  --color-graph-business-soft: #1d304e;
+  --color-graph-content: #a78bfa;
+  --color-graph-content-soft: #282c4e;
+  --color-graph-commerce: #34d399;
+  --color-graph-commerce-soft: #163740;
+  --color-graph-people: #22d3ee;
+  --color-graph-people-soft: #14374d;
+  --color-graph-navigation: #fbbf24;
+  --color-graph-navigation-soft: #34342e;
+  --color-graph-reviews: #f472b6;
+  --color-graph-reviews-soft: #332844;
+}
+
+/* Dark theme — following the OS when the choice is "system" */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: dark;
+    --color-bg: #0a1120;
+    --color-bg-subtle: #0e1729;
+    --color-surface: #111b30;
+    --color-surface-raised: #16223b;
+    --color-border: #1f2c46;
+    --color-border-strong: #2b3a58;
+    --color-border-input: #5d7091;
+    --color-text: #e8edf5;
+    --color-text-muted: #a3afc2;
+    --color-text-subtle: #8f99ac;
+    --color-accent: #2dd4bf;
+    --color-accent-strong: #5eead4;
+    --color-accent-soft: #0f2f33;
+    --color-accent-contrast: #062a26;
+    --color-accent-ink: #2dd4bf;
+    --color-violet: #a78bfa;
+    --color-violet-soft: #221a3d;
+    --color-amber: #fbbf24;
+    --color-amber-soft: #2e2410;
+    --color-rose: #fb7185;
+    --color-rose-soft: #331520;
+    --color-code-bg: #0d1628;
+    --color-code-border: #1c2942;
+    --color-selection: #134e4a;
+    --color-focus: #5eead4;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 16px -4px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+
+    --color-ahead-ink: var(--color-amber);
+    --color-danger-strong: #fda4af;
+    --color-danger-contrast: var(--color-bg);
+    --color-hover: rgba(232, 237, 245, 0.06);
+    --color-overlay: rgba(0, 0, 0, 0.65);
+
+    --color-graph-business: #60a5fa;
+    --color-graph-business-soft: #1d304e;
+    --color-graph-content: #a78bfa;
+    --color-graph-content-soft: #282c4e;
+    --color-graph-commerce: #34d399;
+    --color-graph-commerce-soft: #163740;
+    --color-graph-people: #22d3ee;
+    --color-graph-people-soft: #14374d;
+    --color-graph-navigation: #fbbf24;
+    --color-graph-navigation-soft: #34342e;
+    --color-graph-reviews: #f472b6;
+    --color-graph-reviews-soft: #332844;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}

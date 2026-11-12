@@ -1,0 +1,14 @@
+{
+  "name": "krantho",
+  "owner": {
+    "name": "Descoped"
+  },
+  "description": "Agent skills for building content sites with krantho, the CMS library for Next.js, SvelteKit and Express/Vite.",
+  "plugins": [
+    {
+      "name": "krantho",
+      "source": "./plugins/krantho",
+      "description": "Skills that help a coding agent add krantho to a project, design content and page templates, write content, and set up structured SEO."
+    }
+  ]
+}

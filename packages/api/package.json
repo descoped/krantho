@@ -1,0 +1,43 @@
+{
+  "name": "@krantho/api",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@krantho/ai": "workspace:*",
+    "@krantho/config": "workspace:*",
+    "@krantho/core": "workspace:*",
+    "@krantho/persistence": "workspace:*",
+    "@krantho/schema": "workspace:*",
+    "@krantho/seo-shared": "workspace:*",
+    "sharp": "^0.35.5"
+  },
+  "peerDependencies": {
+    "@krantho/seo": "workspace:*",
+    "zod": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@krantho/seo": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@krantho/persistence-sqlite": "workspace:*",
+    "@types/node": "^25.9.9",
+    "typescript": "^6.0.3",
+    "zod": "^4.4.3"
+  }
+}

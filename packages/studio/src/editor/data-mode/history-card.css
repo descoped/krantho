@@ -1,0 +1,112 @@
+/* History: the versions of the locale version, and the diff of two */
+/* History */
+.data-versions {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.data-version {
+  display: grid;
+  grid-template-columns: 3.5em minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+}
+
+.data-version:first-child {
+  border-top: none;
+}
+
+.data-version-number {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-version-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-3);
+  min-width: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+
+.data-version-meta time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-version-chips,
+.data-version-actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.data-version-actions {
+  justify-content: flex-end;
+}
+
+.data-diff {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.data-diff-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.data-diff-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.data-diff-title:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.data-diff-title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.data-diff-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.data-diff-body {
+  max-height: 520px;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+}
+
+/* Below 640px: a version's chips and actions wrap under its time */
+@media (max-width: 640px) {
+  .data-version {
+    grid-template-columns: 3.5em minmax(0, 1fr);
+  }
+
+  .data-version-chips,
+  .data-version-actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+}

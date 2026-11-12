@@ -1,0 +1,300 @@
+/* Graph browser — a property row, its value and its type-aware inputs */
+/* Property rows */
+.graph-property-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: var(--space-2);
+}
+
+.graph-property-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) 2fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding: 6px 8px;
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.graph-property-row:hover {
+  background: var(--color-hover);
+}
+
+.graph-property-label-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.graph-property-badge {
+  flex-shrink: 0;
+}
+
+.graph-property-badge--required-missing {
+  color: var(--color-danger);
+}
+
+.graph-property-badge--recommended-missing {
+  color: var(--color-ahead-ink);
+}
+
+.graph-property-badge--set {
+  color: var(--color-live-ink);
+}
+
+.graph-property-badge--placeholder {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+
+.graph-property-label {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graph-property-row--required-missing .graph-property-label {
+  color: var(--color-danger);
+}
+
+.graph-property-row--recommended-missing .graph-property-label {
+  color: var(--color-ahead-ink);
+}
+
+.graph-property-value {
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graph-property-value-empty {
+  color: var(--color-text-subtle);
+}
+
+.graph-property-value-string {
+  color: var(--color-text);
+}
+
+.graph-property-value-primitive {
+  color: var(--color-accent-ink);
+  font-family: var(--font-mono);
+}
+
+.graph-property-value-array,
+.graph-property-value-object {
+  color: var(--color-text-subtle);
+  font-family: var(--font-mono);
+  font-style: italic;
+}
+
+/* Reference chips */
+.graph-reference-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.graph-reference-link:hover {
+  background: var(--color-accent);
+  color: var(--color-surface);
+}
+
+.graph-reference-link:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.graph-reference-link-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+/* --- Type-aware Inputs --- */
+.graph-input {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: 13px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.graph-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.graph-input--invalid {
+  border-color: var(--color-danger);
+}
+
+.graph-input--textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.graph-input--select {
+  appearance: auto;
+}
+
+/* Array input */
+.graph-input--array {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: none;
+  padding: 0;
+}
+
+.graph-input-array-item {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.graph-input-array-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.graph-input-array-remove:hover {
+  background: color-mix(in srgb, var(--color-danger) 15%, transparent);
+  color: var(--color-danger);
+}
+
+.graph-input-array-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px dashed var(--color-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.graph-input-array-add:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Object array input (e.g. BreadcrumbList itemListElement) */
+.graph-object-array-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.graph-object-array-item-index {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+  min-width: 20px;
+  padding-top: 6px;
+}
+
+.graph-object-array-item-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graph-object-array-item-remove {
+  border: none;
+  background: transparent;
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.graph-object-array-item-remove:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.graph-object-array-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.graph-object-array-field-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-subtle);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+/* Property row edit mode */
+.graph-property-input-row {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 0;
+}
+
+.graph-property-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.graph-property-remove:hover {
+  background: color-mix(in srgb, var(--color-danger) 15%, transparent);
+  color: var(--color-danger);
+}

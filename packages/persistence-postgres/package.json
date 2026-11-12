@@ -1,0 +1,31 @@
+{
+  "name": "@krantho/persistence-postgres",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@krantho/core": "workspace:*",
+    "@krantho/persistence": "workspace:*",
+    "@krantho/seo-shared": "workspace:*",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "@krantho/persistence-sqlite": "workspace:*",
+    "@testcontainers/postgresql": "^12.0.4",
+    "@types/node": "^25.9.9",
+    "typescript": "^6.0.3"
+  }
+}

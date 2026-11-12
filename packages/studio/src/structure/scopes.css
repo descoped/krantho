@@ -1,0 +1,214 @@
+/* Structure › Scopes & archetypes — the cascade, the identity, the types and the catalog */
+/* Scopes: the cascade */
+.structure-cascade-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.structure-cascade-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  scroll-margin-top: calc(var(--topbar-height) + var(--space-4));
+}
+
+.structure-cascade-icon svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-accent-ink);
+}
+
+.structure-cascade-title {
+  font-weight: 650;
+}
+
+.structure-cascade-says,
+.structure-cascade-count {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.structure-cascade-count {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.structure-cascade-next {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: auto;
+  color: var(--color-accent-ink);
+  font-size: var(--text-xs);
+}
+
+.structure-cascade-next svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Scopes: the site's identity from config */
+.structure-identity {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-3) var(--space-5);
+}
+
+.structure-identity-row dt {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+  font-weight: 550;
+}
+
+.structure-identity-row dd {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.structure-identity-value {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow-wrap: anywhere;
+}
+
+.structure-identity-value svg {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  color: var(--color-text-subtle);
+}
+
+.structure-identity-where {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.structure-scope-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.structure-scope-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+/* Archetypes: the type picker and the impact */
+.structure-type-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-height: 320px;
+  overflow: auto;
+}
+
+.structure-type-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border: none;
+}
+
+.structure-type-group legend {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 650;
+}
+
+.structure-type-option {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+}
+
+.structure-type-option label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.structure-type-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.structure-type-rich {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.structure-impact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.structure-impact-list,
+.structure-rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-left: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+/* Catalog */
+.structure-catalog-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.structure-catalog-types {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.structure-catalog-type {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  min-height: 36px;
+  border-top: 1px solid var(--color-border);
+}
+
+.structure-catalog-type .structure-type-rich {
+  flex: 1 1 160px;
+}
+
+.structure-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.structure-table th,
+.structure-table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  font-weight: 400;
+}
+
+.structure-table thead th {
+  color: var(--color-text-subtle);
+  font-weight: 650;
+}

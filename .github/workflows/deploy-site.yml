@@ -1,0 +1,206 @@
+name: Deploy krantho-site
+
+# GitHub builds krantho-site with the Vercel CLI and uploads the prebuilt
+# output; the Vercel project has no Git connection and never builds itself.
+# The CLI runs from the repository root: the project's Root Directory is
+# krantho-site, and the prebuilt functions reference the workspace node_modules.
+# Runtime environment lives on the Vercel project; see docs/guides/deploy-vercel.md.
+
+on:
+  # A published release deploys: production, or preview for a pre-release. Its tag
+  # is vMAJOR.MINOR.PATCH (semver.org), the version every package.json carries.
+  release:
+    types: [published]
+  # Manual trigger — deploys a ref to preview (default) or production
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Tag, branch or commit to deploy
+        required: true
+        default: master
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options: [preview, production]
+        default: preview
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: false
+
+# contents: write lets the job add the deployment URL to the release notes;
+# id-token: write lets the content check present the job's identity to the site
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    # krantho.com is deployed from this repository only: a fork or a copy has no site
+    if: github.repository == 'descoped/krantho'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.ref || github.sha }}
+          # The build dates each content file by its last commit (content/dates.json);
+          # a shallow checkout would give every file the release commit's date
+          fetch-depth: 0
+
+      - name: Resolve deployment mode
+        id: mode
+        run: |
+          if { [ "${{ github.event_name }}" = "release" ] && [ "${{ github.event.release.prerelease }}" != "true" ]; } || [ "${{ github.event.inputs.environment }}" = "production" ]; then
+            printf 'env=production\nprod_flag=--prod\nlabel=Production\n' >> "$GITHUB_OUTPUT"
+          else
+            printf 'env=preview\nprod_flag=\nlabel=Preview\n' >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      # A release is vMAJOR.MINOR.PATCH, every versioned file carries that version,
+      # the /changelog page has its entry, and it is higher than every earlier
+      # release; a manual production deploy names such a tag. Nothing deploys otherwise.
+      - name: Check the release version
+        if: github.event_name == 'release' || steps.mode.outputs.env == 'production'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || github.event.inputs.ref }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          node scripts/release-version.mjs check "$TAG"
+          node krantho-site/scripts/check-release-entry.mjs "$TAG"
+          if [ "$EVENT" = "release" ]; then
+            # A first release has no earlier one: grep finding nothing is not a failure
+            previous=$(gh release list --exclude-drafts --limit 200 --json tagName -q '.[].tagName' \
+              | { grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' || true; } | { grep -vx "$TAG" || true; } | sort -V | tail -1)
+            if [ -n "$previous" ] && [ "$(printf '%s\n%s\n' "$previous" "$TAG" | sort -V | tail -1)" != "$TAG" ]; then
+              echo "::error::$TAG is not higher than the latest release, $previous"
+              exit 1
+            fi
+            echo "$TAG follows ${previous:-no earlier release}"
+          fi
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@61
+
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=${{ steps.mode.outputs.env }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      # vercel.json installs and builds the workspace from the repository root
+      - name: Build with Vercel
+        run: vercel build ${{ steps.mode.outputs.prod_flag }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      # The import dates each page by its file's last commit, and the sitemap's
+      # lastmod follows; without the dates every page would carry the import's date.
+      # The manifest's version makes the deployment import new and changed content.
+      - name: Check content dates and manifest
+        run: |
+          test -s krantho-site/content/dates.json || { echo "::error::the build wrote no content/dates.json"; exit 1; }
+          test -s krantho-site/content/manifest.json || { echo "::error::the build wrote no content/manifest.json"; exit 1; }
+          echo "$(jq length krantho-site/content/dates.json) content files dated from git"
+          echo "content version $(jq .version krantho-site/content/manifest.json), $(jq '.files | length' krantho-site/content/manifest.json) files"
+
+      # Production's editors change content between releases. Every edit must be in
+      # this release's files (merge the branch `krantho pull` makes), so git stays the
+      # durable copy. The repository variable KRANTHO_CONTENT_GATE sets what an
+      # unmerged edit does: fail (default), warn or off.
+      - name: Check production edits are in the repository
+        if: steps.mode.outputs.env == 'production'
+        env:
+          KRANTHO_CONTENT_GATE: ${{ vars.KRANTHO_CONTENT_GATE }}
+        run: node krantho-site/scripts/check-content-changes.mjs https://krantho.com
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt ${{ steps.mode.outputs.prod_flag }} --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          {
+            echo "### ${{ steps.mode.outputs.label }} deployment"
+            echo ""
+            echo "**URL:** $URL"
+            if [ -n "${{ steps.mode.outputs.prod_flag }}" ]; then
+              echo "**Rollback:** \`vercel promote <previous deployment URL>\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # A deploy starts with an empty page cache: render every page in the
+      # sitemap once, so no visitor waits for a page's first render. Preview
+      # deployments sit behind Vercel's deployment protection and are skipped.
+      - name: Warm the page cache
+        if: steps.mode.outputs.env == 'production'
+        # The deploy is live; a failed warm-up leaves pages to render on first visit
+        continue-on-error: true
+        env:
+          SITE_URL: https://krantho.com
+        run: |
+          curl -fsS "$SITE_URL/sitemap.xml" | sed -n 's:.*<loc>\(.*\)</loc>.*:\1:p' > "$RUNNER_TEMP/urls.txt"
+          while read -r url; do
+            printf '%s %s\n' "$(curl -s -o /dev/null -w '%{http_code}' "$url")" "$url"
+          done < "$RUNNER_TEMP/urls.txt"
+
+      # The warm-up's first requests ran the import. A changed file whose document an
+      # editor also changed is kept as a conflict, so its change is not on the site:
+      # fail and name each one. The deploy is live either way.
+      - name: Check the import took the content
+        if: steps.mode.outputs.env == 'production'
+        run: node krantho-site/scripts/check-content-import.mjs https://krantho.com
+
+      # Search engines read each page's JSON-LD from its source: check every
+      # sitemap page's graph against Schema.org and the site's readers. Errors fail
+      # the job; warnings are reported in the log. The deploy is live either way,
+      # so a failure is a signal to fix and release again. Needs no credentials.
+      - name: Check structured data
+        if: steps.mode.outputs.env == 'production'
+        run: node krantho-site/scripts/check-structured-data.mjs https://krantho.com
+
+      # Every page in the sitemap carries a lastmod: its file's last commit, or the
+      # time an editor last published it in Studio
+      - name: Verify the sitemap
+        if: steps.mode.outputs.env == 'production'
+        env:
+          SITE_URL: https://krantho.com
+        run: |
+          curl -fsS "$SITE_URL/sitemap.xml" > "$RUNNER_TEMP/sitemap.xml"
+          urls=$(grep -c '<loc>' "$RUNNER_TEMP/sitemap.xml" || true)
+          dated=$(grep -c '<lastmod>' "$RUNNER_TEMP/sitemap.xml" || true)
+          echo "sitemap: $urls pages, $dated with lastmod"
+          if [ "$urls" -eq 0 ] || [ "$urls" -ne "$dated" ]; then
+            echo "::error::every sitemap entry needs a lastmod ($dated of $urls)"
+            exit 1
+          fi
+
+      # Tell IndexNow (Bing and the other participating engines) about every page;
+      # the key is seo.indexNow.key in krantho.config.ts, served at /<key>.txt
+      - name: Notify IndexNow
+        if: steps.mode.outputs.env == 'production'
+        run: node krantho-site/scripts/indexnow.mjs https://krantho.com
+
+      - name: Add deployment to release notes
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+          URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          gh release view "$TAG" --json body -q .body > "$RUNNER_TEMP/notes.md"
+          {
+            echo ""
+            echo "---"
+            echo "**Deployment:** $URL"
+            echo "**Rollback:** \`vercel promote $URL\` from a later release"
+          } >> "$RUNNER_TEMP/notes.md"
+          gh release edit "$TAG" --notes-file "$RUNNER_TEMP/notes.md"

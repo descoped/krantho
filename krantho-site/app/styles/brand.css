@@ -1,0 +1,61 @@
+/* The root 404 (app/not-found.tsx): the mark and a calm message on an aurora glow
+   with contour lines, outside the site shell */
+
+.lost {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: var(--space-8) var(--gutter);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 20%, var(--aurora-1), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 20% 85%, var(--aurora-2), transparent 70%),
+    var(--color-bg);
+}
+
+.lost__contours {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: max(100%, 60rem);
+  height: auto;
+  transform: translate(-50%, -50%);
+  fill: none;
+  stroke: var(--contour);
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.lost__inner {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  max-width: 36rem;
+  text-align: center;
+}
+
+.lost__mark {
+  display: inline-flex;
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+  border-radius: var(--radius-md);
+}
+
+.lost__title {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+.lost__lede {
+  margin-inline: auto;
+}
+
+.lost__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}

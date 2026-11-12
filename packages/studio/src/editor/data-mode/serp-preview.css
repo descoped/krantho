@@ -1,0 +1,81 @@
+/*
+ * Search-result preview (SerpPreview, Data mode).
+ *
+ * The one place outside styles/tokens.css that holds colour literals: the preview imitates
+ * a search engine's results page, in its own light colours and type, whatever Studio's
+ * theme. test/no-colour-literals.test.ts allows literals only between the two markers.
+ */
+
+/* serp-preview-literals:start */
+.serp-preview {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  max-width: 600px;
+  font-family: Arial, sans-serif;
+}
+
+.serp-preview p {
+  margin: 0;
+}
+
+.serp-preview-url-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.serp-preview-favicon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f1f3f4;
+  border: 1px solid #dadce0;
+  flex-shrink: 0;
+}
+
+.serp-preview-url-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.serp-preview-site-name {
+  color: #202124;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.serp-preview-breadcrumb {
+  color: #4d5156;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.serp-preview-title {
+  display: block;
+  color: #1a0dab;
+  font-size: 20px;
+  line-height: 1.3;
+  text-decoration: none;
+  margin-bottom: 4px;
+  max-width: 600px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.serp-preview-description {
+  color: #4d5156;
+  font-size: 14px;
+  line-height: 1.58;
+  margin: 0;
+  max-width: 600px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+/* serp-preview-literals:end */

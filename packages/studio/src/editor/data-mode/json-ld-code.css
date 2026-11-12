@@ -1,0 +1,52 @@
+/* JSON-LD source with Copy: the code face on the code surface, scrolling within its own box */
+.json-ld-code {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--color-code-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-code-bg);
+}
+
+.json-ld-code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  border-bottom: 1px solid var(--color-code-border);
+}
+
+.json-ld-code-label {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.json-ld-code-status {
+  flex: 1;
+  color: var(--color-danger-strong);
+  font-size: var(--text-xs);
+}
+
+.json-ld-code-source {
+  max-height: 420px;
+  margin: 0;
+  padding: var(--space-3);
+  overflow: auto;
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-dense);
+}
+
+.json-ld-code-source pre {
+  margin: 0;
+  font: inherit;
+  white-space: pre;
+}
+
+.json-ld-code-source:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}

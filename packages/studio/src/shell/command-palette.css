@@ -1,0 +1,188 @@
+/* Command palette — 560px wide, 12vh from the top; an overlay, so it casts a shadow */
+.palette-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+}
+
+.palette-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--color-overlay);
+  animation: ui-fade-in var(--duration-base) var(--ease-out);
+}
+
+.palette {
+  position: absolute;
+  top: 12vh;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  width: min(560px, calc(100vw - var(--space-6)));
+  max-height: 76vh;
+  overflow: hidden;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-50%);
+  animation: ui-fade-in var(--duration-base) var(--ease-out);
+}
+
+.palette-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+  height: 52px;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.palette-search-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.palette-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-base);
+}
+
+.palette-input::placeholder {
+  color: var(--color-text-subtle);
+}
+
+/* Focus stays in the input: the search row carries the focus line instead of a ring */
+.palette-input:focus-visible {
+  outline: none;
+}
+
+.palette-search:focus-within {
+  box-shadow: inset 0 -2px 0 var(--color-focus);
+}
+
+.palette-key,
+.palette-hint kbd {
+  padding: 2px var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.2;
+}
+
+.palette-status:empty {
+  display: none;
+}
+
+.palette-status {
+  padding: var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.palette-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-1);
+  list-style: none;
+}
+
+.palette-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* The active row: the tint, and an accent bar that meets 3:1 against it in both themes */
+.palette-option[aria-selected="true"] {
+  background: var(--color-accent-soft);
+}
+
+.palette-option[aria-selected="true"]::before {
+  content: "";
+  position: absolute;
+  top: var(--space-2);
+  bottom: var(--space-2);
+  left: 0;
+  width: 3px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+}
+
+.palette-option-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-muted);
+}
+
+.palette-option[aria-selected="true"] .palette-option-icon {
+  color: var(--color-accent-ink);
+}
+
+.palette-option-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.palette-option-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.palette-option-label,
+.palette-option-detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-option-label {
+  font-weight: 550;
+}
+
+.palette-option-detail {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.palette-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+}
+
+.palette-hint kbd + kbd {
+  margin-left: -2px;
+}
+
+@media (max-width: 639.98px) {
+  .palette-hint {
+    display: none;
+  }
+}

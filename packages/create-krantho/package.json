@@ -1,0 +1,31 @@
+{
+  "name": "create-krantho",
+  "version": "1.0.0",
+  "description": "Scaffold a new krantho project",
+  "type": "module",
+  "license": "MIT",
+  "author": "oranheim",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/descoped/krantho.git",
+    "directory": "packages/create-krantho"
+  },
+  "bin": {
+    "create-krantho": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.9",
+    "@types/prompts": "^2.4.9",
+    "typescript": "^6.0.3"
+  }
+}

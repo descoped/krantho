@@ -1,0 +1,109 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read",
+      "Write",
+      "Edit",
+      "WebFetch",
+      "WebSearch",
+      "mcp__playwright__*",
+      "mcp__plugin_playwright_playwright__*",
+      "EnterWorktree",
+      "ExitWorktree"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  },
+  "enabledPlugins": {
+    "playground@claude-plugins-official": true,
+    "agent-sdk-dev@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "krantho@krantho": true
+  },
+  "extraKnownMarketplaces": {
+    "krantho": {
+      "source": {
+        "source": "directory",
+        "path": "."
+      }
+    }
+  },
+  "worktree": {
+    "baseRef": "head"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "s=\"${CLAUDE_PROJECT_DIR:-.}/scripts/claude/finish-worktree-removal.sh\"; [ -r \"$s\" ] || exit 0; exec sh \"$s\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command // empty' | grep -Eq 'git[[:space:]]+worktree[[:space:]]+(remove|prune)' || exit 0; s=\"${CLAUDE_PROJECT_DIR:-.}/scripts/claude/finish-worktree-removal.sh\"; [ -r \"$s\" ] || exit 0; exec sh \"$s\"",
+            "timeout": 120
+          }
+        ]
+      },
+      {
+        "matcher": "ExitWorktree",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "s=\"${CLAUDE_PROJECT_DIR:-.}/scripts/claude/finish-worktree-removal.sh\"; [ -r \"$s\" ] || exit 0; exec sh \"$s\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command // empty' | grep -Eq 'git[[:space:]]+worktree[[:space:]]+(remove|prune)' || exit 0; s=\"${CLAUDE_PROJECT_DIR:-.}/scripts/claude/finish-worktree-removal.sh\"; [ -r \"$s\" ] || exit 0; exec sh \"$s\"",
+            "timeout": 120
+          }
+        ]
+      },
+      {
+        "matcher": "ExitWorktree",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "s=\"${CLAUDE_PROJECT_DIR:-.}/scripts/claude/finish-worktree-removal.sh\"; [ -r \"$s\" ] || exit 0; exec sh \"$s\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "s=\"${CLAUDE_PROJECT_DIR:-.}/scripts/claude/finish-worktree-removal.sh\"; [ -r \"$s\" ] || exit 0; exec sh \"$s\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}

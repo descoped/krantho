@@ -1,0 +1,85 @@
+name: PR review (Claude)
+
+# Automated PR review by claude[bot] on every `pull_request: opened`. The same
+# action also answers `@claude` mentions in PR comments, PR review comments,
+# PR reviews and issue bodies/titles, so a maintainer can ask for a re-review
+# or a clarification on demand. This is project-harness tooling and runs on
+# the Max subscription (see .claude/rules/llm-profile.md), never on an API key.
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request:
+    # `reopened` is the only way to re-fire a review on an EXISTING PR: the
+    # review prompt is gated on `github.event_name == 'pull_request'`, an
+    # `@claude` comment selects the action's tag mode rather than review mode,
+    # and re-running a finished run replays that run's own workflow file.
+    # Deliberately NOT `synchronize`: that would review every push to every
+    # open PR.
+    types: [opened, reopened]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    # Actor gate. The four interactive arms run the triggering comment or
+    # issue text as Claude's instruction while the job holds a write-scoped
+    # token plus the OAuth secret, the classic prompt-injection surface. Each
+    # interactive arm therefore also requires the triggering author to be a
+    # trusted member (`author_association` in OWNER, MEMBER, COLLABORATOR), so
+    # a non-member's `@claude` never drives the write-scoped action.
+    # The `pull_request: opened` auto-review arm is deliberately NOT gated:
+    # its prompt is the hardcoded string below (PR body text never becomes the
+    # instruction), and renovate[bot] opens PRs with author_association NONE,
+    # so gating it would break renovate self-review for no security gain.
+    if: |
+      (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'claude[bot]') ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude') && github.event.comment.user.login != 'claude[bot]' && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude') && github.event.comment.user.login != 'claude[bot]' && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude') && github.event.review.user.login != 'claude[bot]' && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.review.author_association)) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')) && github.event.issue.user.login != 'claude[bot]' && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association))
+    runs-on: ubuntu-latest
+    # Concurrency lives at job level, after the `if` gate, so only runs that
+    # actually review join the group. At workflow level every comment and
+    # review event joins it before the gate, and GitHub replaces a *pending*
+    # run whenever a new one queues, so an unrelated comment could silently
+    # drop a queued `@claude` request. `cancel-in-progress` stays scoped to
+    # `pull_request`: the action's own "working…" progress comment fires
+    # `issue_comment`, and an unconditional cancel would abort the review that
+    # posted it.
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number || github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    # A mid-review timeout is the worst failure mode: the job reports SUCCESS
+    # while the comment still reads "review in progress". A large goal PR is
+    # the biggest thing this workflow sees; a generous ceiling costs a runner
+    # slot on the rare run that needs it, a tight one costs the review.
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        # Full history: the review diffs the PR against master, and a shallow
+        # checkout of a PR with many commits has no merge base to diff from.
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@8ce9314fa9a404564fa7e954cd84f25bcba2b829  # v1.0.236
+        with:
+          # OAuth token from `claude setup-token` (Pro / Max subscription).
+          # The input is `claude_code_oauth_token`; `anthropic_api_key` would
+          # expect a separately billed Console key and is not used here.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: "${{ github.event_name == 'pull_request' && 'Review this PR. Read .claude/CLAUDE.md and every file under .claude/rules/ first and cite the rule when flagging a violation. Check: correctness and type safety (TypeScript strict, no `any`, no unchecked casts); the greenfield rules (no backward-compatibility shims, no migration code, no dead code, no placeholder stubs, no site-specific content under packages/); architecture invariants (persistence only through IPersistenceAdapter with no direct fs outside persistence packages, @krantho/core has zero UI framework imports, cross-package imports via @krantho/*, each package self-contained for npm, new modules exported through the index barrel); one model with no two ways to do the same thing; hardcoded values and leaked secrets (nothing from the configuration tree or an environment variable may reach a browser bundle or a public API response); examples parity (a change in examples/nextjs-shadcn is mirrored in the other examples or tracked as a follow-up); code style (named exports, lowercase-hyphen filenames, no drift-prone counts in CLAUDE.md, rules, README or titles); and that behaviour-preserving refactors keep every default and feature shape. Distinguish CRITICAL (must fix before merge) from SUGGESTION (non-blocking). Post one concise PR review with file and line citations. If the PR is clean, say so plainly and do not manufacture issues. Complete the entire review within this run and post the consolidated review before ending; never end the turn while any review pass is deferred or promised for later.' || '' }}"
+          track_progress: true
+          allowed_bots: 'renovate[bot]'
