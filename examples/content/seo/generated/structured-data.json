@@ -1,0 +1,110 @@
+{
+  "localBusiness": {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": "https://acme-consulting.example.com",
+    "name": "",
+    "description": "Acme Consulting is a strategy and digital transformation firm based in San Francisco. We help mid-market and enterprise organizations navigate change — from market entry and competitive positioning to platform modernization and fractional executive leadership.",
+    "url": "https://acme-consulting.example.com",
+    "telephone": "+1 555-0100",
+    "email": "hello@acme-consulting.example.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Acme Consulting",
+      "addressLocality": "Example Street, Suite 400, San Francisco, CA 94105",
+      "postalCode": "100",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 37.7937,
+      "longitude": -122.3965
+    },
+    "image": "https://acme-consulting.example.com/images/team-photo.jpg",
+    "openingHoursSpecification": [],
+    "areaServed": {
+      "@type": "City",
+      "name": "San Francisco Bay Area"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Acme Consulting",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Strategy Consulting",
+            "description": "Market analysis, competitive positioning, and growth roadmaps for businesses at inflection points."
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": "2500",
+            "priceCurrency": "USD",
+            "unitText": "Half-day"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Digital Transformation",
+            "description": "Platform modernization, data strategy, and technology adoption for organizations ready to scale."
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": "15000",
+            "priceCurrency": "USD",
+            "unitText": "2 weeks"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Advisory & Fractional Leadership",
+            "description": "On-demand executive expertise for critical decisions, board-level guidance, and interim leadership."
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": "5000",
+            "priceCurrency": "USD",
+            "unitText": "1 day/week"
+          }
+        }
+      ]
+    }
+  },
+  "person": {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Acme Consulting LLC",
+    "jobTitle": "Managing Partner",
+    "worksFor": {
+      "@type": "ProfessionalService",
+      "name": ""
+    },
+    "description": "Management consulting firm with 15+ years of experience in strategy, digital transformation, and advisory services for mid-market and enterprise organizations.",
+    "image": "https://acme-consulting.example.com/images/team-photo.jpg",
+    "url": "https://acme-consulting.example.com/about",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Example Street, Suite 400, San Francisco, CA 94105",
+      "addressCountry": "US"
+    },
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "Example School of Business"
+    },
+    "knowsAbout": [
+      "Corporate Strategy",
+      "Digital Transformation",
+      "Go-to-Market Strategy",
+      "Platform Modernization",
+      "Data Strategy",
+      "Fractional Leadership",
+      "M&A Due Diligence",
+      "Organizational Change Management"
+    ]
+  }
+}

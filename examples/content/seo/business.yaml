@@ -1,0 +1,71 @@
+# Non-CMS business metadata for Schema.org and llms.txt
+url: 'https://acme-consulting.example.com'
+geo:
+  latitude: 37.7937
+  longitude: -122.3965
+area-served: 'San Francisco Bay Area'
+founding-year: 2010
+image: 'https://acme-consulting.example.com/images/team-photo.jpg'
+legal-name: 'Acme Consulting LLC'
+job-title: 'Managing Partner'
+alumni-of: 'Example School of Business'
+person-description: 'Management consulting firm with 15+ years of experience in strategy, digital transformation, and advisory services for mid-market and enterprise organizations.'
+credentials:
+  - 'Certified management consultants on staff'
+  - 'Vendor-neutral: no reseller or partner agreements'
+knows-about:
+  - 'Corporate Strategy'
+  - 'Digital Transformation'
+  - 'Go-to-Market Strategy'
+  - 'Platform Modernization'
+  - 'Data Strategy'
+  - 'Fractional Leadership'
+  - 'M&A Due Diligence'
+  - 'Organizational Change Management'
+prose:
+  summary:
+    'Acme Consulting is a strategy and digital transformation firm based in San Francisco. We help mid-market and enterprise organizations navigate change — from market entry and competitive positioning to platform modernization and fractional executive leadership.
+
+    '
+  description:
+    'Founded in 2010, Acme Consulting brings 15+ years of experience across technology, finance, and healthcare sectors. Our team includes former executives from global consultancies, technology companies and fast-growing startups. We combine rigorous analysis with hands-on execution, embedding with client teams to deliver lasting results — not slide decks.
+
+    '
+services:
+  - id: 'strategy'
+    name: 'Strategy Consulting'
+    description: 'Market analysis, competitive positioning, and growth roadmaps for businesses at inflection points.'
+  - id: 'digital-transformation'
+    name: 'Digital Transformation'
+    description: 'Platform modernization, data strategy, and technology adoption for organizations ready to scale.'
+  - id: 'advisory'
+    name: 'Advisory & Fractional Leadership'
+    description: 'On-demand executive expertise for critical decisions, board-level guidance, and interim leadership.'
+llms-sections:
+  - heading: 'Services'
+    links:
+      - title: 'Services Overview'
+        path: '/services'
+        description: 'Acme Consulting offers three core service lines: strategy consulting, digital transformation, and advisory/fractional leadership for mid-market and enterprise organizations.'
+      - title: 'Strategy Consulting'
+        path: '/services#strategy'
+        description: 'Market entry and expansion strategy, competitive analysis, growth planning, OKR design, and M&A commercial due diligence for companies with $5M-$500M revenue.'
+      - title: 'Digital Transformation'
+        path: '/services#digital-transformation'
+        description: 'Legacy platform migration, data platform architecture, cloud optimization, and AI/ML readiness assessment for CTOs and technology leaders.'
+      - title: 'Advisory & Fractional Leadership'
+        path: '/services#advisory'
+        description: 'Fractional CTO/COO engagements, board advisory, investor readiness, post-acquisition integration, and crisis management for boards and executive teams.'
+  - heading: 'About'
+    links:
+      - title: 'About Acme Consulting'
+        path: '/about'
+        description: 'Founded in 2010 by former consulting and technology leaders. 200+ organizations served across technology, finance, and healthcare. Team of strategists, technologists, and operators.'
+      - title: 'Our Approach'
+        path: '/about#our-approach'
+        description: 'Three principles: start with the problem, work alongside (not above), and measure what matters. Every engagement has clear success criteria defined collaboratively.'
+  - heading: 'Contact'
+    links:
+      - title: 'Contact & Booking'
+        path: '/contact'
+        description: 'Book a consultation at Acme Consulting, 100 Example Street, San Francisco. Available Monday-Friday 9am-5pm PT. Phone +1 555-0100, email hello@acme-consulting.example.com.'

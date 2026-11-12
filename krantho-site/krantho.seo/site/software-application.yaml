@@ -1,0 +1,16 @@
+# Krantho the product, on every page of the site. No offers, price or ratings:
+# krantho is not released and has no pricing. The explicit @id keeps it apart
+# from the Organization, which a site entity without an @id would replace.
+"@type": SoftwareApplication
+"@id": https://krantho.com/#software
+role: product
+properties:
+  name: Krantho
+  description: A CMS library for content sites built in your own codebase. It adds content management, an admin and structured SEO to Next.js, SvelteKit and Express.
+  url: https://krantho.com
+  applicationCategory: DeveloperApplication
+  applicationSubCategory: Content management system
+  operatingSystem: Any
+  softwareRequirements: Node.js 22.9.0 or later
+  publisher:
+    "@id": https://krantho.com/#business

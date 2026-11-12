@@ -1,0 +1,11 @@
+{
+  "name": "krantho",
+  "version": "1.0.0",
+  "description": "Skills for building a site with krantho: add it to a Next.js, SvelteKit or Express/Vite project, design content and page templates, create and edit content, and configure structured SEO.",
+  "author": {
+    "name": "Descoped"
+  },
+  "homepage": "https://krantho.com/docs/agent-skills",
+  "repository": "https://github.com/descoped/krantho",
+  "keywords": ["krantho", "cms", "nextjs", "sveltekit", "express", "seo", "content"]
+}

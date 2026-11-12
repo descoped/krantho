@@ -1,0 +1,163 @@
+/* Graph browser — an entity card and its header */
+/* Entity cards */
+.graph-entity-card {
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.graph-entity-card:hover {
+  border-color: var(--color-text-subtle);
+}
+
+.graph-entity-card--selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+.graph-entity-card--missing-required {
+  border-color: var(--color-danger);
+}
+
+.graph-entity-card--missing-required.graph-entity-card--selected {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 1px var(--color-danger);
+}
+
+.graph-entity-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.graph-entity-expand-button {
+  background: transparent;
+  border: none;
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: var(--text-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.graph-entity-expand-button:hover {
+  color: var(--color-text);
+}
+
+.graph-entity-chevron {
+  display: inline-block;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.graph-entity-chevron--open {
+  transform: rotate(90deg);
+}
+
+.graph-entity-header-main {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.graph-entity-header-main:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+
+.graph-entity-header-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.graph-entity-type {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.graph-entity-name {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graph-entity-header-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
+}
+
+.graph-entity-id {
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 320px;
+}
+
+.graph-entity-eligibility {
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.graph-entity-eligibility--complete {
+  background: var(--color-live-soft);
+  color: var(--color-live-ink);
+}
+
+.graph-entity-eligibility--incomplete {
+  background: var(--color-ahead-soft);
+  color: var(--color-ahead-ink);
+}
+
+.graph-entity-body {
+  padding: 0 var(--space-3) var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.graph-entity-empty {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+  font-style: italic;
+  padding: var(--space-2) 0;
+}
+
+.graph-focused .graph-entity-header-main {
+  animation: graph-focus-pulse 1.2s ease-out;
+}
+
+/* Focus-target highlight animation */
+@keyframes graph-focus-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--color-accent);
+  }
+  50% {
+    box-shadow: 0 0 0 4px var(--color-accent-soft);
+  }
+}

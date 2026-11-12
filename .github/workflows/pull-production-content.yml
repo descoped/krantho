@@ -1,0 +1,94 @@
+name: Pull production content
+
+# Editors change content in production between releases. This workflow reads what
+# they changed (GET /api/changes), pushes it as a branch and opens an issue with the
+# link that turns it into a pull request, so git keeps every edit. It presents the
+# job's GitHub identity token to the site, which trusts it through auth.workload in
+# krantho-site/krantho.config.ts (runs on master only); no secret is stored. Merge the branch like any other; the next release imports the files.
+# (Opening the pull request itself needs a repository that lets Actions create
+# pull requests; the issue's link works either way.)
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: pull-production-content
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+  id-token: write
+
+env:
+  SITE_URL: https://krantho.com
+
+jobs:
+  pull:
+    name: Pull production edits
+    # krantho.com trusts this repository only: a fork or a copy has no site to read
+    if: github.repository == 'descoped/krantho'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The pull branch starts from the commit production last imported
+          fetch-depth: 0
+
+      - name: Skip while an earlier pull is open
+        id: open
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh issue list --state open --label production-edits --json number -q length)
+          echo "open=$open" >> "$GITHUB_OUTPUT"
+          if [ "$open" != "0" ]; then echo "An earlier pull is still open: merge it and close its issue."; fi
+
+      - uses: actions/setup-go@v6
+        if: steps.open.outputs.open == '0'
+        with:
+          go-version-file: cli/go.mod
+          cache-dependency-path: cli/go.sum
+
+      - name: Build the CLI
+        if: steps.open.outputs.open == '0'
+        run: go build -C cli -o "$RUNNER_TEMP/krantho" ./cmd/krantho
+
+      - name: Pull production edits to a branch
+        id: pull
+        if: steps.open.outputs.open == '0'
+        run: |
+          audience=$(jq -rn --arg a "$SITE_URL" '$a|@uri')
+          token=$(curl -fsS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=$audience" | jq -r .value)
+          echo "::add-mask::$token"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          out=$(KRANTHO_TOKEN="$token" "$RUNNER_TEMP/krantho" pull \
+            --api-url "$SITE_URL" --content-dir krantho-site/content --push \
+            --branch "prod-pull/$(date -u +%Y%m%d-%H%M%S)")
+          echo "$out"
+          branch=$(printf '%s\n' "$out" | sed -n 's/^Branch \([^ ]*\) holds.*/\1/p')
+          printf '%s\n' "$out" | sed -n 's/^\(add\|edit\|delete\)  *\(.*\)$/- \1 `\2`/p' > "$RUNNER_TEMP/changes.md"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Open an issue with the branch
+        if: steps.pull.outputs.branch != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.pull.outputs.branch }}
+        run: |
+          gh label create production-edits --color 0e8a16 \
+            --description "Edits editors made in production, waiting to be merged" 2>/dev/null || true
+          {
+            echo "Editors changed these files in production since its last content import:"
+            echo ""
+            cat "$RUNNER_TEMP/changes.md"
+            echo ""
+            echo "Branch \`$BRANCH\` holds them. [Open a pull request](${{ github.server_url }}/${{ github.repository }}/compare/${{ github.event.repository.default_branch }}...$BRANCH?expand=1) and merge it. The next release imports the files; until then production keeps the edits. Close this issue once the branch is merged."
+          } > "$RUNNER_TEMP/body.md"
+          gh issue create --label production-edits \
+            --title "Production edits to merge" --body-file "$RUNNER_TEMP/body.md"

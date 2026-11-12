@@ -1,0 +1,47 @@
+/* The edge between two columns: a wide target with a hairline that shows on hover, focus and drag */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 10px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.resize-handle[data-edge="right"] {
+  right: -5px;
+}
+
+.resize-handle[data-edge="left"] {
+  left: -5px;
+}
+
+.resize-handle::after {
+  content: "";
+  position: absolute;
+  inset: 0 4px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.resize-handle:hover::after,
+.resize-handle:focus-visible::after,
+body[data-resizing] .resize-handle::after {
+  background: var(--color-accent);
+}
+
+.resize-handle:focus-visible {
+  outline: none;
+}
+
+/* While dragging: no text selection, and the frame takes no pointer */
+body[data-resizing] {
+  cursor: col-resize;
+  user-select: none;
+}
+
+body[data-resizing] iframe {
+  pointer-events: none;
+}

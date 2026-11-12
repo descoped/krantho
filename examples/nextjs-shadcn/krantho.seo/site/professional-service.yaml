@@ -1,0 +1,19 @@
+"@type": ProfessionalService
+role: primary
+properties:
+  name: Krantho Example
+  description: Strategic consulting for small businesses
+  telephone: "+47 22 00 00 00"
+  email: hello@example.com
+  address:
+    "@type": PostalAddress
+    streetAddress: Example Road 123
+    addressLocality: Oslo
+    postalCode: "0123"
+    addressCountry: "NO"
+  openingHoursSpecification:
+    - "@type": OpeningHoursSpecification
+      dayOfWeek: [Monday, Tuesday, Wednesday, Thursday, Friday]
+      opens: "09:00"
+      closes: "17:00"
+  priceRange: "$$"

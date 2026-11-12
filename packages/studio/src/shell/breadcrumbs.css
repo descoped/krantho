@@ -1,0 +1,64 @@
+/* Breadcrumbs — muted ancestors, the current screen in full text colour */
+.breadcrumbs {
+  min-width: 0;
+}
+
+.breadcrumbs-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.breadcrumbs-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* Decorative: the subtle text colour keeps it legible without competing with the labels */
+.breadcrumbs-separator {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: var(--color-text-subtle);
+}
+
+.breadcrumbs-link,
+.breadcrumbs-text {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.breadcrumbs-link {
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.breadcrumbs-link:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.breadcrumbs-current {
+  overflow: hidden;
+  color: var(--color-text);
+  font-weight: 550;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Narrow screens: only the current screen and its parent */
+@media (max-width: 639.98px) {
+  .breadcrumbs-item:not(:nth-last-child(-n + 2)) {
+    display: none;
+  }
+
+  .breadcrumbs-item:nth-last-child(2) .breadcrumbs-separator {
+    display: none;
+  }
+}

@@ -1,0 +1,166 @@
+/*
+ * The details drawer: over the page's right edge, below the top bar — an
+ * overlay, so it may cast a shadow. The preview, the facts, the documents that
+ * use the file, then its actions and details.
+ */
+.media-drawer {
+  position: fixed;
+  top: var(--topbar-height);
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: min(400px, 100%);
+  padding: var(--space-4) var(--space-5) var(--space-6);
+  overflow-y: auto;
+  background: var(--color-surface-raised);
+  border-left: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  animation: ui-rise-in var(--duration-base) var(--ease-out);
+}
+
+/* Room for the drawer, so the grid stays beside it on a wide screen */
+@media (min-width: 1100px) {
+  .media--drawer {
+    padding-right: 400px;
+  }
+}
+
+.media-drawer-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.media-drawer-title {
+  min-width: 0;
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.media-drawer-title:focus {
+  outline: none;
+}
+
+.media-drawer-title:focus-visible {
+  box-shadow: var(--shadow-focus);
+}
+
+.media-drawer-preview {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-subtle);
+}
+
+.media-drawer-preview img {
+  max-width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+}
+
+.media-drawer-preview svg {
+  width: 40px;
+  height: 40px;
+}
+
+.media-facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.media-facts dt {
+  color: var(--color-text-muted);
+}
+
+.media-references {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.media-references-count {
+  font-weight: 600;
+}
+
+.media-reference-list {
+  padding-left: var(--space-5);
+}
+
+.media-reference-fields {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.media-link {
+  color: var(--color-accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Tags: quiet pills with Remove, then the input that adds one */
+.media-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  list-style: none;
+}
+
+.media-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px 2px 2px var(--space-2);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+}
+
+.media-tag-remove {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.media-tag-remove:hover {
+  background: var(--color-hover);
+  color: var(--color-text);
+}
+
+.media-tag-remove:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.media-tag-remove svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 639.98px) {
+  .media-drawer {
+    padding: var(--space-4);
+  }
+}

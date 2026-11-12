@@ -1,0 +1,7 @@
+{
+  "domain": "krantho.com",
+  "siteName": "Krantho",
+  "language": "en",
+  "siteDescription": "Krantho, a CMS library for content sites built in your own codebase",
+  "enrichSkipRoutes": []
+}

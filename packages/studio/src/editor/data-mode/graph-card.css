@@ -1,0 +1,249 @@
+/* The graph card: the sources legend, each entity and its property table, view-source and the editor */
+/* Sources: the legend, and each chip with its icon */
+.data-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  list-style: none;
+}
+
+.data-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.data-legend-text {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.ui-chip.data-scope {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+/* Entities: type, scope and @id, then the property table */
+.data-entities {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.data-entity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.data-entity-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.data-entity-type {
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.data-entity-type:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.data-entity-type:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.data-entity-id {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.data-props {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+  table-layout: fixed;
+}
+
+.data-props th,
+.data-props td {
+  padding: var(--space-1) var(--space-2) var(--space-1) 0;
+  border-top: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-props thead th {
+  border-top: none;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.data-props thead th:first-child {
+  width: 26%;
+}
+
+.data-props thead th:last-child {
+  width: 30%;
+}
+
+.data-prop-key {
+  font-weight: 500;
+}
+
+.data-prop-key code {
+  overflow-wrap: anywhere;
+}
+
+.data-prop-fixed {
+  display: inline-flex;
+  margin-left: var(--space-1);
+  color: var(--color-text-subtle);
+  vertical-align: middle;
+}
+
+.data-prop-fixed svg {
+  width: 12px;
+  height: 12px;
+}
+
+.data-prop-value code {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.data-prop-source {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.data-prop-origin {
+  color: var(--color-text-subtle);
+  overflow-wrap: anywhere;
+}
+
+.data-refs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.data-ref {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-accent-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.data-ref svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.data-ref code {
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.data-ref:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Disclosures: view-source */
+.data-disclosure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.data-disclosure summary {
+  width: fit-content;
+  color: var(--color-accent-ink);
+  font-size: var(--text-sm);
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.data-disclosure summary:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.data-disclosure[open] summary {
+  margin-bottom: var(--space-2);
+}
+
+.data-graph-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Below 640px: each property row stacks as labelled cells */
+@media (max-width: 640px) {
+  .data-props thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .data-props,
+  .data-props tbody,
+  .data-props tr,
+  .data-props th,
+  .data-props td {
+    display: block;
+    width: 100%;
+  }
+
+  .data-props tr {
+    padding: var(--space-2) 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .data-props th,
+  .data-props td {
+    padding: 2px 0;
+    border-top: none;
+  }
+
+  .data-props td::before {
+    content: attr(data-label) " ";
+    color: var(--color-text-subtle);
+  }
+}

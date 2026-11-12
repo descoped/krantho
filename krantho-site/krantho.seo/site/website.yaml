@@ -1,0 +1,5 @@
+# krantho.com itself. No SearchAction: the site search is a client-side
+# palette with no search results URL.
+"@type": WebSite
+role: site
+properties: {}

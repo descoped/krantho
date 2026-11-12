@@ -1,0 +1,47 @@
+{
+  "name": "@krantho/core",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cache-tags": {
+      "types": "./dist/cache-tags.d.ts",
+      "import": "./dist/cache-tags.js"
+    },
+    "./content": {
+      "types": "./dist/content-resolver.d.ts",
+      "import": "./dist/content-resolver.js"
+    },
+    "./marks": {
+      "types": "./dist/marks.d.ts",
+      "import": "./dist/marks.js"
+    },
+    "./sections": {
+      "types": "./dist/sections.d.ts",
+      "import": "./dist/sections.js"
+    },
+    "./seo": {
+      "types": "./dist/loaders/seo-loader.d.ts",
+      "import": "./dist/loaders/seo-loader.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.9",
+    "typescript": "^6.0.3"
+  }
+}

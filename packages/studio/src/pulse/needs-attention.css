@@ -1,0 +1,89 @@
+/* Needs attention — rows on hairlines: a tinted icon, the title and detail, the action */
+.attention-list {
+  list-style: none;
+}
+
+.attention-row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 60px;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.attention-row:first-child {
+  border-top: none;
+}
+
+.attention-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+}
+
+.attention-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.attention-row--delivery .attention-icon {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.attention-row--lock .attention-icon {
+  background: var(--color-violet-soft);
+  color: var(--color-violet);
+}
+
+.attention-row--ahead .attention-icon {
+  background: var(--color-ahead-soft);
+  color: var(--color-ahead-ink);
+}
+
+.attention-row--meta .attention-icon {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+}
+
+.attention-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.attention-title {
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+
+.attention-detail {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+
+.attention-more {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 639.98px) {
+  .attention-row {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .attention-action {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

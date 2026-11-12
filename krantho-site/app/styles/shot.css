@@ -1,0 +1,154 @@
+/*
+ * A screenshot of Studio in a browser frame: a bar with the address, and
+ * one image per theme, the one matching the reader's theme shown. Used by the
+ * landing page and by a page body's {{screen:name|/studio/path|alt}} (lib/markdown.ts).
+ */
+
+.shot {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.shot__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.shot__dots > span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-border-strong);
+}
+
+.shot__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 2.25rem;
+  padding: 0 var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-subtle);
+}
+
+.shot__url {
+  flex: 1;
+  max-width: 18rem;
+  margin-inline: auto;
+  padding: 0.125rem var(--space-3);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-text-subtle);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shot__img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  background: var(--color-bg-subtle);
+}
+
+/* One screenshot per theme; a hidden lazy image is never fetched */
+.shot__img--dark {
+  display: none;
+}
+
+:root[data-theme='dark'] .shot__img--light {
+  display: none;
+}
+
+:root[data-theme='dark'] .shot__img--dark {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']):not([data-theme='dark']) .shot__img--light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']):not([data-theme='dark']) .shot__img--dark {
+    display: block;
+  }
+}
+
+/* In a page body: the screenshot stands apart from the text around it, and opens at full size */
+.prose .shot {
+  margin-block: var(--space-6) var(--space-8);
+}
+
+.prose a.shot__img {
+  display: block;
+  cursor: zoom-in;
+}
+
+.prose a.shot__img--dark {
+  display: none;
+}
+
+.prose a.shot__img img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/*
+ * A screenshot opened over the page (app/components/screen-viewer.tsx): as
+ * wide as the window allows while the whole 16:10 image stays in view
+ */
+.screen-viewer {
+  position: fixed;
+  width: min(calc(100vw - 2 * var(--gutter)), calc((100vh - 2 * var(--gutter)) * 1.6));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.screen-viewer::backdrop {
+  background: color-mix(in srgb, var(--color-bg) 75%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.screen-viewer__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+}
+
+.screen-viewer__close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+}
+
+.screen-viewer__close:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}

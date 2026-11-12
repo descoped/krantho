@@ -1,0 +1,56 @@
+/* Modal — an overlay, so it may cast a shadow; 480px wide */
+.ui-modal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+}
+
+.ui-modal-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--color-overlay);
+  animation: ui-fade-in var(--duration-base) var(--ease-out);
+}
+
+.ui-modal {
+  position: relative;
+  width: min(480px, 100%);
+  max-height: calc(100dvh - var(--space-6));
+  overflow-y: auto;
+  padding: var(--space-5);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: ui-rise-in var(--duration-base) var(--ease-out);
+}
+
+.ui-modal:focus {
+  outline: none;
+}
+
+.ui-modal-title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+}
+
+.ui-modal-body {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.ui-modal-body p + p {
+  margin-top: var(--space-2);
+}
+
+.ui-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}

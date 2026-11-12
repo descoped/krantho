@@ -1,0 +1,38 @@
+{
+  "name": "@krantho/ui-react",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@krantho/core": "workspace:*",
+    "@krantho/seo-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.9",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "react": "^19.2.9",
+    "react-dom": "^19.2.9",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0"
+  }
+}

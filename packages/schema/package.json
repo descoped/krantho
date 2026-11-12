@@ -1,0 +1,33 @@
+{
+  "name": "@krantho/schema",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@krantho/core": "workspace:*",
+    "@krantho/persistence": "workspace:*",
+    "@krantho/seo-shared": "workspace:*",
+    "gray-matter": "^4.0.3"
+  },
+  "peerDependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.9",
+    "typescript": "^6.0.3",
+    "zod": "^4.4.3"
+  }
+}

@@ -1,0 +1,18 @@
+# Example: run Postgres for krantho development
+# Usage: docker compose -f docker-compose.example.yml up -d
+# Connect: DATABASE_URL=postgres://krantho:krantho@localhost:5432/krantho
+
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: krantho
+      POSTGRES_USER: krantho
+      POSTGRES_PASSWORD: krantho
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

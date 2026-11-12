@@ -1,0 +1,39 @@
+/*
+ * Where it appears, a global's own mode: the banner that says what a global
+ * is, then Data mode's cards (data-mode.css) for its readers and history.
+ */
+.globals-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  max-width: 80ch;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  line-height: var(--leading-dense);
+}
+
+.globals-banner-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent-ink);
+}
+
+.globals-paths {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-left: var(--space-5);
+}
+
+.globals-rule {
+  max-width: 72ch;
+  font-size: var(--text-sm);
+  line-height: var(--leading-dense);
+}

@@ -1,0 +1,44 @@
+/* Theme switch — a segmented control; the chosen option is a raised segment, no shadow */
+.theme-switch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.theme-switch[data-vertical="true"] {
+  flex-direction: column;
+}
+
+.theme-switch-option {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 24px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.theme-switch-option:hover {
+  color: var(--color-text);
+}
+
+/* The chosen theme: an accent border and icon, 3:1 or more against the track in both themes */
+.theme-switch-option[aria-checked="true"] {
+  background: var(--color-surface);
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.theme-switch-option svg {
+  width: 14px;
+  height: 14px;
+}

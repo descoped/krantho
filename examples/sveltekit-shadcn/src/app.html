@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Runs before first paint: applies the stored theme (or the system's), so a cached page never shows the other one first -->
+    <script>(function(){try{var t=localStorage.getItem('theme'),r=document.documentElement,d=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);r.classList.remove('light','dark');r.classList.add(d?'dark':'light')}catch(e){}})()</script>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" />
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-prerender="true">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>

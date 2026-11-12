@@ -1,0 +1,30 @@
+{
+  "name": "@krantho/ui-tailwind",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@krantho/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "tailwindcss": ">=4.0.0"
+  }
+}

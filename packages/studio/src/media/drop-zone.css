@@ -1,0 +1,46 @@
+/* The drop zone: a dashed hairline that turns accent while files are dragged over it */
+.media-drop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-input);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.media-drop--over {
+  background: var(--color-accent-soft);
+  border-style: solid;
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.media-drop-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.media-drop-progress:empty,
+.media-drop-failures:empty {
+  display: none;
+}
+
+.media-drop-progress {
+  flex-basis: 100%;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.media-drop-failures {
+  flex-basis: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-danger-soft);
+  border-radius: var(--radius-sm);
+  color: var(--color-danger-strong);
+  list-style: none;
+}

@@ -1,0 +1,7 @@
+# The organization behind krantho.com. The first site entity: its `name` is the
+# Open Graph site name. Its name, description and logo come from the `site`
+# section of krantho.config.ts. Kept to what is true today — no address, phone,
+# email or profile links (the repository is private).
+"@type": Organization
+role: primary
+properties: {}

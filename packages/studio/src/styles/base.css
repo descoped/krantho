@@ -1,0 +1,99 @@
+/*
+ * Studio base: reset, type, the focus ring and reduced motion.
+ * Colours, type scale and motion come from tokens.css.
+ */
+
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* `hidden` always hides, whatever display a class gives the element */
+[hidden] {
+  display: none !important;
+}
+
+/*
+ * The document scrolls the page; keep what scrolls into view (a focused row,
+ * an anchor) clear of the sticky top bar and table header (WCAG 2.4.11)
+ */
+html {
+  scroll-padding-top: var(--sticky-offset);
+}
+
+/* Type: the system UI face for text, JetBrains Mono for code */
+body {
+  font-family: var(--font-text);
+  font-size: var(--text-sm);
+  line-height: var(--leading-dense);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Display type only where it helps: page titles (and the brand mark, in its own rule) */
+h1 {
+  font-family: var(--font-display);
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--color-selection);
+  color: var(--color-text);
+}
+
+/* Read by assistive technology, not shown */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The visible focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Overlays enter with these; reduced motion shortens them to nothing */
+@keyframes ui-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ui-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.99);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

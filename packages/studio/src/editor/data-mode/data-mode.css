@@ -1,0 +1,305 @@
+/*
+ * Data mode: what the page emits, as a column of calm cards with hairline
+ * borders. Ids, keys and values in the code face; sources as chips with an
+ * icon each, so provenance never rests on colour.
+ */
+.data-mode {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* Card */
+.data-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.data-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+}
+
+.data-card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 650;
+  line-height: var(--leading-snug);
+}
+
+.data-card-aside {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.data-card-lead {
+  max-width: 72ch;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-dense);
+}
+
+.data-note {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-dense);
+}
+
+.data-note--error {
+  color: var(--color-danger-strong);
+}
+
+.data-mode code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+/* Rich results */
+.data-rich-list,
+.data-checks,
+.data-outcomes,
+.data-finding-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+}
+
+.data-rich {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "icon name chip"
+    "icon reader chip";
+  align-items: center;
+  column-gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.data-rich:first-child {
+  border-top: none;
+}
+
+.data-rich-icon {
+  grid-area: icon;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-subtle);
+}
+
+.data-rich-icon--eligible {
+  color: var(--color-live);
+}
+
+.data-rich-name {
+  grid-area: name;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.data-rich-reader {
+  grid-area: reader;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.data-rich .ui-chip {
+  grid-area: chip;
+}
+
+/* Findings per search engine */
+.data-findings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.data-finding-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.data-finding-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.data-finding-title {
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.data-check,
+.data-outcome {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  line-height: var(--leading-dense);
+}
+
+.data-check-icon,
+.data-outcome svg,
+.data-finding-clean svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+
+.data-outcome--error svg {
+  color: var(--color-danger-strong);
+}
+
+.data-check--open .data-check-icon {
+  color: var(--color-ahead-ink);
+}
+
+.data-outcome--skipped svg {
+  color: var(--color-text-subtle);
+}
+
+.data-finding-clean svg,
+.data-check-icon,
+.data-outcome--generated svg {
+  color: var(--color-live);
+}
+
+.data-finding-clean {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Checks */
+.data-check-label {
+  min-width: 10em;
+  font-weight: 550;
+}
+
+.data-check-hint {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Fields Data mode edits in the draft */
+.data-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  border: none;
+}
+
+.data-image-field {
+  min-inline-size: 0;
+  border: none;
+}
+
+.data-image-field legend {
+  margin-bottom: var(--space-1);
+}
+
+:is(.data-fields, .data-image-field):disabled :is(input, select, textarea, button) {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.data-fields-legend {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.data-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.data-field-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.data-field-help,
+.data-toggle-hint {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.data-toggle {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.data-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent);
+}
+
+.data-tag {
+  width: fit-content;
+  max-width: 100%;
+  padding: var(--space-1) var(--space-2);
+  overflow-wrap: anywhere;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+}
+
+.data-image-choice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.data-image-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Enrichment */
+.data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .data-card {
+    padding: var(--space-4);
+  }
+}

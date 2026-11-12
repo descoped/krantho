@@ -1,0 +1,121 @@
+/* Graph browser — the Add entity picker */
+/* --- Add Entity Picker --- */
+.graph-add-entity-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border: 1px dashed var(--color-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.graph-add-entity-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.graph-add-entity-picker {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  padding: 8px;
+  margin-top: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.graph-add-entity-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.graph-add-entity-search {
+  flex: 1;
+}
+
+.graph-add-entity-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.graph-add-entity-close:hover {
+  background: var(--color-bg-subtle);
+}
+
+.graph-add-entity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graph-add-entity-category {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  padding: 4px 6px;
+  margin-top: 4px;
+}
+
+.graph-add-entity-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  color: var(--color-text);
+}
+
+.graph-add-entity-type:hover {
+  background: var(--color-bg-subtle);
+}
+
+.graph-add-entity-type-name {
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.graph-add-entity-type-desc {
+  flex: 1;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.graph-add-entity-rich-badge {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-live) 15%, transparent);
+  color: var(--color-live-ink);
+  font-weight: 600;
+}
+
+.graph-add-entity-empty {
+  padding: 12px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  text-align: center;
+}

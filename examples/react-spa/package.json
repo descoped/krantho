@@ -1,0 +1,33 @@
+{
+  "name": "@krantho/example-react-spa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx scripts/generate-content.ts && tsx scripts/generate-seo.ts && node --env-file-if-exists=../../.env node_modules/vite/bin/vite.js --port 4006",
+    "build": "tsx scripts/generate-content.ts && tsx scripts/generate-seo.ts && vite build && tsx scripts/prerender.ts",
+    "preview": "vite preview --port 4006",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@krantho/config": "workspace:*",
+    "@krantho/core": "workspace:*",
+    "@krantho/media-local": "workspace:*",
+    "@krantho/schema": "workspace:*",
+    "@krantho/server-node": "workspace:*",
+    "react": "^19.2.9",
+    "react-dom": "^19.2.9",
+    "react-router": "^8.1.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.0.5",
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.7",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.2"
+  }
+}

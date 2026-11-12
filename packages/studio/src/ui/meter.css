@@ -1,0 +1,31 @@
+/* Meter — a 4px bar on the subtle surface; each part's colour meets 3:1 against it */
+.ui-meter {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-subtle);
+}
+
+.ui-meter-part {
+  flex-basis: 0;
+  min-width: 2px;
+}
+
+.ui-meter-part--live {
+  background: var(--color-live);
+}
+
+.ui-meter-part--ahead {
+  background: var(--color-ahead);
+}
+
+.ui-meter-part--danger {
+  background: var(--color-danger);
+}
+
+.ui-meter-part--muted {
+  background: var(--color-border-strong);
+}

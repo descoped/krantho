@@ -1,0 +1,288 @@
+/* Structure mode: the schema's fields, then the markdown body, on one hairline card */
+.editor-structure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.editor-structure-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-inline-size: 0;
+  border: none;
+}
+
+/* A field: its head line, the input, then help and error */
+.editor-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.editor-field-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.editor-field-label {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.editor-field-required {
+  margin-left: 2px;
+  color: var(--color-danger-strong);
+}
+
+.editor-field-optional {
+  color: var(--color-text-subtle);
+  font-size: var(--text-xs);
+}
+
+.ui-chip.editor-field-pill {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.editor-field-help {
+  max-width: 68ch;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.editor-field-error {
+  color: var(--color-danger-strong);
+  font-size: var(--text-xs);
+  font-weight: 550;
+}
+
+/* Inputs: the input border keeps 3:1 against the card (WCAG 1.4.11) */
+.editor-control {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+}
+
+.editor-control:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.editor-control--area {
+  min-height: 80px;
+  resize: vertical;
+  line-height: var(--leading-dense);
+}
+
+.editor-control--short {
+  width: auto;
+  min-width: 220px;
+  max-width: 100%;
+}
+
+.editor-field--invalid .editor-control {
+  border-color: var(--color-danger);
+}
+
+.editor-structure :disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.editor-field-counter {
+  align-self: flex-end;
+  margin-top: calc(-1 * var(--space-1));
+  color: var(--color-text-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom fields: outside the schema, each with Promote */
+.editor-custom-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.editor-subtitle {
+  font-size: var(--text-base);
+  font-weight: 650;
+}
+
+.editor-note {
+  margin-top: calc(-1 * var(--space-2));
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.editor-custom-line {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* The body: one markdown document; its ## headings are the sections */
+.editor-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.editor-body-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+}
+
+.editor-body-title {
+  font-family: var(--font-text);
+  font-size: var(--text-base);
+  font-weight: 650;
+}
+
+.editor-body-hint {
+  flex: 1;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.editor-body-hint code {
+  color: var(--color-text);
+}
+
+.editor-body-views {
+  display: inline-flex;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+.editor-body-panes {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Split: the markdown beside its rendering where there is room, stacked below that */
+@media (min-width: 900px) {
+  .editor-body-panes--split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.editor-body-toggle {
+  height: 28px;
+  padding: 0 var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.editor-body-toggle:hover {
+  background: var(--color-hover);
+  color: var(--color-text);
+}
+
+.editor-body-toggle[aria-pressed="true"] {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.editor-body-textarea {
+  width: 100%;
+  min-height: 360px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  resize: vertical;
+  tab-size: 2;
+}
+
+.editor-body-textarea:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.editor-body-textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.editor-body-preview {
+  min-height: 360px;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+}
+
+.editor-body-preview :is(h1, h2, h3, h4) {
+  margin: var(--space-4) 0 var(--space-2);
+  font-family: var(--font-text);
+  line-height: var(--leading-snug);
+}
+
+.editor-body-preview :is(p, ul, ol, pre, blockquote) {
+  margin-bottom: var(--space-3);
+}
+
+.editor-body-preview :is(ul, ol) {
+  padding-left: var(--space-5);
+}
+
+.editor-body-preview code {
+  padding: 1px 4px;
+  background: var(--color-code-bg);
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.editor-body-preview pre {
+  padding: var(--space-3);
+  overflow-x: auto;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+  border-radius: var(--radius-sm);
+}
+
+.editor-body-preview a {
+  color: var(--color-accent-ink);
+}
+
+@media (max-width: 959.98px) {
+  .editor-structure {
+    padding: var(--space-4);
+  }
+}

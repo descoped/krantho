@@ -1,0 +1,5 @@
+# Generated at dev/build time by scripts/generate-content.ts and generate-seo.ts
+/public/content/
+/public/sitemap.xml
+/public/robots.txt
+/public/llms.txt

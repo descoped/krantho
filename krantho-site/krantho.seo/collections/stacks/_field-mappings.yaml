@@ -1,0 +1,3 @@
+# Stack pages have no date field: the Article's datePublished is the date the
+# page was first published on the site (its first version).
+Article.date: datePublished

@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [],
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/persistence" },
+    { "path": "packages/persistence-fs" },
+    { "path": "packages/schema" },
+    { "path": "packages/seo" },
+    { "path": "packages/tools" }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@krantho/example-sveltekit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=../../.env node_modules/vite/bin/vite.js dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node build",
+    "verify:cache": "node scripts/verify-cache.mjs",
+    "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@krantho/config": "workspace:*",
+    "@krantho/core": "workspace:*",
+    "@krantho/media-local": "workspace:*",
+    "@krantho/persistence-fs": "workspace:*",
+    "@krantho/persistence-sqlite": "workspace:*",
+    "@krantho/schema": "workspace:*",
+    "@krantho/server-sveltekit": "workspace:*",
+    "@krantho/ui-svelte": "workspace:*",
+    "@sveltejs/adapter-node": "^5.5.7",
+    "@sveltejs/kit": "^2.70.3",
+    "@tailwindcss/vite": "^4.3.2",
+    "svelte": "^5.56.4",
+    "tailwindcss": "^4.3.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-vercel": "^6.3.4",
+    "@types/node": "^25.9.9",
+    "svelte-check": "^4.7.6",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.2"
+  }
+}

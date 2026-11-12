@@ -1,0 +1,139 @@
+/* Pulse — the header, the key figures, then the panels on a 4px rhythm */
+.pulse,
+.pulse-skeleton-frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Needs attention beside the collections; stacked below 960px */
+.pulse-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  gap: var(--space-5);
+}
+
+@media (max-width: 959.98px) {
+  .pulse-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A panel: hairline border, small radius, the surface; no shadow in flow */
+.pulse-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.pulse-panel-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pulse-panel-head h2,
+.pulse-panel-title {
+  font-size: var(--text-sm);
+  font-weight: 650;
+  line-height: var(--leading-snug);
+}
+
+.pulse-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--color-ahead-soft);
+  color: var(--color-ahead-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+/* A source that could not be read is said, never counted as zero */
+.pulse-unread {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.pulse-unread svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: var(--color-ahead-ink);
+}
+
+/* Loading placeholders, sized as the content they stand for */
+.pulse-skeleton {
+  display: block;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-subtle);
+  animation: pulse-skeleton 1.6s var(--ease-in-out) infinite;
+}
+
+.pulse-skeleton--title {
+  width: min(320px, 70%);
+  height: 2.25rem;
+}
+
+.pulse-skeleton--facts {
+  width: min(360px, 80%);
+  height: 20px;
+}
+
+.pulse-skeleton--label {
+  width: 40%;
+  height: 14px;
+}
+
+.pulse-skeleton--number {
+  width: 30%;
+  height: 2.25rem;
+  margin-top: var(--space-1);
+}
+
+.pulse-skeleton--line {
+  width: 70%;
+  height: 14px;
+}
+
+.pulse-skeleton--short {
+  width: 40%;
+  height: 12px;
+}
+
+.pulse-figure .pulse-skeleton--line {
+  margin-top: auto;
+}
+
+.pulse-skeleton-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 60px;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.pulse-panel-head + .pulse-skeleton-row {
+  border-top: none;
+}
+
+@keyframes pulse-skeleton {
+  50% {
+    opacity: 0.55;
+  }
+}
