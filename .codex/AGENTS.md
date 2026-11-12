@@ -27,16 +27,18 @@ When harness changes are needed, report the proposed change for Claude Code to
 handle. This restriction takes precedence over imported workflow instructions
 that would change the harness.
 
-Other `.claude/` directories have distinct purposes:
+`.claude/worktrees/` holds isolated working checkouts managed through the project's git
+workflow. Normal project edits inside a worktree remain permitted; its Claude harness files
+remain read-only.
 
-- `issues/`: active issue designs and task records; designs must be self-contained.
-- `history/`: issue records archived after merge.
-- `roadmap/`: planning documents; read relevant plans as task context.
-- `worktrees/`: isolated working checkouts managed through the project's git workflow.
+## Working documents stay out of the repository
 
-Read relevant workflow artifacts and follow their documented lifecycle when the
-requested task requires updating them. Normal project edits inside a worktree
-remain permitted; its Claude harness files remain read-only.
+The repository holds the project and nothing else. Design and task documents, analyses, plans
+and other working notes are never written into the checkout, tracked or ignored. They go to the
+notes directory that `.claude/CLAUDE.md` names (Documentation Conventions): `issues/issue-N/`
+for an issue's `design.md` and `task.md`, `notes/` for working notes. Without access to it, keep
+working documents in a directory outside the checkout. Never link to a working document from an
+issue or a pull request.
 
 ## Permission discipline
 
