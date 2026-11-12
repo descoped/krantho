@@ -18,9 +18,10 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      tag:
-        description: Release tag to publish (vMAJOR.MINOR.PATCH)
+      ref:
+        description: Tag, branch or commit to publish; its packages' version is published
         required: true
+        default: main
       dry_run:
         description: Pack and list only; publish nothing
         type: boolean
@@ -41,12 +42,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      REF: ${{ github.event.release.tag_name || inputs.ref }}
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ env.TAG }}
+          ref: ${{ env.REF }}
 
       - uses: pnpm/action-setup@v6
 
@@ -59,9 +60,12 @@ jobs:
       # Trusted publishing needs npm 11.5.1 or later
       - run: npm install --global npm@11
 
-      # Only a release tag whose versioned files all carry its version is published
+      # Every versioned file carries the version that is published
       - name: Check the release version
-        run: node scripts/release-version.mjs check "$TAG"
+        run: |
+          tag="v$(node scripts/release-version.mjs current)"
+          node scripts/release-version.mjs check "$tag"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
