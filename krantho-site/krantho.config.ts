@@ -33,8 +33,10 @@ export default defineKranthoConfig({
       issuer: 'https://token.actions.githubusercontent.com',
       audience: 'https://krantho.com',
       subjects: [
-        'repo:descoped/krantho:ref:refs/heads/main',
-        'repo:descoped/krantho:ref:refs/tags/v*',
+        // GitHub's immutable subject: owner and repository by name and ID, so a new
+        // repository that takes the name later is not trusted
+        'repo:descoped@11634416/krantho@1455174269:ref:refs/heads/main',
+        'repo:descoped@11634416/krantho@1455174269:ref:refs/tags/v*',
       ],
     },
   },
