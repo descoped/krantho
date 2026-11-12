@@ -2,14 +2,18 @@
   "name": "create-krantho",
   "version": "1.0.0",
   "description": "Scaffold a new krantho project",
-  "type": "module",
   "license": "MIT",
-  "author": "oranheim",
+  "homepage": "https://krantho.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/descoped/krantho.git",
+    "url": "git+https://github.com/descoped/krantho.git",
     "directory": "packages/create-krantho"
   },
+  "bugs": {
+    "url": "https://github.com/descoped/krantho/issues"
+  },
+  "author": "oranheim",
+  "type": "module",
   "bin": {
     "create-krantho": "./dist/index.js"
   },

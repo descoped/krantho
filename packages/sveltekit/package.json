@@ -2,14 +2,18 @@
   "name": "@krantho/sveltekit",
   "version": "1.0.0",
   "description": "One-install krantho bundle for SvelteKit — server adapter, Svelte UI, Studio, media, and SEO.",
-  "type": "module",
   "license": "MIT",
-  "author": "oranheim",
+  "homepage": "https://krantho.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/descoped/krantho.git",
+    "url": "git+https://github.com/descoped/krantho.git",
     "directory": "packages/sveltekit"
   },
+  "bugs": {
+    "url": "https://github.com/descoped/krantho/issues"
+  },
+  "author": "oranheim",
+  "type": "module",
   "dependencies": {
     "@krantho/server-sveltekit": "workspace:*",
     "@krantho/ui-svelte": "workspace:*",

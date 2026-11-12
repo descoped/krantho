@@ -2,14 +2,18 @@
   "name": "@krantho/node",
   "version": "1.0.0",
   "description": "One-install krantho bundle for Vite / Express / Node — server adapter, Studio, media, and SEO. Pick a UI library separately.",
-  "type": "module",
   "license": "MIT",
-  "author": "oranheim",
+  "homepage": "https://krantho.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/descoped/krantho.git",
+    "url": "git+https://github.com/descoped/krantho.git",
     "directory": "packages/node"
   },
+  "bugs": {
+    "url": "https://github.com/descoped/krantho/issues"
+  },
+  "author": "oranheim",
+  "type": "module",
   "dependencies": {
     "@krantho/server-node": "workspace:*",
     "@krantho/studio": "workspace:*",

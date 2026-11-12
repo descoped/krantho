@@ -1,6 +1,16 @@
 {
   "name": "@krantho/persistence",
   "version": "1.0.0",
+  "license": "MIT",
+  "homepage": "https://krantho.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/descoped/krantho.git",
+    "directory": "packages/persistence"
+  },
+  "bugs": {
+    "url": "https://github.com/descoped/krantho/issues"
+  },
   "type": "module",
   "exports": {
     ".": {
@@ -8,7 +18,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",

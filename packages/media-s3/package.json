@@ -1,6 +1,16 @@
 {
   "name": "@krantho/media-s3",
   "version": "1.0.0",
+  "license": "MIT",
+  "homepage": "https://krantho.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/descoped/krantho.git",
+    "directory": "packages/media-s3"
+  },
+  "bugs": {
+    "url": "https://github.com/descoped/krantho/issues"
+  },
   "type": "module",
   "exports": {
     ".": {

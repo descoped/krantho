@@ -1,16 +1,21 @@
 name: Publish to npm
 
 # Publishes every workspace package that is not private, at the version of a
-# release tag, to npm under the @krantho scope (and create-krantho). pnpm
-# replaces each workspace:* dependency with the released version and skips a
-# package whose version is already on npm, so a re-run publishes only what is
-# missing. Each package gets npm provenance from this job's identity.
+# release tag, to npm: the @krantho scope and create-krantho. Each package is
+# packed with pnpm, which replaces workspace:* with the released version, and
+# published with npm. A version already on npm is skipped, so a re-run
+# publishes only what is missing.
 #
-# Manual for now: run it with dry_run (the default) to see what would be
-# published. It needs the NPM_TOKEN secret, an npm automation token with
-# publish rights on the @krantho organisation.
+# Authentication: with the NPM_TOKEN secret set, npm publishes with that token.
+# Without it, npm uses trusted publishing: npm trusts this workflow's GitHub
+# identity for each package that names it as its trusted publisher, and no
+# token is stored. Both attach provenance.
+#
+# A published release runs it; run it by hand with dry_run to see what would go out.
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       tag:
@@ -35,10 +40,13 @@ jobs:
     if: github.repository == 'descoped/krantho'
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ env.TAG }}
 
       - uses: pnpm/action-setup@v6
 
@@ -48,30 +56,46 @@ jobs:
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
+      # Trusted publishing needs npm 11.5.1 or later
+      - run: npm install --global npm@11
+
       # Only a release tag whose versioned files all carry its version is published
       - name: Check the release version
-        env:
-          TAG: ${{ inputs.tag }}
         run: node scripts/release-version.mjs check "$TAG"
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
 
+      - name: Pack the packages
+        run: |
+          mkdir -p "$RUNNER_TEMP/packs"
+          for dir in packages/*/; do
+            [ "$(jq -r '.private // false' "$dir/package.json")" = "true" ] && continue
+            (cd "$dir" && pnpm pack --pack-destination "$RUNNER_TEMP/packs" >/dev/null)
+          done
+          ls "$RUNNER_TEMP/packs"
+
       # A pre-release goes to the `next` dist-tag, so `npm install` keeps the last release
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: 'true'
-          TAG: ${{ inputs.tag }}
-          DRY_RUN: ${{ inputs.dry_run }}
         run: |
           dist_tag=latest
           case "$TAG" in *-*) dist_tag=next ;; esac
-          args=(--recursive --access public --no-git-checks --tag "$dist_tag")
-          if [ "$DRY_RUN" = "true" ]; then
-            args+=(--dry-run)
-          elif [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "::error::the NPM_TOKEN secret is not set"
-            exit 1
-          fi
-          pnpm publish "${args[@]}"
+          # Without a token, npm authenticates through trusted publishing
+          [ -n "$NODE_AUTH_TOKEN" ] || unset NODE_AUTH_TOKEN
+          failed=0
+          for pack in "$RUNNER_TEMP"/packs/*.tgz; do
+            name=$(tar -xzOf "$pack" package/package.json | jq -r .name)
+            version=$(tar -xzOf "$pack" package/package.json | jq -r .version)
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "$name@$version is already on npm"
+              continue
+            fi
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "would publish $name@$version ($dist_tag)"
+              continue
+            fi
+            npm publish "$pack" --access public --tag "$dist_tag" --provenance || failed=1
+          done
+          exit "$failed"

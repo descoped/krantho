@@ -1,6 +1,16 @@
 {
   "name": "@krantho/server-node",
   "version": "1.0.0",
+  "license": "MIT",
+  "homepage": "https://krantho.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/descoped/krantho.git",
+    "directory": "packages/server-node"
+  },
+  "bugs": {
+    "url": "https://github.com/descoped/krantho/issues"
+  },
   "type": "module",
   "exports": {
     ".": {

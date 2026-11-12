@@ -1,8 +1,17 @@
 {
   "name": "@krantho/ui-svelte",
   "version": "1.0.0",
+  "license": "MIT",
+  "homepage": "https://krantho.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/descoped/krantho.git",
+    "directory": "packages/ui-svelte"
+  },
+  "bugs": {
+    "url": "https://github.com/descoped/krantho/issues"
+  },
   "type": "module",
-  "svelte": "./src/index.ts",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -11,8 +20,9 @@
     }
   },
   "files": [
-    "dist"
+    "src"
   ],
+  "svelte": "./src/index.ts",
   "scripts": {
     "build": "echo 'Svelte package uses svelte-package (not yet configured)'",
     "typecheck": "svelte-check --tsconfig ./tsconfig.json",
