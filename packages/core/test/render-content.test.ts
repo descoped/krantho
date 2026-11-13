@@ -69,6 +69,22 @@ describe('renderContent', () => {
       expect(unbased).toContain('href="/docs/guide/"')
     })
 
+    it('rewrites the src and href of raw img and a tags as markdown links are', async () => {
+      const resolveUrl = (url: string): string => (url.startsWith('images/') ? `/${url}` : url)
+      const body = [
+        '<p align="center"><img src="images/menu.png" width="340"></p>',
+        '',
+        'Inline <a href=\'/setup/\'>setup</a> and <img alt=x src="images/b.png">, <span title="images/c">no</span>.',
+      ].join('\n')
+
+      const { html } = await renderContent({}, body, { basePath: '/repo', resolveUrl })
+
+      expect(html).toContain('<img src="/repo/images/menu.png" width="340">')
+      expect(html).toContain("<a href='/repo/setup/'>")
+      expect(html).toContain('src="/repo/images/b.png"')
+      expect(html).toContain('<span title="images/c">')
+    })
+
     it('leaves URLs as written without a base path, also after a render with one', async () => {
       await renderContent({}, links, { basePath: '/repo' })
       const { html } = await renderContent({}, links)

@@ -219,7 +219,9 @@ interface RenderContentOptions {
 
 With `basePath` (`/docs-site`), a markdown link or image whose URL starts at the site's root (`/guide`,
 `/images/logo.svg`) gets the base path in front, as Next's `basePath` does for the site's own links. Absolute,
-protocol-relative and relative URLs, URLs already under the base path, and URLs in raw HTML are left as written.
+protocol-relative and relative URLs, and URLs already under the base path, are left as written. The quoted `src` and
+`href` of raw `<img>` and `<a>` tags in the markdown are rewritten as links are (`html-urls.ts`); other raw HTML is
+left as written.
 `resolveUrl` rewrites each link and image URL as written, before the base path is added: `@krantho/static`
 maps relative links between markdown files to the pages they become. `new MarkdownProcessor({ basePath,
 resolveUrl })` does the same for a processor of your own.

@@ -169,9 +169,9 @@ export default nextConfig
 
 ## Links and images
 
-A project site is served under `/<repository>`. `next/link` adds that path to the site's own links, and krantho adds it to links and images in your markdown that start at the site's root: `[Setup](/setup/)` and `![Diagram](/diagram.png)` work at `/<repository>/` and at a domain of your own alike. Put images in `public/`. Absolute URLs and raw HTML are left as written.
+A project site is served under `/<repository>`. `next/link` adds that path to the site's own links, and krantho adds it to links and images in your markdown that start at the site's root: `[Setup](/setup/)` and `![Diagram](/diagram.png)` work at `/<repository>/` and at a domain of your own alike. Put images in `public/`. Absolute URLs are left as written.
 
-Links between your markdown files work too, so the same folder reads well on GitHub: `[Setup](setup.md#install)` goes to the setup page, and `![Diagram](images/diagram.png)` to `/images/diagram.png`, which the site serves from `public/images/diagram.png`. See [Links between files](/docs/package-static#links-between-files).
+Links between your markdown files work too, so the same folder reads well on GitHub: `[Setup](setup.md#install)` goes to the setup page, and `![Diagram](images/diagram.png)` to `/images/diagram.png`, which the site serves from `public/images/diagram.png`. An image sized in HTML, `<img src="images/diagram.png" width="340">`, works the same way. See [Links between files](/docs/package-static#links-between-files).
 
 ## Publish a repository's existing docs
 
