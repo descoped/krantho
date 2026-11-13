@@ -11,7 +11,8 @@ on:
   # is vMAJOR.MINOR.PATCH (semver.org), the version every package.json carries.
   release:
     types: [published]
-  # Manual trigger — deploys a ref to preview (default) or production
+  # Manual trigger: a preview of any ref (default), or production from a ref whose
+  # versioned files carry the latest release's version — a site-only release
   workflow_dispatch:
     inputs:
       ref:
@@ -29,15 +30,17 @@ concurrency:
   group: deploy-site
   cancel-in-progress: false
 
-# contents: write lets the job add the deployment URL to the release notes;
 # id-token: write lets the content check present the job's identity to the site
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
+# The project's identifiers are secrets so that no log shows them. The repository is
+# public: nothing names the Vercel account, a deployment URL or how to roll back in a
+# log, the job summary or the release notes (.claude/rules/public-content.md).
 env:
-  VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
   deploy:
@@ -72,14 +75,28 @@ jobs:
 
       # A release is vMAJOR.MINOR.PATCH, every versioned file carries that version,
       # the /changelog page has its entry, and it is higher than every earlier
-      # release; a manual production deploy names such a tag. Nothing deploys otherwise.
+      # release. A manual production deploy ships a commit on main whose versioned
+      # files carry the latest release's version. Nothing deploys otherwise.
       - name: Check the release version
         if: github.event_name == 'release' || steps.mode.outputs.env == 'production'
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name || github.event.inputs.ref }}
+          TAG: ${{ github.event.release.tag_name }}
           EVENT: ${{ github.event_name }}
         run: |
+          if [ "$EVENT" != "release" ]; then
+            TAG="v$(node -p "require('./package.json').version")"
+            latest=$(gh release list --exclude-drafts --exclude-pre-releases --limit 1 --json tagName -q '.[0].tagName')
+            if [ "$TAG" != "$latest" ]; then
+              echo "::error::the ref is at $TAG; a site-only release ships the latest release, $latest"
+              exit 1
+            fi
+            if ! git merge-base --is-ancestor HEAD origin/main; then
+              echo "::error::a site-only release ships a commit on main"
+              exit 1
+            fi
+            echo "Site-only release at $TAG"
+          fi
           node scripts/release-version.mjs check "$TAG"
           node krantho-site/scripts/check-release-entry.mjs "$TAG"
           if [ "$EVENT" = "release" ]; then
@@ -126,21 +143,19 @@ jobs:
       # Vercel reads the commit's author from git and blocks a deployment whose author
       # is not a member of the team; commits carry a GitHub noreply address. Without
       # git metadata the deployment is the token owner's.
+      # The CLI prints the deployment's URL and the Vercel account; neither reaches the log.
+      # On failure the CLI's output is shown with its URLs and account removed.
       - name: Deploy to Vercel
-        id: deploy
         env:
           GIT_DIR: /nonexistent
         run: |
-          URL=$(vercel deploy --prebuilt ${{ steps.mode.outputs.prod_flag }} --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
-          {
-            echo "### ${{ steps.mode.outputs.label }} deployment"
-            echo ""
-            echo "**URL:** $URL"
-            if [ -n "${{ steps.mode.outputs.prod_flag }}" ]; then
-              echo "**Rollback:** \`vercel promote <previous deployment URL>\`"
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          if ! vercel deploy --prebuilt ${{ steps.mode.outputs.prod_flag }} --token=${{ secrets.VERCEL_TOKEN }} \
+              > /dev/null 2> "$RUNNER_TEMP/deploy.log"; then
+            sed -E 's#https?://[^ ]+#<url>#g; s#[A-Za-z0-9._-]+/krantho\b#<account>/krantho#g; s#[A-Za-z0-9.-]+\.vercel\.app#<deployment>#g' \
+              "$RUNNER_TEMP/deploy.log" | tail -40
+            exit 1
+          fi
+          echo "### ${{ steps.mode.outputs.label }} deployment done" >> "$GITHUB_STEP_SUMMARY"
 
       # A deploy starts with an empty page cache: render every page in the
       # sitemap once, so no visitor waits for a page's first render. Preview
@@ -193,19 +208,3 @@ jobs:
       - name: Notify IndexNow
         if: steps.mode.outputs.env == 'production'
         run: node krantho-site/scripts/indexnow.mjs https://krantho.com
-
-      - name: Add deployment to release notes
-        if: github.event_name == 'release'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ github.event.release.tag_name }}
-          URL: ${{ steps.deploy.outputs.url }}
-        run: |
-          gh release view "$TAG" --json body -q .body > "$RUNNER_TEMP/notes.md"
-          {
-            echo ""
-            echo "---"
-            echo "**Deployment:** $URL"
-            echo "**Rollback:** \`vercel promote $URL\` from a later release"
-          } >> "$RUNNER_TEMP/notes.md"
-          gh release edit "$TAG" --notes-file "$RUNNER_TEMP/notes.md"
