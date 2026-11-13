@@ -29,7 +29,7 @@ import config from '../krantho.config'
 import { collections } from '../krantho.collections'
 
 export const site = createStaticSite({ config, collections })
-initServerLoader(site.loader, { basePath: site.basePath })
+initServerLoader(site.loader, site.rendering)
 ```
 
 It takes the configuration and collections the server takes, and returns:
@@ -42,6 +42,7 @@ It takes the configuration and collections the server takes, and returns:
 | `llmsTxt()` | `llms.txt`: the site's name and summary, then each published, indexable page under its collection's heading, with a link and its description |
 | `robotsTxt()` | `robots.txt`, allowing every crawler and naming the sitemap |
 | `basePath` | The path of `site.baseUrl` (`/docs-site`), or `''` at a host's root |
+| `rendering` | How pages render their markdown: `basePath`, `resolveUrl` (see Links between files) and `atNotation` (`content.atNotation`). Pass it to `initServerLoader()` |
 | `config` | The resolved configuration |
 
 Serve each file from a route written once at build:
@@ -67,6 +68,18 @@ export async function GET(): Promise<Response> {
 - a collection with pages has no `path`, or one that does not end in `/`: each page is written as a folder, and the sitemap, llms.txt and canonical URLs must name the address it is served at. Write `path: '/docs/:slug/'`.
 
 Pages are dated by their files' last git commit. Without the repository's full history, such as a shallow CI checkout, the build warns once and dates them by modification time: check out with `fetch-depth: 0`.
+
+## Links between files
+
+`site.rendering.resolveUrl` lets a folder of markdown read the same on GitHub and on the site. A URL written relative to a document's file is rewritten when the page renders:
+
+| Written in `docs/setup.md` | Rendered (site at `/docs-site`) |
+|---|---|
+| `[Apps](apps.md#limits)` | `/docs-site/apps/#limits` |
+| `[Home](README.md)`, with `indexFile: 'README.md'` | `/docs-site/` |
+| `![Flow](images/flow.png)` | `/docs-site/images/flow.png` |
+
+A link to a markdown file goes to that document's page, in whichever collection reads the file. Any other file inside the collection's directory is served from the site's root, so copy it into `public/` at the same path (`public/images/flow.png`). Absolute URLs, URLs that start with `/` or `#`, and files outside the collection's directory are left as written. `createLinkResolver(collections)` builds the same resolver for a site of your own.
 
 ## basePathOf
 

@@ -213,13 +213,21 @@ interface RenderContentOptions {
   atNotation?: boolean              // substitute @field references from fields (default: true)
   processor?: IMarkdownProcessor    // default: MarkdownProcessor
   basePath?: string                 // the path the site is served under (default: none)
+  resolveUrl?: (url: string) => string  // rewrites link and image URLs before basePath (default: none)
 }
 ```
 
 With `basePath` (`/docs-site`), a markdown link or image whose URL starts at the site's root (`/guide`,
 `/images/logo.svg`) gets the base path in front, as Next's `basePath` does for the site's own links. Absolute,
 protocol-relative and relative URLs, URLs already under the base path, and URLs in raw HTML are left as written.
-`new MarkdownProcessor({ basePath })` does the same for a processor of your own.
+`resolveUrl` rewrites each link and image URL as written, before the base path is added: `@krantho/static`
+maps relative links between markdown files to the pages they become. `new MarkdownProcessor({ basePath,
+resolveUrl })` does the same for a processor of your own.
+
+`slugOfFile(collection, fileName)` and `fileNameOf(collection, slug)` (`content-files.ts`) are the one
+mapping between a collection's files and its slugs: `<slug>.md`, except that a collection with an
+`indexFile` (`README.md`) reads that file as `index` and does not read `index.md`. The filesystem
+adapter, the import, the content migration, the file watcher and `GET /api/changes` all use it.
 
 Renders a markdown body for display: @-notation substitution from `fields`, HTML, and the `##` sections (`IMarkdownProcessor.extractSections`, the rendering seam). The one implementation of content rendering — `ContentEngine` uses it, and so do server-rendered pages that read published content (`@krantho/ui-react/server`, the SvelteKit examples) and the server's import, file watcher and content migration (with `atNotation: false`), which store the sections it returns.
 

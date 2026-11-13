@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { renderContent } from '@krantho/core'
+import { renderContent, slugOfFile } from '@krantho/core'
 import { type AuthoredMetadata, type Publication, publicationOfFile } from '@krantho/persistence'
 import {
   type ContentConfig,
@@ -85,10 +85,9 @@ export async function autoImport(
       collection,
       (await adapter.getRuntimeSchema?.(collection.name)) ?? null,
     )
-    const mdFiles = entries.filter((e) => e.endsWith('.md'))
-
-    for (const file of mdFiles) {
-      const slug = file.slice(0, -3)
+    for (const file of entries) {
+      const slug = slugOfFile(collection, file)
+      if (slug === null) continue
       const filePath = join(collection.directory, file)
 
       try {

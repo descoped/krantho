@@ -63,6 +63,30 @@ describe('FileSystemAdapter collection directories', () => {
     expect(await slugsOf('published', 'landing')).toEqual(['home'])
   })
 
+  it('reads a collection’s named index file as its index document, and not index.md', async () => {
+    await writeFile(
+      join(root, 'docs', 'README.md'),
+      '---\ntitle: Readme\nstatus: published\n---\nHi',
+    )
+    await writeFile(
+      join(root, 'docs', 'index.md'),
+      '---\ntitle: Shadowed\nstatus: published\n---\nNo',
+    )
+    const readme = new FileSystemAdapter({
+      contentPath: root,
+      defaultLocale: 'en',
+      directories: new Map([['docs', join(root, 'docs')]]),
+      indexFiles: new Map([['docs', 'README.md']]),
+    })
+    const slugs = (
+      await readme.query({ state: 'current', projection: 'meta', collections: ['docs'] })
+    ).items.map((meta) => meta.slug)
+
+    expect((await readme.getContent('docs', 'index'))?.fields.title).toBe('Readme')
+    expect(await readme.getContent('docs', 'README')).toBeNull()
+    expect(slugs.sort()).toEqual(['index', 'install', 'oppsett'])
+  })
+
   it('lists no documents for a collection whose directory does not exist yet', async () => {
     const fresh = new FileSystemAdapter({
       contentPath: root,

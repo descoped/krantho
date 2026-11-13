@@ -66,6 +66,7 @@ Properties:
 - `name` -- unique collection identifier
 - `source` -- `'filesystem'` (`.md` files are master) or `'database'` (database is master)
 - `directory` -- required for filesystem collections, path to content directory
+- `indexFile` -- optional; the file in `directory` read as the document `index` (`'README.md'`, the file GitHub shows for a folder). `index.md` is then not read. A `.md` file name with no `/`
 - `schema` -- Zod object schema for field validation and type inference
 - `path` -- optional; where the collection's documents render as pages. The sitemap, the editor's **Open on site**, the Next.js page refresh after a publish and the URLs in a page's JSON-LD all read it through `documentPath()` in `@krantho/core` ([core.md](core.md#cache-tags)):
   - a pattern holding `:slug` -- `'/articles/:slug'` renders `hello` at `/articles/hello`; the slug `index` renders at the pattern without its `/:slug` segment (`/articles`)

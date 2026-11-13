@@ -60,6 +60,13 @@ export interface MarkdownProcessorOptions {
    * URLs in raw HTML inside the markdown are left as written.
    */
   basePath?: string | undefined
+  /**
+   * Rewrites the URL of each link and image as written in the markdown,
+   * before the base path is added: a static site maps a relative link to
+   * another document's file (`setup.md#install`) to that page's address.
+   * URLs in raw HTML are left as written.
+   */
+  resolveUrl?: ((url: string) => string) | undefined
 }
 
 /** A path without the slashes it ends with: `/docs-site/` is `/docs-site` */
@@ -86,22 +93,26 @@ function underBasePath(url: string, basePath: string): string {
  * Markdown processor with @ notation support
  */
 export class MarkdownProcessor implements IMarkdownProcessor {
-  private readonly basePath: string
+  private readonly rewrite: ((url: string) => string) | undefined
 
   constructor(options: MarkdownProcessorOptions = {}) {
-    this.basePath = withoutTrailingSlashes(options.basePath ?? '')
+    const basePath = withoutTrailingSlashes(options.basePath ?? '')
+    const resolve = options.resolveUrl
+    if (basePath && resolve) this.rewrite = (url) => underBasePath(resolve(url), basePath)
+    else if (basePath) this.rewrite = (url) => underBasePath(url, basePath)
+    else this.rewrite = resolve
   }
 
   async parse(content: string): Promise<string> {
-    const basePath = this.basePath
+    const rewrite = this.rewrite
     try {
       const result = await marked.parse(
         content,
-        basePath
+        rewrite
           ? {
               walkTokens: (token) => {
                 if (token.type === 'link' || token.type === 'image') {
-                  token.href = underBasePath(token.href, basePath)
+                  token.href = rewrite(token.href)
                 }
               },
             }
@@ -142,6 +153,8 @@ export interface RenderContentOptions {
   processor?: IMarkdownProcessor | undefined
   /** The path the site is served under, for root-relative URLs ({@link MarkdownProcessorOptions}) */
   basePath?: string | undefined
+  /** Rewrites link and image URLs before the base path is added ({@link MarkdownProcessorOptions}) */
+  resolveUrl?: ((url: string) => string) | undefined
 }
 
 /**
@@ -155,7 +168,9 @@ export async function renderContent(
   body: string,
   options: RenderContentOptions = {},
 ): Promise<RenderedContent> {
-  const processor = options.processor ?? new MarkdownProcessor({ basePath: options.basePath })
+  const processor =
+    options.processor ??
+    new MarkdownProcessor({ basePath: options.basePath, resolveUrl: options.resolveUrl })
   const content = (options.atNotation ?? true) ? processor.processAtNotation(body, fields) : body
   const [html, sections] = await Promise.all([
     processor.parse(content),

@@ -1,10 +1,13 @@
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
 import {
+  type ContentFileNaming,
   type ContentMetadata,
   DEFAULT_FRONTMATTER_STATUS,
+  fileNameOf,
   type IContentLoader,
   renderContent,
+  slugOfFile,
   splitFrontmatter,
 } from '@krantho/core'
 import type {
@@ -53,6 +56,11 @@ export interface FileSystemAdapterOptions extends Partial<PersistenceConfig> {
    * sets to the checkout's.
    */
   dateOf?: ((filePath: string) => string | undefined) | undefined
+  /**
+   * The file each collection reads as its `index` document, by collection
+   * name (`README.md`); a collection without one reads `index.md`
+   */
+  indexFiles?: ReadonlyMap<string, string> | undefined
 }
 
 /** A file's publication state from its frontmatter status */
@@ -100,6 +108,7 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
   private readonly defaultStatus: string
   private readonly defaultLocale: string
   private readonly dateOf: ((filePath: string) => string | undefined) | undefined
+  private readonly indexFiles: ReadonlyMap<string, string>
 
   constructor(config: FileSystemAdapterOptions) {
     const merged = { ...DEFAULT_FS_CONFIG, ...config }
@@ -108,6 +117,7 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
     this.defaultLocale = config.defaultLocale
     this.defaultStatus = config.defaultStatus ?? DEFAULT_FRONTMATTER_STATUS
     this.dateOf = config.dateOf
+    this.indexFiles = config.indexFiles ?? new Map()
   }
 
   async exists(slug: string): Promise<boolean> {
@@ -163,7 +173,7 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
     return runContentQuery(
       {
         collections: () => [...this.directories.keys()],
-        slugs: (collection) => slugsIn(this.directoryOf(collection)),
+        slugs: (collection) => slugsIn(this.directoryOf(collection), this.namingOf(collection)),
         read: (collection, slug, render) => this.readFile(collection, slug, render),
       },
       spec,
@@ -237,8 +247,22 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
     return this.directories.get(collection) ?? this.contentPath
   }
 
+  private namingOf(collection: string): ContentFileNaming {
+    return { indexFile: this.indexFiles.get(collection) }
+  }
+
+  /**
+   * The file of a collection's document. Throws for a slug no file is read as:
+   * in a collection reading `README.md` as `index`, `README` and `index.md` are
+   * not documents.
+   */
   private filePath(collection: string, slug: string): string {
-    return path.join(this.directoryOf(collection), `${slug}.md`)
+    const naming = this.namingOf(collection)
+    const fileName = fileNameOf(naming, slug)
+    if (slugOfFile(naming, fileName) !== slug) {
+      throw new Error(`${collection} has no document file for ${slug}`)
+    }
+    return path.join(this.directoryOf(collection), fileName)
   }
 
   private resolveContentPath(slug: string): string {
@@ -247,7 +271,7 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
 }
 
 /** The slugs of the markdown files in a directory; none when the directory does not exist yet */
-async function slugsIn(directory: string): Promise<string[]> {
+async function slugsIn(directory: string, naming: ContentFileNaming = {}): Promise<string[]> {
   let entries: string[]
   try {
     entries = await fs.readdir(directory)
@@ -255,5 +279,8 @@ async function slugsIn(directory: string): Promise<string[]> {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []
     throw error
   }
-  return entries.filter((entry) => entry.endsWith('.md')).map((entry) => entry.slice(0, -3))
+  return entries.flatMap((entry) => {
+    const slug = slugOfFile(naming, entry)
+    return slug === null ? [] : [slug]
+  })
 }
