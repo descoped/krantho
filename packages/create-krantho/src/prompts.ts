@@ -1,6 +1,6 @@
 import prompts from 'prompts'
 
-export type Framework = 'nextjs' | 'sveltekit'
+export type Framework = 'nextjs' | 'sveltekit' | 'nextjs-static'
 export type UI = 'tailwind' | 'mui' | 'plain'
 export type PackageManager = 'pnpm' | 'npm' | 'yarn'
 
@@ -12,6 +12,8 @@ export interface ProjectOptions {
   seo: boolean
   sampleContent: boolean
   packageManager: PackageManager
+  /** The package manager and its version (\`pnpm@12.1.0\`), when known: package.json's \`packageManager\` */
+  packageManagerSpec?: string | undefined
   port: number
 }
 
@@ -20,6 +22,12 @@ function detectPackageManager(): PackageManager {
   if (agent.startsWith('pnpm')) return 'pnpm'
   if (agent.startsWith('yarn')) return 'yarn'
   return 'npm'
+}
+
+/** The running package manager with its version (\`pnpm@12.1.0\`), from the user agent it sets */
+function detectPackageManagerSpec(): string | undefined {
+  const match = /^(pnpm|yarn|npm)\/(\d+\.\d+\.\d+)/.exec(process.env.npm_config_user_agent ?? '')
+  return match ? `${match[1]}@${match[2]}` : undefined
 }
 
 export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
@@ -44,6 +52,11 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
             description: 'Svelte 5, server-side rendering',
             value: 'sveltekit',
           },
+          {
+            title: 'Static site (Next.js, GitHub Pages)',
+            description: 'Markdown docs built to static files, no database',
+            value: 'nextjs-static',
+          },
         ],
       },
       {
@@ -66,7 +79,8 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
         ],
       },
       {
-        type: 'toggle',
+        // A static site has no API and no Studio to sign in to
+        type: (_, values) => (values.framework === 'nextjs-static' ? null : 'toggle'),
         name: 'auth',
         message: 'Enable authentication (token mode)?',
         initial: false,
@@ -74,7 +88,7 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
         inactive: 'no',
       },
       {
-        type: 'toggle',
+        type: (_, values) => (values.framework === 'nextjs-static' ? null : 'toggle'),
         name: 'seo',
         message: 'Include SEO components?',
         initial: true,
@@ -82,7 +96,7 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
         inactive: 'no',
       },
       {
-        type: 'toggle',
+        type: (_, values) => (values.framework === 'nextjs-static' ? null : 'toggle'),
         name: 'sampleContent',
         message: 'Include sample content?',
         initial: true,
@@ -101,11 +115,12 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
   return {
     name: targetArg ?? response.name,
     framework: response.framework,
-    ui: response.ui ?? 'tailwind',
+    ui: response.ui ?? (response.framework === 'nextjs-static' ? 'plain' : 'tailwind'),
     auth: response.auth ?? false,
     seo: response.seo ?? true,
     sampleContent: response.sampleContent ?? true,
     packageManager: detectPackageManager(),
+    packageManagerSpec: detectPackageManagerSpec(),
     port: 3000,
   }
 }

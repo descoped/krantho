@@ -61,7 +61,10 @@ writes the pnpm setting itself. A site on Postgres only does not need it.
 1. **Inspect the project.** Read `package.json`: `next` → Next.js, `@sveltejs/kit` → SvelteKit,
    `express` or `vite` without a meta-framework → Express/Vite. Note the package manager, the
    TypeScript setup, the existing routes, and where content lives today. For a new project, ask
-   which framework, or suggest `npx create-krantho`.
+   which framework, or suggest `npx create-krantho`. A site whose authors edit markdown in the
+   repository and that needs no Studio or server (project docs on GitHub Pages) is a static site:
+   `npx create-krantho` → **Static site (Next.js, GitHub Pages)**, built on `@krantho/static`
+   (krantho.com/docs/deploy-github-pages); the steps below are for a site with a server.
 2. **Load the stack reference** and follow it for every file:
    - Next.js (App Router): `${CLAUDE_SKILL_DIR}/references/next.md`
    - SvelteKit 2: `${CLAUDE_SKILL_DIR}/references/sveltekit.md`

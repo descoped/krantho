@@ -69,7 +69,9 @@ A project from `create-krantho` with pnpm already has the setting. A site on Pos
 npx create-krantho my-site
 ```
 
-The scaffolder asks for the framework (Next.js or SvelteKit), a UI library (Tailwind CSS, MUI on Next.js only, or plain CSS), token authentication, SEO components and sample content. It writes `krantho.config.ts`, `krantho.collections.ts`, the API route, the pages and the content directory, installs the dependencies, and initializes a git repository. The generated configuration turns on local media (`media: { provider: 'local' }`); a Next.js project also caches each page until a content change (`cache: { pages: 'next-isr' }`) and shows a banner while an editor previews drafts.
+The scaffolder asks for the framework (Next.js, SvelteKit, or a static site built with Next.js), a UI library (Tailwind CSS, MUI on Next.js only, or plain CSS), token authentication, SEO components and sample content. It writes `krantho.config.ts`, `krantho.collections.ts`, the API route, the pages and the content directory, installs the dependencies, and initializes a git repository. The generated configuration turns on local media (`media: { provider: 'local' }`); a Next.js project also caches each page until a content change (`cache: { pages: 'next-isr' }`) and shows a banner while an editor previews drafts.
+
+A static site is markdown built to plain files, with no database, API or Studio: [Deploy to GitHub Pages](/docs/deploy-github-pages) describes the project it writes.
 
 ## Configure
 

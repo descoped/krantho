@@ -8,6 +8,7 @@ export {
   contentCommit,
   contentVersion,
   generateContentDates,
+  gitDateLookup,
   loadContentDates,
 } from './content-dates.js'
 export type { ContentLoader } from './content-loader.js'
@@ -35,5 +36,6 @@ export { verifyPreviewRequest } from './preview-token.js'
 export { matchRoute, routeSpecificity } from './route-matcher.js'
 export type { ExportResult, ImportResult, SeoSeedConfig } from './seo-config-io.js'
 export { exportSeoConfig, importSeoConfig } from './seo-config-io.js'
+export { memorySeoConfig } from './seo-seed.js'
 export type { StudioRequest, StudioServer } from './studio-gate.js'
 export { createStudioServer } from './studio-gate.js'

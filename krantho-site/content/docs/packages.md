@@ -19,6 +19,7 @@ Krantho is published to npm as one package per concern. They share one version a
 | [`@krantho/next`](https://www.npmjs.com/package/@krantho/next) | One install for Next.js: the server adapter, React UI, Studio, local media and SEO |
 | [`@krantho/sveltekit`](https://www.npmjs.com/package/@krantho/sveltekit) | One install for SvelteKit: the server adapter, Svelte UI, Studio, local media and SEO |
 | [`@krantho/node`](https://www.npmjs.com/package/@krantho/node) | One install for Express, Vite or Node: the server adapter, Studio, local media and SEO; pick a UI package separately |
+| [`@krantho/static`](https://www.npmjs.com/package/@krantho/static) | A site built from its markdown to static files, for GitHub Pages or any file host. [Docs](/docs/package-static) |
 
 ## Server
 
@@ -46,7 +47,7 @@ Krantho is published to npm as one package per concern. They share one version a
 | [`@krantho/persistence`](https://www.npmjs.com/package/@krantho/persistence) | The persistence contract every store implements. [Docs](/docs/package-persistence) |
 | [`@krantho/persistence-sqlite`](https://www.npmjs.com/package/@krantho/persistence-sqlite) | SQLite, the default |
 | [`@krantho/persistence-postgres`](https://www.npmjs.com/package/@krantho/persistence-postgres) | Postgres, for production and serverless hosts |
-| [`@krantho/persistence-fs`](https://www.npmjs.com/package/@krantho/persistence-fs) | Markdown files as the store, for prototypes |
+| [`@krantho/persistence-fs`](https://www.npmjs.com/package/@krantho/persistence-fs) | Markdown files as the store, for prototypes and static sites |
 
 ## Media
 

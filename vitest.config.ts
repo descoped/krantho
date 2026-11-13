@@ -14,6 +14,7 @@ export default defineConfig({
       'packages/schema/vitest.config.ts',
       'packages/tools/vitest.config.ts',
       'packages/server/vitest.config.ts',
+      'packages/static/vitest.config.ts',
       'packages/server-next/vitest.config.ts',
       'packages/server-sveltekit/vitest.config.ts',
       'packages/server-node/vitest.config.ts',

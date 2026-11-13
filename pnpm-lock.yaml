@@ -1182,6 +1182,34 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
 
+  packages/static:
+    dependencies:
+      '@krantho/api':
+        specifier: workspace:*
+        version: link:../api
+      '@krantho/config':
+        specifier: workspace:*
+        version: link:../config
+      '@krantho/core':
+        specifier: workspace:*
+        version: link:../core
+      '@krantho/schema':
+        specifier: workspace:*
+        version: link:../schema
+      '@krantho/server':
+        specifier: workspace:*
+        version: link:../server
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+
   packages/studio:
     devDependencies:
       '@fontsource-variable/bricolage-grotesque':

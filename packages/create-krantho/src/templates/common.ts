@@ -15,6 +15,7 @@ export function generateCommonFiles(options: ProjectOptions): Map<string, string
 function gitignore(): string {
   return `node_modules/
 dist/
+out/
 .next/
 .svelte-kit/
 .krantho/

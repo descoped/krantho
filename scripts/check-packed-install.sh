@@ -5,10 +5,13 @@
 # like this one meets what a user meets: Node's own resolver, pnpm's strict
 # layout and the files each package publishes.
 #
-# Usage: sh scripts/check-packed-install.sh <nextjs|sveltekit> (after pnpm run build)
+# A static site (nextjs-static) is built instead, as GitHub Pages builds a project
+# site, and its files are checked.
+#
+# Usage: sh scripts/check-packed-install.sh <nextjs|sveltekit|nextjs-static> (after pnpm run build)
 set -eu
 
-framework=${1:?usage: check-packed-install.sh <nextjs|sveltekit>}
+framework=${1:?usage: check-packed-install.sh <nextjs|sveltekit|nextjs-static>}
 root=$(cd "$(dirname "$0")/.." && pwd)
 work=$(mktemp -d)
 port=4199
@@ -66,6 +69,12 @@ fi
 if grep -Eq "^  '?@krantho/[a-z-]+@[0-9]" "$site/pnpm-lock.yaml"; then
   grep -E "^  '?@krantho/[a-z-]+@[0-9]" "$site/pnpm-lock.yaml"
   echo "these @krantho packages came from the registry, not the packs"; exit 1
+fi
+
+if [ "$framework" = nextjs-static ]; then
+  sh "$root/scripts/check-static-site.sh" "$site"
+  rm -rf "$work"
+  exit 0
 fi
 
 if [ "$framework" = nextjs ]; then

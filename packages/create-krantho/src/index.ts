@@ -76,6 +76,15 @@ function initializeGit(projectDir: string): void {
 /** Print the "what's next" hint shown after scaffolding completes. */
 function printSuccessMessage(options: ProjectOptions): void {
   console.log(`\nDone! Your krantho project is ready.\n`)
+  if (options.framework === 'nextjs-static') {
+    console.log(`  cd ${options.name}`)
+    console.log(`  ${options.packageManager} run dev\n`)
+    console.log(
+      `Pages are the markdown files in content/docs; \`run build\` writes the site to out/.`,
+    )
+    console.log(`Publish: push to GitHub, then Settings → Pages → Source: GitHub Actions.\n`)
+    return
+  }
   console.log(`  cd ${options.name}`)
   console.log(`  ${options.packageManager} run dev\n`)
   console.log(`Studio: http://localhost:${options.port}/studio`)
