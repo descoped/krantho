@@ -36,17 +36,37 @@ for (const [path, content] of files) {
 }
 EOF
 
-# Every @krantho package and create-krantho resolves to its packed tarball
-overrides=$(for pack in "$packs"/*.tgz; do
-  tar -xzOf "$pack" package/package.json | jq --arg f "file:$pack" '{(.name): $f}'
-done | jq -s add)
+# Every @krantho package and create-krantho resolves to its packed tarball. The
+# overrides go in pnpm-workspace.yaml, which pnpm 10 and every later pnpm read.
+for pack in "$packs"/*.tgz; do
+  name=$(tar -xzOf "$pack" package/package.json | jq -r .name)
+  printf "  '%s': file:%s\n" "$name" "$pack"
+done > "$work/overrides"
+{ echo; echo 'overrides:'; cat "$work/overrides"; } >> "$site/pnpm-workspace.yaml"
 manager=$(jq -r .packageManager "$root/package.json")
-jq --argjson o "$overrides" --arg m "$manager" '.pnpm.overrides = $o | .packageManager = $m' \
-  "$site/package.json" > "$work/package.json"
+jq --arg m "$manager" '.packageManager = $m' "$site/package.json" > "$work/package.json"
 mv "$work/package.json" "$site/package.json"
 
 cd "$site"
 pnpm install --no-frozen-lockfile
+
+# pnpm installs a missing peer from the registry and applies no override to it:
+# add each such @krantho peer as a direct dependency on its pack, and install again
+peers=$(grep -Eo "^  '?@krantho/[a-z-]+@[0-9]" pnpm-lock.yaml | sed -E "s/^  '?//; s/@[0-9]$//" | sort -u)
+if [ -n "$peers" ]; then
+  for name in $peers; do
+    pack=$(grep "'$name':" "$work/overrides" | sed 's/.*: //')
+    jq --arg n "$name" --arg p "$pack" '.dependencies[$n] = $p' package.json > "$work/package.json"
+    mv "$work/package.json" package.json
+  done
+  pnpm install --no-frozen-lockfile
+fi
+
+# The site must run on the packs, not on packages from the registry
+if grep -Eq "^  '?@krantho/[a-z-]+@[0-9]" "$site/pnpm-lock.yaml"; then
+  grep -E "^  '?@krantho/[a-z-]+@[0-9]" "$site/pnpm-lock.yaml"
+  echo "these @krantho packages came from the registry, not the packs"; exit 1
+fi
 
 if [ "$framework" = nextjs ]; then
   pnpm exec next dev -p "$port" > "$work/server.log" 2>&1 &
@@ -54,11 +74,11 @@ else
   pnpm exec vite dev --port "$port" > "$work/server.log" 2>&1 &
 fi
 server=$!
-trap 'kill $server 2>/dev/null || true' EXIT
+trap 'kill $server 2>/dev/null || true; rm -rf "$work"' EXIT
 
 base="http://localhost:$port"
 i=0
-until curl -s -o /dev/null "$base/api/content"; do
+until [ "$(curl -s -o /dev/null -w '%{http_code}' "$base/api/content")" != 000 ]; do
   i=$((i + 1))
   [ $i -lt 60 ] || { cat "$work/server.log"; echo "the site did not start"; exit 1; }
   sleep 2
