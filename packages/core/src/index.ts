@@ -26,7 +26,7 @@ export {
 
 // Change events and the cache tag vocabulary
 export type { ContentChange, ContentChangeListener } from './content-change.js'
-export type { RenderContentOptions } from './content-engine.js'
+export type { MarkdownProcessorOptions, RenderContentOptions } from './content-engine.js'
 export {
   ContentEngine,
   ContentEngineFactory,

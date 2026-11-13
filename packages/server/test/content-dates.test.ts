@@ -9,6 +9,7 @@ import {
   contentDateLookup,
   contentVersion,
   generateContentDates,
+  gitDateLookup,
   loadContentDates,
 } from '../src/content-dates.js'
 
@@ -131,5 +132,33 @@ describe('contentDateLookup', () => {
     expect(contentDateKey(contentDir, join(contentDir, 'docs', 'install.md'))).toBe(
       'docs/install.md',
     )
+  })
+})
+
+describe('gitDateLookup', () => {
+  it('finds each file’s last commit date across the directories, by its path', async () => {
+    commit(root, 'docs/install.md', '2026-01-02T03:04:05Z')
+    commit(root, 'pages/about.md', '2026-02-03T04:05:06Z')
+    const docs = join(root, 'content', 'docs')
+    const pages = join(root, 'content', 'pages')
+
+    const dateOf = await gitDateLookup([docs, pages, join(root, 'content', 'missing')])
+
+    expect(dateOf(join(docs, 'install.md'))).toBe('2026-01-02T03:04:05.000Z')
+    expect(dateOf(join(pages, '..', 'pages', 'about.md'))).toBe('2026-02-03T04:05:06.000Z')
+    expect(dateOf(join(pages, 'draft.md'))).toBeUndefined()
+    expect(existsSync(join(docs, CONTENT_DATES_FILE))).toBe(false)
+  })
+
+  it('knows no dates in a shallow clone', async () => {
+    commit(root, 'docs/install.md', '2026-01-02T03:04:05Z')
+    const clone = join(root, 'clone')
+    execFileSync('git', ['clone', '-q', '--depth', '1', `file://${root}`, clone], {
+      stdio: 'ignore',
+    })
+
+    const dateOf = await gitDateLookup([join(clone, 'content', 'docs')])
+
+    expect(dateOf(join(clone, 'content', 'docs', 'install.md'))).toBeUndefined()
   })
 })

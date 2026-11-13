@@ -12,6 +12,7 @@ export {
   getCMSContent,
   getCMSSlugs,
 } from './server/cms-context.js'
+export type { ServerLoaderOptions } from './server/content-loader.js'
 export { initServerLoader, loadContent } from './server/content-loader.js'
 export { resolveJsonLd, SeoJsonLd } from './server/seo-jsonld.js'
 export type { SeoMeta } from './server/seo-resolver.js'

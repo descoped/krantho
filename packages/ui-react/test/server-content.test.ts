@@ -54,6 +54,17 @@ describe('server content', () => {
     )
   })
 
+  it("puts the site's base path in front of root-relative links in markdown", async () => {
+    const doc = published('docs', 'intro', 'Intro')
+    initServerLoader(loaderOf([{ ...doc, body: 'See [setup](/docs/setup/).' }]), {
+      basePath: '/repo',
+    })
+
+    const intro = await loadContent({ collection: 'docs', slug: 'intro' })
+
+    expect(intro.html).toContain('href="/repo/docs/setup/"')
+  })
+
   it('renders the published document of the named collection', async () => {
     const home = await loadContent({ collection: 'pages', slug: 'home' })
 

@@ -117,6 +117,8 @@ if (doc) {
 }
 ```
 
+A site served under a path (`https://example.github.io/docs-site`) passes `basePath: '/docs-site'`: links and images in the markdown that start at the site's root, such as `/guide` or `/images/logo.svg`, get the path in front. Absolute and relative URLs and raw HTML are left as written.
+
 `getPublished` returns `null` when the document has nothing published. Its result is a `PublishedContent` (`collection`, `slug`, `locale`, `fields`, `body`, `publishedAt`); the loader implements `IPublishedContentLoader` (`getPublished(ref)`, `listPublished(collection, locale?)`, `listPublishedSummaries(collection, locale?)`, `isPreview()`). `listPublishedSummaries` returns each document without its `body`: a page that only lists documents (a navigation, a card list) reads it. An omitted `locale` is the site's default locale. `isPreview()` is `true` only while an editor previews the page, and `false` for visitors and for any render a cache keeps.
 
 The same loader implements `IPublishedSeoLoader`, the SEO data pages read in-process: `seoProperties(configId)` returns the primary entity's properties of an SEO configuration (`site`, `doc:<collection>/<slug>`, …), and `jsonLd(ref)` returns a page's JSON-LD graph composed from its published version, or `null` when nothing is published. Both are plain data, so `@krantho/core` stays free of the SEO packages. [@krantho/ui-react](/docs/package-ui-react) reads them through `resolveSeoContent()` and `<SeoJsonLd>`.

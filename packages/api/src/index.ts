@@ -41,6 +41,11 @@ export {
   validateAll,
 } from './handlers/index.js'
 export { storedBaseUrlSetting, storedModelSetting } from './handlers/llm-credential.js'
+export type { LlmsTxtOverrides } from './handlers/seo-llms-txt.js'
+export { buildLlmsTxt } from './handlers/seo-llms-txt.js'
+export { buildDefaultRobotsBody } from './handlers/seo-robots.js'
+export type { SitemapUrl } from './handlers/seo-sitemap.js'
+export { buildSitemapUrls, serializeSitemapXml } from './handlers/seo-sitemap.js'
 export type { AfterMutationContext, BeforeSaveContext, ContentHooks } from './hooks.js'
 export type { CachedVariant, ImageCacheSettings } from './image-cache.js'
 export { ImageCache } from './image-cache.js'
@@ -85,6 +90,7 @@ export type {
   ContentItemResponse,
   ErrorResponse,
   MediaConfig,
+  SeoFileSource,
   ServerFramework,
   SitePreviewMode,
   WebhookConfig,

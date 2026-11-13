@@ -25,4 +25,43 @@ describe('renderContent', () => {
 
     expect(rendered.content).toBe('Hello @name')
   })
+
+  describe('under a base path', () => {
+    const links = [
+      '[Guide](/docs/guide/) ![Logo](/images/logo.svg)',
+      '[Site](https://example.com/x) [Other](//cdn.example.com/a.js) [Near](guide/) [Top](#top)',
+      '[Already](/repo/docs/x/) [Root](/repo)',
+      '',
+      '## Links',
+      '',
+      'See [setup](/docs/setup/).',
+    ].join('\n')
+
+    it('puts the base path in front of URLs that start at the site root', async () => {
+      const { html, sections } = await renderContent({}, links, { basePath: '/repo/' })
+
+      expect(html).toContain('href="/repo/docs/guide/"')
+      expect(html).toContain('src="/repo/images/logo.svg"')
+      expect(sections.Links).toContain('href="/repo/docs/setup/"')
+    })
+
+    it('leaves absolute, protocol-relative, relative and already-based URLs as written', async () => {
+      const { html } = await renderContent({}, links, { basePath: '/repo' })
+
+      expect(html).toContain('href="https://example.com/x"')
+      expect(html).toContain('href="//cdn.example.com/a.js"')
+      expect(html).toContain('href="guide/"')
+      expect(html).toContain('href="#top"')
+      expect(html).toContain('href="/repo/docs/x/"')
+      expect(html).toContain('href="/repo"')
+    })
+
+    it('leaves URLs as written without a base path, also after a render with one', async () => {
+      await renderContent({}, links, { basePath: '/repo' })
+      const { html } = await renderContent({}, links)
+
+      expect(html).toContain('href="/docs/guide/"')
+      expect(html).toContain('src="/images/logo.svg"')
+    })
+  })
 })

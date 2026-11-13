@@ -10,6 +10,7 @@ import type {
   IPersistenceAdapter,
 } from '@krantho/persistence'
 import { FileSystemAdapter } from '@krantho/persistence-fs'
+import { gitDateLookup } from './content-dates.js'
 
 /** Result of creating a persistence adapter */
 export interface AdapterResult {
@@ -42,16 +43,20 @@ export async function createAdapter(
   const defaultLocale = site.defaultLocale
 
   switch (config.provider) {
-    case 'filesystem':
+    case 'filesystem': {
+      const directories = collectionDirectories(collections)
       return {
         adapter: new FileSystemAdapter({
           contentPath: config.filesystem.contentPath,
-          directories: collectionDirectories(collections),
+          directories,
           defaultLocale,
           defaultStatus: defaultStatus.filesystem,
+          // A page publishes on the date its file was last committed, not the checkout's
+          dateOf: await gitDateLookup([config.filesystem.contentPath, ...directories.values()]),
         }),
         schemaVersion: 0,
       }
+    }
 
     case 'sqlite': {
       const {

@@ -54,10 +54,46 @@ export function createEmptyResult(
 /**
  * Markdown processor with @ notation support
  */
+/** Options for {@link MarkdownProcessor} */
+export interface MarkdownProcessorOptions {
+  /**
+   * The path a site is served under (`/docs-site`): a link or image whose
+   * URL starts at the site's root (`/guide`, `/images/a.png`) gets it in
+   * front, as the site's own links do. Empty or unset leaves URLs as written.
+   * URLs in raw HTML inside the markdown are left as written.
+   */
+  basePath?: string | undefined
+}
+
+/** A root-relative URL (`/guide`, not `//host` or `https:`) under the base path */
+function underBasePath(url: string, basePath: string): string {
+  if (!url.startsWith('/') || url.startsWith('//')) return url
+  if (url === basePath || url.startsWith(`${basePath}/`)) return url
+  return `${basePath}${url}`
+}
+
 export class MarkdownProcessor implements IMarkdownProcessor {
+  private readonly basePath: string
+
+  constructor(options: MarkdownProcessorOptions = {}) {
+    this.basePath = (options.basePath ?? '').replace(/\/+$/, '')
+  }
+
   async parse(content: string): Promise<string> {
+    const basePath = this.basePath
     try {
-      const result = await marked.parse(content)
+      const result = await marked.parse(
+        content,
+        basePath
+          ? {
+              walkTokens: (token) => {
+                if (token.type === 'link' || token.type === 'image') {
+                  token.href = underBasePath(token.href, basePath)
+                }
+              },
+            }
+          : undefined,
+      )
       return typeof result === 'string' ? result : String(result)
     } catch (error) {
       throw new Error('Failed to parse markdown', { cause: error })
@@ -91,6 +127,8 @@ export interface RenderContentOptions {
   /** Substitute `@field` references with field values (default true) */
   atNotation?: boolean | undefined
   processor?: IMarkdownProcessor | undefined
+  /** The path the site is served under, for root-relative URLs ({@link MarkdownProcessorOptions}) */
+  basePath?: string | undefined
 }
 
 /**
@@ -104,7 +142,7 @@ export async function renderContent(
   body: string,
   options: RenderContentOptions = {},
 ): Promise<RenderedContent> {
-  const processor = options.processor ?? new MarkdownProcessor()
+  const processor = options.processor ?? new MarkdownProcessor({ basePath: options.basePath })
   const content = (options.atNotation ?? true) ? processor.processAtNotation(body, fields) : body
   const [html, sections] = await Promise.all([
     processor.parse(content),

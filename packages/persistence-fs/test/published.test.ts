@@ -37,6 +37,21 @@ describe('FileSystemAdapter published reads', () => {
     expect(live.map((doc) => doc.fields.title)).toEqual(['About', 'Home'])
   })
 
+  it('dates a file by the lookup, and by its modification time when the lookup has none', async () => {
+    const dated = new FileSystemAdapter({
+      contentPath: dir,
+      defaultLocale: 'en',
+      dateOf: (filePath) =>
+        filePath === join(dir, 'home.md') ? '2024-03-01T10:00:00.000Z' : undefined,
+    })
+
+    const home = await dated.getPublished('pages', 'home')
+    const about = await dated.getPublished('pages', 'about')
+
+    expect(home?.meta.createdAt).toBe('2024-03-01T10:00:00.000Z')
+    expect(Date.parse(about?.meta.createdAt ?? '')).toBeGreaterThan(Date.parse('2025-01-01'))
+  })
+
   it('follows a configured default status for files without one', async () => {
     const drafts = new FileSystemAdapter({
       contentPath: dir,

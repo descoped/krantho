@@ -254,7 +254,7 @@ This page renders on each request. To keep pages cached until their content chan
 
 | Function | Purpose |
 |----------|---------|
-| `initServerLoader(loader)` | Set the content loader for server components (`createContentLoader({ config, collections })`) |
+| `initServerLoader(loader, options?)` | Set the content loader for server components (`createContentLoader({ config, collections })`); `options.basePath` is the path the site is served under, which root-relative links and images in markdown get in front |
 | `getCMSContent(collection, slug, options?)` | The published version of a document; a 404 `NetworkError` when nothing is published (wrapped in `React.cache`) |
 | `getCMSSlugs(collection, locale?)` | Slugs of the published documents in a collection (wrapped in `React.cache`) |
 | `getAllCMSContent(collection, options?)` | Every published document in a collection (wrapped in `React.cache`) |
