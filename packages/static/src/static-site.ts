@@ -119,8 +119,12 @@ export function createStaticSite(options: StaticSiteOptions): StaticSite {
   let source: Promise<SeoFileSource> | null = null
   let history: Promise<void> | null = null
 
-  const files = (): Promise<SeoFileSource> => {
+  const checkHistory = (): Promise<void> => {
     history ??= warnWithoutHistory(config)
+    return history
+  }
+  const files = async (): Promise<SeoFileSource> => {
+    await checkHistory()
     source ??= openSeoFileSource(config, options.collections)
     return source
   }
@@ -133,8 +137,7 @@ export function createStaticSite(options: StaticSiteOptions): StaticSite {
       if (!Object.hasOwn(options.collections, collection)) {
         throw new Error(`No collection named ${collection}`)
       }
-      history ??= warnWithoutHistory(config)
-      await history
+      await checkHistory()
       const summaries = await loader.listPublishedSummaries(collection, locale)
       return summaries.map((summary) => ({ slug: summary.slug }))
     },

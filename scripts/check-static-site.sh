@@ -21,7 +21,7 @@ KRANTHO_SITE_BASE_URL=https://example.github.io/site pnpm exec next build
 
 failed=0
 check() {
-  if grep -q -- "$2" "out/$1"; then
+  if grep -qF -- "$2" "out/$1"; then
     echo "ok   $1 has $2"
   else
     echo "FAIL $1 lacks $2"
