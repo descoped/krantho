@@ -75,8 +75,8 @@ jobs:
 
       # A release is vMAJOR.MINOR.PATCH, every versioned file carries that version,
       # the /changelog page has its entry, and it is higher than every earlier
-      # release. A manual production deploy ships a ref whose versioned files carry
-      # the latest release's version. Nothing deploys otherwise.
+      # release. A manual production deploy ships a commit on main whose versioned
+      # files carry the latest release's version. Nothing deploys otherwise.
       - name: Check the release version
         if: github.event_name == 'release' || steps.mode.outputs.env == 'production'
         env:
@@ -89,6 +89,10 @@ jobs:
             latest=$(gh release list --exclude-drafts --exclude-pre-releases --limit 1 --json tagName -q '.[0].tagName')
             if [ "$TAG" != "$latest" ]; then
               echo "::error::the ref is at $TAG; a site-only release ships the latest release, $latest"
+              exit 1
+            fi
+            if ! git merge-base --is-ancestor HEAD origin/main; then
+              echo "::error::a site-only release ships a commit on main"
               exit 1
             fi
             echo "Site-only release at $TAG"
