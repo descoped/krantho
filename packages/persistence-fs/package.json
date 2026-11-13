@@ -1,6 +1,7 @@
 {
   "name": "@krantho/persistence-fs",
   "version": "1.0.0",
+  "description": "A krantho persistence adapter that reads and writes markdown files directly, for prototypes.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -30,7 +31,7 @@
     "@krantho/core": "workspace:*",
     "@krantho/persistence": "workspace:*",
     "gray-matter": "^4.0.3",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@types/node": "^25.9.9",

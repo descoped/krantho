@@ -1,6 +1,7 @@
 {
   "name": "@krantho/server-sveltekit",
   "version": "1.0.0",
+  "description": "The krantho adapter for SvelteKit: API and Studio endpoints, the content loader and CDN page caching.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -38,9 +39,9 @@
     }
   },
   "devDependencies": {
+    "@krantho/schema": "workspace:*",
     "@types/node": "^25.9.9",
     "typescript": "^6.0.3",
-    "zod": "^4.4.3",
-    "@krantho/schema": "workspace:*"
+    "zod": "^4.6.7"
   }
 }

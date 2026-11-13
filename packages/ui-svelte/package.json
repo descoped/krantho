@@ -1,6 +1,7 @@
 {
   "name": "@krantho/ui-svelte",
   "version": "1.0.0",
+  "description": "Svelte 5 components that render krantho content.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -36,6 +37,6 @@
     "svelte": ">=5.0.0"
   },
   "devDependencies": {
-    "svelte-check": "^4.7.6"
+    "svelte-check": "^4.7.8"
   }
 }

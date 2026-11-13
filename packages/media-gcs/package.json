@@ -1,6 +1,7 @@
 {
   "name": "@krantho/media-gcs",
   "version": "1.0.0",
+  "description": "The krantho media file store on Google Cloud Storage, with no Google SDK dependency.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {

@@ -2,7 +2,7 @@
   "name": "krantho-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "Full-site content framework with agentic SEO \u2014 pnpm workspace monorepo",
+  "description": "Full-site content framework with agentic SEO — pnpm workspace monorepo",
   "type": "module",
   "license": "MIT",
   "author": "oranheim",
@@ -32,11 +32,11 @@
     "seo:enrich:meta": "tsx packages/tools/src/cms/generate-meta-descriptions.ts --root examples/nextjs-shadcn"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.15",
+    "@biomejs/biome": "~2.5.15",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10",
-    "vite": "^8.3.2"
+    "vite": "^8.3.8",
+    "vitest": "^4.1.12"
   },
   "engines": {
     "node": ">=22.9.0"

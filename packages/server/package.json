@@ -1,6 +1,7 @@
 {
   "name": "@krantho/server",
   "version": "1.0.0",
+  "description": "The krantho server runtime: persistence, the content engine, the API handlers, Studio serving and the in-process content loader.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -38,7 +39,7 @@
     "@krantho/studio": "workspace:*",
     "chokidar": "^5.0.0",
     "gray-matter": "^4.0.3",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "peerDependencies": {
     "@aws-sdk/client-cloudfront": "^3.1143.0",
@@ -77,15 +78,15 @@
     }
   },
   "devDependencies": {
-    "@aws-sdk/client-cloudfront": "^3.1143.0",
+    "@aws-sdk/client-cloudfront": "^3.1168.0",
     "@krantho/media-gcs": "workspace:*",
     "@krantho/media-local": "workspace:*",
     "@krantho/media-s3": "workspace:*",
     "@krantho/media-vercel-blob": "workspace:*",
-    "@testcontainers/postgresql": "^12.0.4",
+    "@testcontainers/postgresql": "^12.2.1",
     "@types/node": "^25.9.9",
-    "@vercel/functions": "^3.9.11",
+    "@vercel/functions": "^3.11.2",
     "typescript": "^6.0.3",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   }
 }

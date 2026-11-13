@@ -1,6 +1,7 @@
 {
   "name": "@krantho/schema",
   "version": "1.0.0",
+  "description": "Typed krantho content collections defined with Zod schemas, with validation, type inference and runtime schema merging.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -38,6 +39,6 @@
   "devDependencies": {
     "@types/node": "^25.9.9",
     "typescript": "^6.0.3",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   }
 }

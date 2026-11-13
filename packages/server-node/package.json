@@ -1,6 +1,7 @@
 {
   "name": "@krantho/server-node",
   "version": "1.0.0",
+  "description": "The krantho adapter for Node.js, Express and Vite: a request handler, a Vite plugin and a standalone server.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -46,10 +47,10 @@
     }
   },
   "devDependencies": {
+    "@krantho/schema": "workspace:*",
     "@types/node": "^25.9.9",
     "typescript": "^6.0.3",
-    "vite": "^8.3.2",
-    "zod": "^4.4.3",
-    "@krantho/schema": "workspace:*"
+    "vite": "^8.3.8",
+    "zod": "^4.6.7"
   }
 }

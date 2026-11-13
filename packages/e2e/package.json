@@ -10,11 +10,11 @@
     "live:assistant": "node live/assistant.ts"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.13.0",
+    "@axe-core/playwright": "^4.14.0",
     "@krantho/ai": "workspace:*",
     "@krantho/persistence": "workspace:*",
     "@krantho/persistence-sqlite": "workspace:*",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.65.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.9.9",
     "typescript": "^6.0.3"

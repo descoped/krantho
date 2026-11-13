@@ -1,6 +1,7 @@
 {
   "name": "@krantho/persistence",
   "version": "1.0.0",
+  "description": "The krantho persistence contract: the interfaces for content, versions, media, auth, SEO configuration and the shared page cache.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -29,7 +30,7 @@
   "dependencies": {
     "@krantho/core": "workspace:*",
     "@krantho/seo-shared": "workspace:*",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "typescript": "^6.0.3"

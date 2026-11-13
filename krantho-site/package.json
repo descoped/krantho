@@ -10,7 +10,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@krantho/studio": "workspace:*",
     "@krantho/api": "workspace:*",
     "@krantho/config": "workspace:*",
     "@krantho/core": "workspace:*",
@@ -22,20 +21,21 @@
     "@krantho/seo": "workspace:*",
     "@krantho/server": "workspace:*",
     "@krantho/server-next": "workspace:*",
+    "@krantho/studio": "workspace:*",
     "@krantho/ui-react": "workspace:*",
-    "@plausible-analytics/tracker": "^0.4.6",
-    "marked": "^18.0.7",
+    "@plausible-analytics/tracker": "^0.4.7",
+    "marked": "^18.2.0",
     "minisearch": "^7.2.0",
-    "next": "~16.4.0",
+    "next": "~16.4.6",
     "postgres": "^3.4.9",
-    "react": "^19.2.9",
-    "react-dom": "^19.2.9",
-    "shiki": "^4.4.3",
-    "zod": "^4.4.3"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "shiki": "^4.6.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/react": "^19.2.18",
+    "@types/react": "^19.3.0",
     "typescript": "^6.0.3"
   },
-  "note": "Dogfooding project \u2014 the krantho website built with krantho. Part of the workspace during development. Will be extracted to descoped/krantho-site when packages are published to npm."
+  "note": "The krantho website, built with krantho on the workspace's own packages."
 }

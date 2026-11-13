@@ -1,6 +1,7 @@
 {
   "name": "@krantho/persistence-postgres",
   "version": "1.0.0",
+  "description": "The krantho persistence adapter for Postgres, the production store for serverless hosts and several instances.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -34,7 +35,7 @@
   },
   "devDependencies": {
     "@krantho/persistence-sqlite": "workspace:*",
-    "@testcontainers/postgresql": "^12.0.4",
+    "@testcontainers/postgresql": "^12.2.1",
     "@types/node": "^25.9.9",
     "typescript": "^6.0.3"
   }

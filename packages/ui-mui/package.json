@@ -1,6 +1,7 @@
 {
   "name": "@krantho/ui-mui",
   "version": "1.0.0",
+  "description": "Material UI components that render krantho content.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -32,7 +33,7 @@
   "devDependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@types/react": "^19.2.18",
+    "@types/react": "^19.3.0",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {

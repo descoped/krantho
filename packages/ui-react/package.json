@@ -1,6 +1,7 @@
 {
   "name": "@krantho/ui-react",
   "version": "1.0.0",
+  "description": "React server components, server utilities and hooks that render published krantho content.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -36,10 +37,10 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.9",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.7",
-    "react": "^19.2.9",
-    "react-dom": "^19.2.9",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {

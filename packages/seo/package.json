@@ -1,6 +1,7 @@
 {
   "name": "@krantho/seo",
   "version": "1.0.0",
+  "description": "Schema.org structured data for krantho: archetypes composed into one JSON-LD graph, checked against the vocabulary and search engine rules.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -32,9 +33,9 @@
     "@krantho/seo-shared": "workspace:*"
   },
   "devDependencies": {
-    "@adobe/structured-data-validator": "^1.7.0",
+    "@adobe/structured-data-validator": "^1.7.1",
     "@types/node": "^25.9.9",
-    "@types/react": "^19.2.18",
+    "@types/react": "^19.3.0",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {

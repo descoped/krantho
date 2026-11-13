@@ -1,6 +1,7 @@
 {
   "name": "@krantho/ai",
   "version": "1.0.0",
+  "description": "A zero-dependency LLM client for Anthropic, OpenAI, Gemini, OpenRouter and Ollama, using only fetch().",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {

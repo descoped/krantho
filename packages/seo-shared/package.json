@@ -1,6 +1,7 @@
 {
   "name": "@krantho/seo-shared",
   "version": "1.0.0",
+  "description": "Zero-dependency SEO field discovery primitives and shared SEO types for krantho.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {

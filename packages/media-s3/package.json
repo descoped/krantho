@@ -1,6 +1,7 @@
 {
   "name": "@krantho/media-s3",
   "version": "1.0.0",
+  "description": "The krantho media file store on S3-compatible object storage, such as AWS S3, Cloudflare R2 and MinIO.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -27,7 +28,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1143.0",
+    "@aws-sdk/client-s3": "^3.1168.0",
     "@krantho/config": "workspace:*",
     "@krantho/persistence": "workspace:*"
   },

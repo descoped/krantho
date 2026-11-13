@@ -1,6 +1,7 @@
 {
   "name": "@krantho/config",
   "version": "1.0.0",
+  "description": "krantho's typed configuration: defaults, krantho.config.ts and the environment, resolved once into one tree.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -40,8 +41,8 @@
     "test:bundle": "node test/bundle-boundary.mjs"
   },
   "dependencies": {
-    "zod": "^4.4.3",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^25.9.9",

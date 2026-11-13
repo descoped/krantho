@@ -1,6 +1,7 @@
 {
   "name": "@krantho/api",
   "version": "1.0.0",
+  "description": "The krantho REST API: framework-neutral handlers for content, versions, media, SEO, auth, plugins and webhooks, with an OpenAPI 3.1 specification.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -48,6 +49,6 @@
     "@krantho/persistence-sqlite": "workspace:*",
     "@types/node": "^25.9.9",
     "typescript": "^6.0.3",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   }
 }

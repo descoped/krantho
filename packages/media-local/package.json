@@ -1,6 +1,7 @@
 {
   "name": "@krantho/media-local",
   "version": "1.0.0",
+  "description": "The krantho media file store on local disk, for development and single servers with a persistent volume.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {

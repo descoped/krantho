@@ -18,8 +18,8 @@
     "@krantho/seo": "workspace:*",
     "@krantho/seo-shared": "workspace:*",
     "gray-matter": "^4.0.3",
-    "p-limit": "^7.3.0",
-    "yaml": "^2.9.0"
+    "p-limit": "^7.3.3",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",

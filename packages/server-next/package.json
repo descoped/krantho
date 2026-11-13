@@ -1,6 +1,7 @@
 {
   "name": "@krantho/server-next",
   "version": "1.0.0",
+  "description": "The krantho adapter for the Next.js App Router: API and Studio route handlers, the content loader and page caching.",
   "license": "MIT",
   "homepage": "https://krantho.com",
   "repository": {
@@ -40,12 +41,12 @@
     "next": ">=16.3.8"
   },
   "devDependencies": {
-    "@types/node": "^25.9.9",
-    "typescript": "^6.0.3",
-    "zod": "^4.4.3",
     "@krantho/schema": "workspace:*",
-    "next": "~16.4.5",
-    "react": "^19.2.9",
-    "react-dom": "^19.2.9"
+    "@types/node": "^25.9.9",
+    "next": "~16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^6.0.3",
+    "zod": "^4.6.7"
   }
 }
