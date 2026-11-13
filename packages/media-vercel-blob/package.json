@@ -1,6 +1,6 @@
 {
   "name": "@krantho/media-vercel-blob",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "The krantho media file store on Vercel Blob.",
   "license": "MIT",
   "homepage": "https://krantho.com",

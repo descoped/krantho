@@ -3,6 +3,28 @@
 Every krantho release, newest first. Versions follow [semver.org](https://semver.org); a release's tag is
 `vMAJOR.MINOR.PATCH`.
 
+## 1.1.0 - 2026-11-13
+
+### Added
+
+- `@krantho/static`: a site built from its markdown to static files, for GitHub Pages or any file host.
+  `createStaticSite()` gives the read loader, the pages to write (`params()`), `sitemapXml()`, `llmsTxt()`,
+  `robotsTxt()` and the base path from `site.baseUrl`; `@krantho/static/base-path` exports `basePathOf()` for
+  `next.config.ts`.
+- `create-krantho` has a third choice, "Static site (Next.js, GitHub Pages)": a docs site with a grouped sidebar,
+  a static export under the path Pages serves it at, and a GitHub Pages workflow.
+- `@krantho/api` exports the sitemap, robots.txt and llms.txt builders, which take a `SeoFileSource` instead of a
+  request.
+- `renderContent()` and `initServerLoader()` take a `basePath`: root-relative links and images in markdown get it.
+
+### Fixed
+
+- On the filesystem provider, pages compose the structured data the `seo` section configures, held in memory;
+  before, they fell back to the blog-post archetype with no site entities.
+- The filesystem adapter dates each file by its last git commit (`dateOf`), so publish dates and the sitemap's
+  `lastmod` no longer change with each checkout.
+- Every package that depends on `glob` resolves 14.0.2 or later.
+
 ## 1.0.2 - 2026-11-13
 
 ### Fixed

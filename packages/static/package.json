@@ -1,6 +1,6 @@
 {
   "name": "@krantho/static",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Build a krantho site to static files: markdown content, structured SEO and the sitemap, for GitHub Pages or any file host.",
   "license": "MIT",
   "homepage": "https://krantho.com",

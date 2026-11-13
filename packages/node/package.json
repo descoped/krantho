@@ -1,6 +1,6 @@
 {
   "name": "@krantho/node",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "One-install krantho bundle for Vite / Express / Node — server adapter, Studio, media, and SEO. Pick a UI library separately.",
   "license": "MIT",
   "homepage": "https://krantho.com",
