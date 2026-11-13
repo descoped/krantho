@@ -43,8 +43,8 @@ function packageJson(options: ProjectOptions): string {
     '@krantho/persistence-sqlite': KRANTHO_RANGE,
     '@sveltejs/adapter-auto': '^7.0.1',
     '@sveltejs/kit': '^2.55.0',
-    svelte: '^5.55.0',
-    zod: '^4.4.3',
+    svelte: '^5.57.3',
+    zod: '^4.6.7',
   }
 
   if (options.ui === 'tailwind') {
@@ -55,7 +55,7 @@ function packageJson(options: ProjectOptions): string {
   const devDeps: Record<string, string> = {
     '@types/node': '^25.5.0',
     typescript: '^6.0.2',
-    vite: '^8.0.3',
+    vite: '^8.3.8',
   }
 
   const pkg = {

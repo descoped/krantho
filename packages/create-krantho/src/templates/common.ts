@@ -7,6 +7,7 @@ export function generateCommonFiles(options: ProjectOptions): Map<string, string
   files.set('.env', envFile(options))
   files.set('README.md', readme(options))
   files.set('.claude/settings.json', claudeSettings())
+  if (options.packageManager === 'pnpm') files.set('pnpm-workspace.yaml', pnpmSettings())
 
   return files
 }
@@ -20,6 +21,19 @@ dist/
 .env.local
 *.db
 *.db-journal
+`
+}
+
+/**
+ * pnpm runs no dependency's install step until the project allows it, and the
+ * default SQLite store needs better-sqlite3's native binary. pnpm 10 reads
+ * `onlyBuiltDependencies`, pnpm 11 and later `allowBuilds`; each ignores the other.
+ */
+function pnpmSettings(): string {
+  return `onlyBuiltDependencies:
+  - better-sqlite3
+allowBuilds:
+  better-sqlite3: true
 `
 }
 
