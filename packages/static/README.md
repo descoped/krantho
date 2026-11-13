@@ -6,7 +6,7 @@ content. The output deploys to GitHub Pages or any host that serves files. There
 no API and no Studio.
 
 ```bash
-pnpm add @krantho/static @krantho/ui-react @krantho/seo zod
+pnpm add @krantho/static @krantho/config @krantho/schema @krantho/ui-react @krantho/seo zod
 ```
 
 ```ts

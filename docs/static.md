@@ -38,7 +38,7 @@ site.config                     // the resolved KranthoConfig
 
 `createStaticSite()` resolves the configuration with `loadConfig()` (the instance the loader shares)
 and throws a `KranthoConfigError` listing each issue when `persistence.provider` is not
-`filesystem`, `cache.pages` is not `none`, or a collection with pages has a `path` that does not end
+`filesystem`, `cache.pages` is not `none`, or a collection with pages has no `path` or one that does not end
 in `/`. The trailing slash keeps the URLs krantho writes (sitemap, llms.txt, JSON-LD, canonical)
 the same as the folders Next's `trailingSlash: true` export writes.
 

@@ -15,10 +15,10 @@ The static mode of krantho. A site reads its markdown files at build time and wr
 ## Install
 
 ```bash
-pnpm add @krantho/static @krantho/ui-react @krantho/seo zod
+pnpm add @krantho/static @krantho/config @krantho/schema @krantho/ui-react @krantho/seo zod
 ```
 
-`npx create-krantho` with **Static site (Next.js, GitHub Pages)** sets it up for you.
+`pnpm create krantho` with **Static site (Next.js, GitHub Pages)** sets it up for you.
 
 ## createStaticSite
 
@@ -38,8 +38,8 @@ It takes the configuration and collections the server takes, and returns:
 |---|---|
 | `loader` | The content loader pages read through: the live version of each document, and each page's JSON-LD composed from the `seo` section of the configuration. Pass it to `initServerLoader()` |
 | `params(collection, locale?)` | One `{ slug }` for each published document of the collection, for `generateStaticParams` |
-| `sitemapXml()` | `sitemap.xml`: every published, indexable page, dated by its file's last commit |
-| `llmsTxt()` | `llms.txt`: the site's name, then a link and description for each published page |
+| `sitemapXml()` | `sitemap.xml`: every published, indexable page, dated by its file's last commit (see Requirements) |
+| `llmsTxt()` | `llms.txt`: the site's name and summary, then each published, indexable page under its collection's heading, with a link and its description |
 | `robotsTxt()` | `robots.txt`, allowing every crawler and naming the sitemap |
 | `basePath` | The path of `site.baseUrl` (`/docs-site`), or `''` at a host's root |
 | `config` | The resolved configuration |
@@ -64,7 +64,7 @@ export async function GET(): Promise<Response> {
 
 - `persistence.provider` is not `filesystem`: the markdown files are the content;
 - `cache.pages` is not `none`: every page is rendered once, at build;
-- a collection with pages has a path that does not end in `/`: each page is written as a folder, and the sitemap, llms.txt and canonical URLs must name the address it is served at. Write `path: '/docs/:slug/'`.
+- a collection with pages has no `path`, or one that does not end in `/`: each page is written as a folder, and the sitemap, llms.txt and canonical URLs must name the address it is served at. Write `path: '/docs/:slug/'`.
 
 Pages are dated by their files' last git commit. Without the repository's full history, such as a shallow CI checkout, the build warns once and dates them by modification time: check out with `fetch-depth: 0`.
 

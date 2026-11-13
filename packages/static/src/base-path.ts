@@ -14,5 +14,7 @@ export function basePathOf(baseUrl: string): string {
   } catch {
     throw new Error(`site.baseUrl is not an absolute URL: ${baseUrl}`)
   }
-  return path.replace(/\/+$/, '')
+  let end = path.length
+  while (end > 0 && path[end - 1] === '/') end--
+  return path.slice(0, end)
 }

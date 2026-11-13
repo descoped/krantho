@@ -17,10 +17,10 @@ It suits project documentation and other sites whose authors work in the reposit
 ## Create the site
 
 ```bash
-npx create-krantho my-docs
+pnpm create krantho my-docs
 ```
 
-Choose **Static site (Next.js, GitHub Pages)** as the framework. The project has:
+Choose **Static site (Next.js, GitHub Pages)** as the framework. The project uses the package manager you ran the scaffolder with: `npx create-krantho my-docs` gives an npm project, whose workflow runs `npm ci` and `npm run build`. The project has:
 
 | File | What it does |
 |---|---|
@@ -98,7 +98,7 @@ jobs:
 
 - `configure-pages` reports the address Pages serves the site at, and the build takes it as `KRANTHO_SITE_BASE_URL`, the site's `site.baseUrl`. Canonical URLs, the sitemap and the structured data name that address.
 - `fetch-depth: 0` checks out the whole history: each page is dated by its file's last commit. A shallow checkout dates every page by the checkout, and the build says so.
-- `pnpm/action-setup` reads the pnpm version from `packageManager` in `package.json`. An npm project runs `npm ci` and has no such step.
+- `pnpm/action-setup` reads the pnpm version from `packageManager` in `package.json` (`"packageManager": "pnpm@12.16.1"`), which the scaffolder writes. A project set up by hand needs it too. An npm project runs `npm ci` and has no such step.
 
 > [!CAUTION]
 > Leave `configure-pages` without `static_site_generator`. With it, the action rewrites a `next.config.js` and writes a second, empty one beside a `next.config.ts`.
@@ -126,6 +126,7 @@ export default defineKranthoConfig({
   site: {
     domain: 'localhost',
     name: 'my-docs',
+    description: 'Documentation for my-docs.',
     language: 'en',
     baseUrl: 'http://localhost:3000',
   },
@@ -181,7 +182,7 @@ Verify the domain for your account or organization first, so no one else can cla
 
 ## Search engines
 
-The build writes `sitemap.xml`, `llms.txt` and `robots.txt` from the published pages. Crawlers read `robots.txt` only at a host's root, so a project site's `/<repository>/robots.txt` has no effect: submit the sitemap in the search engines' webmaster tools instead. At a domain of your own, `robots.txt` names the sitemap.
+The build writes `sitemap.xml`, `llms.txt` and `robots.txt` from the published pages. `robots.txt` allows every crawler and names the sitemap. Crawlers read it only at a host's root, so on a project site, where it is served at `/<repository>/robots.txt`, it has no effect: submit the sitemap in the search engines' webmaster tools instead. At a domain of your own, crawlers find it.
 
 ## Limits
 
