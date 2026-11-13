@@ -9,7 +9,7 @@ description: >
   published (live) version, version history, preview, and how files reach the database.
 compatibility: krantho 1.x; Claude Code
 metadata:
-  krantho-version: 1.0.0
+  krantho-version: 1.0.1
   docs: https://krantho.com/docs/content-authoring
 ---
 

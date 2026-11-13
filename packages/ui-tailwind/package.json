@@ -1,6 +1,6 @@
 {
   "name": "@krantho/ui-tailwind",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tailwind CSS components that render krantho content with semantic style tokens.",
   "license": "MIT",
   "homepage": "https://krantho.com",

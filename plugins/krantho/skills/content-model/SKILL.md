@@ -10,7 +10,7 @@ description: >
   collection. Ships starter templates for common site sections.
 compatibility: krantho 1.x; Claude Code
 metadata:
-  krantho-version: 1.0.0
+  krantho-version: 1.0.1
   docs: https://krantho.com/docs/content-model
 ---
 
