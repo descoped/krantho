@@ -1,6 +1,6 @@
 {
   "name": "@krantho/example-nextjs-mui",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "node ../../scripts/with-env.mjs ../../.env node_modules/next/dist/bin/next dev",

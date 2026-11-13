@@ -10,7 +10,7 @@ description: >
   sitemaps, llms.txt, AEO, or configuring the LLM a krantho site uses for enrichment.
 compatibility: krantho 1.x; Claude Code
 metadata:
-  krantho-version: 1.0.2
+  krantho-version: 1.1.0
   docs: https://krantho.com/docs/add-seo
 ---
 

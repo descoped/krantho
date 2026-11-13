@@ -1,6 +1,6 @@
 {
   "name": "krantho-monorepo",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "private": true,
   "description": "Full-site content framework with agentic SEO — pnpm workspace monorepo",
   "type": "module",
