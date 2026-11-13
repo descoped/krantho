@@ -390,6 +390,26 @@ describe('createContentLoader', () => {
     expect(graph).toContain('"Article"')
   })
 
+  it('composes the configured SEO for a site without a database', async () => {
+    const config: KranthoConfigInput = {
+      site,
+      persistence: { provider: 'filesystem' },
+      seo: { identity: 'WebSite', collections: { pages: ['TechArticle'] } },
+    }
+    const loader = createContentLoader({ config, collections })
+
+    const graph = (await loader.jsonLd({ collection: 'pages', slug: 'home' })) as {
+      '@graph': Array<Record<string, unknown>>
+    }
+    const types = graph['@graph'].map((node) => node['@type'])
+
+    expect(types).toContain('WebSite')
+    expect(types).toContain('TechArticle')
+    expect(types).not.toContain('BlogPosting')
+    expect(await loader.seoProperties('site')).toMatchObject({ name: 'Loader' })
+    expect(existsSync(dataDir)).toBe(false)
+  })
+
   it('states the structure the page renders in its graph', async () => {
     const config: KranthoConfigInput = {
       site,

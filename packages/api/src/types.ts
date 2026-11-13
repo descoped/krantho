@@ -128,6 +128,16 @@ export interface MediaConfig {
   files: import('@krantho/persistence').IFileStore
 }
 
+/**
+ * What a site's SEO files — the sitemap, robots.txt and llms.txt — are built
+ * from: its configuration, collections, content and SEO configuration. No
+ * request is involved, so a static build writes the same files the API serves.
+ */
+export type SeoFileSource = Pick<
+  ApiContext,
+  'config' | 'contentConfig' | 'adapter' | 'seoConfigAdapter'
+>
+
 /** Check if adapter supports version history (append-only adapters do) */
 export function hasVersioning(adapter: unknown): boolean {
   const a = adapter as Record<string, unknown>

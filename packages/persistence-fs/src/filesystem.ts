@@ -46,6 +46,13 @@ export interface FileSystemAdapterOptions extends Partial<PersistenceConfig> {
    * A deployment sets this through `content.defaultStatus.filesystem`.
    */
   defaultStatus?: string | undefined
+  /**
+   * When a file last changed, by its path: a document's `createdAt`, and so
+   * the date its page publishes. A file the lookup does not know, or every
+   * file without one, takes its modification time, which a fresh checkout
+   * sets to the checkout's.
+   */
+  dateOf?: ((filePath: string) => string | undefined) | undefined
 }
 
 /** A file's publication state from its frontmatter status */
@@ -92,6 +99,7 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
   private readonly directories: ReadonlyMap<string, string>
   private readonly defaultStatus: string
   private readonly defaultLocale: string
+  private readonly dateOf: ((filePath: string) => string | undefined) | undefined
 
   constructor(config: FileSystemAdapterOptions) {
     const merged = { ...DEFAULT_FS_CONFIG, ...config }
@@ -99,6 +107,7 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
     this.directories = config.directories ?? new Map()
     this.defaultLocale = config.defaultLocale
     this.defaultStatus = config.defaultStatus ?? DEFAULT_FRONTMATTER_STATUS
+    this.dateOf = config.dateOf
   }
 
   async exists(slug: string): Promise<boolean> {
@@ -209,9 +218,10 @@ export class FileSystemAdapter implements IPersistenceAdapter, IContentLoader {
       this.defaultLocale,
       this.defaultStatus,
     )
-    const stat = await fs.stat(filePath)
+    const dated = this.dateOf?.(filePath)
+    const modified = dated ? new Date(dated) : (await fs.stat(filePath)).mtime
     const document: QueriedDocument = {
-      meta: fileMeta(collection, slug, locale, status, stat.mtime),
+      meta: fileMeta(collection, slug, locale, status, modified),
       fields,
       ...authoredMetadata(repositoryFrontmatter(parsed.data) as Partial<AuthoredMetadata>),
       body: parsed.content,

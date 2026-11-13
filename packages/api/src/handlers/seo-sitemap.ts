@@ -2,7 +2,7 @@ import { documentPath, rendersPages } from '@krantho/core'
 import { canReadPublished } from '@krantho/persistence'
 import { buildSeoFieldMap, resolveSeoField } from '@krantho/seo-shared'
 import { PUBLIC_MACHINE_READ_CACHE_CONTROL } from '../public-cache.js'
-import type { ApiContext, ApiHandler } from '../types.js'
+import type { ApiHandler, SeoFileSource } from '../types.js'
 
 /**
  * Canonical paths for the SEO routes registered in `create-api-handlers.ts`.
@@ -44,7 +44,7 @@ export function isNoindex(fields: Record<string, unknown>): boolean {
 /**
  * Build the list of sitemap URLs from the handler's content config.
  *
- * Pure: reads from the context, returns an array. No side effects. This is
+ * Pure: reads from the source, returns an array. No side effects. This is
  * the shared core used by both `seoSitemap` (XML output) and `seoSitemapJson`
  * (JSON output for the Studio preview), plus any future consumer that needs
  * the url list.
@@ -57,7 +57,7 @@ export function isNoindex(fields: Record<string, unknown>): boolean {
  * name (`/{name}/slug`). A path is listed once: the homepage, and a fixed-path
  * collection whose documents share one page.
  */
-export async function buildSitemapUrls(ctx: ApiContext): Promise<SitemapUrl[]> {
+export async function buildSitemapUrls(ctx: SeoFileSource): Promise<SitemapUrl[]> {
   const baseUrl = ctx.config.site.baseUrl.replace(/\/$/, '')
   const urls: SitemapUrl[] = []
   const listed = new Set<string>()

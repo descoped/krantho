@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process'
 import { readdir, readFile, writeFile } from 'node:fs/promises'
-import { join, relative, sep } from 'node:path'
+import { join, relative, resolve, sep } from 'node:path'
 import { promisify } from 'node:util'
 
 const run = promisify(execFile)
@@ -37,16 +37,12 @@ async function markdownFiles(dir: string): Promise<string[]> {
 }
 
 /**
- * Write `<contentDir>/dates.json`: each markdown file's last git commit date.
- *
- * Run at build time, where the repository's history is available; the server
- * reads the file when it imports content, so a page that was never edited in
- * Studio carries the date its file last changed, not the date of the
- * import. Answers null and writes nothing when the history is missing or
- * shallow (a CI checkout without `fetch-depth: 0`) — every file would then
- * carry the latest commit's date. A file that is not committed yet is left out.
+ * Each markdown file's last git commit date, keyed by its path relative to
+ * `contentDir`. Null when the history is missing or shallow (a CI checkout
+ * without `fetch-depth: 0`): every file would then carry the latest commit's
+ * date. A file that is not committed yet is left out.
  */
-export async function generateContentDates(contentDir: string): Promise<ContentDates | null> {
+export async function readContentDates(contentDir: string): Promise<ContentDates | null> {
   const shallow = await git(contentDir, ['rev-parse', '--is-shallow-repository'])
   if (shallow !== 'false') return null
 
@@ -55,6 +51,21 @@ export async function generateContentDates(contentDir: string): Promise<ContentD
     const date = await git(contentDir, ['log', '-1', '--format=%cI', '--', file])
     if (date) dates[contentDateKey(contentDir, file)] = new Date(date).toISOString()
   }
+  return dates
+}
+
+/**
+ * Write `<contentDir>/dates.json`: each markdown file's last git commit date
+ * ({@link readContentDates}).
+ *
+ * Run at build time, where the repository's history is available; the server
+ * reads the file when it imports content, so a page that was never edited in
+ * Studio carries the date its file last changed, not the date of the
+ * import. Answers null and writes nothing without the full history.
+ */
+export async function generateContentDates(contentDir: string): Promise<ContentDates | null> {
+  const dates = await readContentDates(contentDir)
+  if (!dates) return null
   await writeFile(
     join(contentDir, CONTENT_DATES_FILE),
     `${JSON.stringify(dates, null, 2)}\n`,
@@ -98,6 +109,33 @@ export async function loadContentDates(contentDir: string): Promise<ContentDates
 
 /** When a content file last changed, by its path; undefined dates the import now */
 export type ContentDateOf = (filePath: string) => string | undefined
+
+/** Each directory's dates, read once per process: the loader and a static build's files open the same ones */
+const directoryDates = new Map<string, Promise<ContentDates | null>>()
+
+function datesOf(directory: string): Promise<ContentDates | null> {
+  let dates = directoryDates.get(directory)
+  if (!dates) {
+    dates = readContentDates(directory)
+    directoryDates.set(directory, dates)
+  }
+  return dates
+}
+
+/**
+ * Look up a content file's last commit date, by its path, across the
+ * directories a site reads its files from. A file outside them, or every file
+ * without the full history, has none. Each directory's history is read once
+ * per process.
+ */
+export async function gitDateLookup(directories: readonly string[]): Promise<ContentDateOf> {
+  const dates = new Map<string, string>()
+  for (const directory of new Set(directories.map((dir) => resolve(dir)))) {
+    const found = await datesOf(directory)
+    for (const [key, date] of Object.entries(found ?? {})) dates.set(join(directory, key), date)
+  }
+  return (filePath) => dates.get(resolve(filePath))
+}
 
 /** Look up a content file's date in the dates the build wrote for `contentDir` */
 export async function contentDateLookup(contentDir: string): Promise<ContentDateOf> {

@@ -1,55 +1,10 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { ISeoConfigAdapter, SeoConfig, SeoConfigScope } from '@krantho/persistence'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { MemorySeoConfigAdapter } from '../src/memory-seo-config.js'
 import type { SeoSeedConfig } from '../src/seo-config-io.js'
 import { applySeedConfig, exportSeoConfig, importSeoConfig } from '../src/seo-config-io.js'
-
-// ---------------------------------------------------------------------------
-// In-memory adapter for testing (no real DB)
-// ---------------------------------------------------------------------------
-
-class MemorySeoConfigAdapter implements ISeoConfigAdapter {
-  private store = new Map<string, SeoConfig>()
-
-  async getConfig(id: string): Promise<SeoConfig | null> {
-    return this.store.get(id) ?? null
-  }
-
-  async saveConfig(config: Omit<SeoConfig, 'createdAt' | 'updatedAt'>): Promise<void> {
-    const now = new Date().toISOString()
-    this.store.set(config.id, {
-      ...config,
-      createdAt: now,
-      updatedAt: now,
-    })
-  }
-
-  async deleteConfig(id: string): Promise<void> {
-    this.store.delete(id)
-  }
-
-  async listConfigs(scope?: SeoConfigScope): Promise<SeoConfig[]> {
-    const all = [...this.store.values()]
-    return scope ? all.filter((c) => c.scope === scope) : all
-  }
-
-  async listConfigsByPrefix(prefix: string): Promise<SeoConfig[]> {
-    return [...this.store.values()].filter((c) => c.id.startsWith(prefix))
-  }
-
-  async deleteAllConfigs(): Promise<number> {
-    const count = this.store.size
-    this.store.clear()
-    return count
-  }
-
-  /** Test helper — get all stored configs */
-  getAll(): SeoConfig[] {
-    return [...this.store.values()]
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Test helpers
@@ -213,7 +168,7 @@ describe('importSeoConfig error paths', () => {
     const result = await importSeoConfig(adapter, nonExistent, { mode: 'overwrite' })
     expect(result.scopesImported).toBe(0)
     expect(result.entitiesImported).toBe(0)
-    expect(adapter.getAll()).toHaveLength(0)
+    expect(await adapter.listConfigs()).toHaveLength(0)
   })
 
   it('rejects when a YAML file contains invalid content', async () => {
@@ -261,8 +216,8 @@ describe('round-trip: export → import → compare', () => {
     await importSeoConfig(db2, tempDir, { mode: 'overwrite' })
 
     // Compare
-    const db1Configs = db1.getAll().sort((a, b) => a.id.localeCompare(b.id))
-    const db2Configs = db2.getAll().sort((a, b) => a.id.localeCompare(b.id))
+    const db1Configs = (await db1.listConfigs()).sort((a, b) => a.id.localeCompare(b.id))
+    const db2Configs = (await db2.listConfigs()).sort((a, b) => a.id.localeCompare(b.id))
 
     expect(db2Configs.length).toBe(db1Configs.length)
     for (let i = 0; i < db1Configs.length; i++) {

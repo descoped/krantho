@@ -2,7 +2,7 @@ import { documentPath, type PageCollection, rendersPages } from '@krantho/core'
 import { type ContentSummary, canReadPublished, type PublishedReader } from '@krantho/persistence'
 import { buildSeoFieldMap, resolveSeoField } from '@krantho/seo-shared'
 import { PUBLIC_MACHINE_READ_CACHE_CONTROL } from '../public-cache.js'
-import type { ApiContext, ApiHandler } from '../types.js'
+import type { ApiContext, ApiHandler, SeoFileSource } from '../types.js'
 import { isNoindex } from './seo-sitemap.js'
 
 /** The route serving the site's llms.txt */
@@ -24,7 +24,7 @@ function oneLine(text: string): string {
 }
 
 /** The site summary: the override, else the site SEO config's primary entity description */
-async function siteSummary(ctx: ApiContext, overrides: LlmsTxtOverrides): Promise<string> {
+async function siteSummary(ctx: SeoFileSource, overrides: LlmsTxtOverrides): Promise<string> {
   if (overrides.summary !== undefined) return oneLine(overrides.summary)
   const config = await ctx.seoConfigAdapter?.getConfig('site')
   const description = config?.config.entities[0]?.properties.description
@@ -33,7 +33,7 @@ async function siteSummary(ctx: ApiContext, overrides: LlmsTxtOverrides): Promis
 
 /** `- [title](url): description` for one live document, or null when it is not listed */
 function documentLine(
-  ctx: ApiContext,
+  ctx: SeoFileSource,
   collection: PageCollection,
   doc: ContentSummary,
   overrides: LlmsTxtOverrides,
@@ -53,7 +53,7 @@ function documentLine(
 
 /** The `## collection` block of one collection, or null when it lists nothing */
 async function collectionBlock(
-  ctx: ApiContext,
+  ctx: SeoFileSource,
   adapter: PublishedReader,
   collection: PageCollection,
   overrides: LlmsTxtOverrides,
@@ -76,7 +76,7 @@ async function collectionBlock(
  * indexable document with its URL and description.
  */
 export async function buildLlmsTxt(
-  ctx: ApiContext,
+  ctx: SeoFileSource,
   overrides: LlmsTxtOverrides = {},
 ): Promise<string> {
   const blocks = [`# ${oneLine(ctx.config.site.name)}`]

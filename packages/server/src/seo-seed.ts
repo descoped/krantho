@@ -2,6 +2,7 @@ import { resolve } from 'node:path'
 import type { KranthoConfig, SeoSection } from '@krantho/config'
 import { isConfigured } from '@krantho/config'
 import type { ISeoConfigAdapter } from '@krantho/persistence'
+import { MemorySeoConfigAdapter } from './memory-seo-config.js'
 import type { SeoSeedConfig } from './seo-config-io.js'
 import { applySeedConfig } from './seo-config-io.js'
 
@@ -40,6 +41,17 @@ export function seedSeoOnce(config: KranthoConfig, adapter: ISeoConfigAdapter): 
     seeds.set(key, seeding)
   }
   return seeding
+}
+
+/**
+ * The SEO configuration of a site without a database: a store in memory,
+ * filled from the `seo` section, so its pages compose the identity and
+ * archetypes the configuration defines
+ */
+export async function memorySeoConfig(config: KranthoConfig): Promise<ISeoConfigAdapter> {
+  const store = new MemorySeoConfigAdapter()
+  if (isConfigured(config, 'seo')) await seedSeoConfig(config.seo, seedPlan(config.seo), store)
+  return store
 }
 
 /** The database a connection opens, whichever connection it is */

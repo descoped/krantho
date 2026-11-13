@@ -35,7 +35,7 @@ import { inPreviewRequest, recordReadTags } from './page-request.js'
 import { createAdapter } from './persistence.js'
 import type { ReadCache } from './read-cache.js'
 import { createReadCache } from './read-cache.js'
-import { seedSeoOnce } from './seo-seed.js'
+import { memorySeoConfig, seedSeoOnce } from './seo-seed.js'
 
 /** The page reads over one version of each document */
 type ReadViewLoader = IPublishedContentLoader & IPublishedSeoLoader
@@ -302,7 +302,11 @@ async function openStore(config: KranthoConfig, contentConfig: ContentConfig): P
   }
   const { seoConfigAdapter } = await createLockAdapters(lockDb, config.persistence.provider)
   if (seoConfigAdapter) await seedSeoOnce(config, seoConfigAdapter)
-  return { adapter, seoConfigs: seoConfigAdapter }
+  // Without a database, the pages' SEO is the code-defined configuration, held in memory
+  const seoConfigs =
+    seoConfigAdapter ??
+    (config.persistence.provider === 'filesystem' ? await memorySeoConfig(config) : undefined)
+  return { adapter, seoConfigs }
 }
 
 function toPublishedSummary(doc: ContentSummary): PublishedSummary {

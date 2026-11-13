@@ -715,6 +715,28 @@ Document IDs (`doc:<collection>/<slug>`) read and edit `metadata.seo`. Their PUT
 | DELETE | `/api/seo/config/:id` | `deleteSeoConfig` | Delete a specific SEO configuration |
 | DELETE | `/api/seo/config` | `deleteAllSeoConfigs` | Delete shared policies; document metadata remains intact |
 
+#### SEO files without a request
+
+The sitemap, robots.txt and llms.txt handlers build their bodies with functions that take a `SeoFileSource`
+(`config`, `contentConfig`, `adapter`, `seoConfigAdapter?`) instead of a request, so a static build writes the
+files the API serves:
+
+```typescript
+import {
+  buildDefaultRobotsBody,
+  buildLlmsTxt,
+  buildSitemapUrls,
+  serializeSitemapXml,
+} from '@krantho/api'
+
+const sitemapXml = serializeSitemapXml(await buildSitemapUrls(source))
+const robotsTxt = buildDefaultRobotsBody(config.site.baseUrl)
+const llmsTxt = await buildLlmsTxt(source)
+```
+
+They read only live documents in collections that render pages, and skip noindex pages. A saved robots.txt
+override or llms.txt snapshot is the handlers' concern: the builders always generate.
+
 ### Assistant Routes (`registerAssistantRoutes`)
 
 Registered only when `assistant.enabled` is set. With it off these paths answer 404 and are absent from `/api/openapi.json` (where the routes are tagged `Assistant`). What the assistant does, and its limits, are in [assistant.md](assistant.md).

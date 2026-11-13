@@ -43,8 +43,14 @@ interface FileSystemAdapterOptions {
   contentPath?: string    // a collection without a directory; defaults to 'content/pages'
   seoPath?: string        // defaults to 'content/seo'
   defaultStatus?: string  // defaults to 'published'
+  dateOf?: (filePath: string) => string | undefined  // when each file last changed
 }
 ```
+
+`dateOf` dates a document (`meta.createdAt`, the page's publish date and the sitemap's `lastmod`) by its file's
+path. `@krantho/server` passes each file's last git commit date, read once when the adapter opens. A file the
+lookup does not know, or every file without the repository's full history (a shallow clone), takes its
+modification time, which a fresh checkout sets to the checkout's time.
 
 `defaultStatus` is the status given to a markdown file whose frontmatter declares none. A
 deployment sets it through `content.defaultStatus.filesystem` in the krantho configuration

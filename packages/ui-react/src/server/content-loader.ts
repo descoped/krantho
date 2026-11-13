@@ -15,6 +15,17 @@ import type { CMSContent, CMSSummary, ContentLoaderOptions } from '../types'
 export type ServerContentLoader = IPublishedContentLoader & Partial<IPublishedSeoLoader>
 
 let serverLoader: ServerContentLoader | null = null
+let renderBasePath = ''
+
+/** How server components render what they read */
+export interface ServerLoaderOptions {
+  /**
+   * The path the site is served under (`/docs-site`, Next's `basePath`):
+   * links and images in markdown that start at the site's root get it in
+   * front, as the site's own links do
+   */
+  basePath?: string | undefined
+}
 
 /** The loader server components read through */
 export function getServerLoader(): ServerContentLoader {
@@ -31,8 +42,12 @@ export function getServerLoader(): ServerContentLoader {
  * `@krantho/server` (re-exported by the framework adapters). Pages read only
  * the live (published) version of each document.
  */
-export function initServerLoader(loader: ServerContentLoader): void {
+export function initServerLoader(
+  loader: ServerContentLoader,
+  options: ServerLoaderOptions = {},
+): void {
   serverLoader = loader
+  renderBasePath = options.basePath ?? ''
 }
 
 function generateExcerpt(
@@ -72,7 +87,7 @@ async function toCMSContent(
     excerptLength = 160,
   } = options
 
-  const rendered = await renderContent(doc.fields, doc.body)
+  const rendered = await renderContent(doc.fields, doc.body, { basePath: renderBasePath })
   const sections = extractSections ? rendered.sections : {}
 
   return {
