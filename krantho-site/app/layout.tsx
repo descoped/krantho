@@ -69,6 +69,8 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${display.variable} ${mono.variable}`}
+      // The CSS scrolls smoothly within a page; a new page opens at its top
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <body>

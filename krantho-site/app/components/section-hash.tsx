@@ -46,6 +46,9 @@ export function SectionHash({ selector }: { selector: string }): null {
     // browser scrolls there. One check per frame, however often scroll fires.
     let frame = 0
     const follow = (): void => {
+      // Leaving the page, a scroll can come before the cleanup below: the
+      // address is the next page's by then, and its hash is not ours to set
+      if (targets.some((target) => !target.isConnected)) return
       const id = currentTarget(targets)
       showHash(id)
       markNav(id)
