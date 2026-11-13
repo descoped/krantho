@@ -128,7 +128,6 @@ export interface MediaConfig {
   files: import('@krantho/persistence').IFileStore
 }
 
-/** Check if adapter supports version history (append-only adapters do) */
 /**
  * What a site's SEO files — the sitemap, robots.txt and llms.txt — are built
  * from: its configuration, collections, content and SEO configuration. No
@@ -139,6 +138,7 @@ export type SeoFileSource = Pick<
   'config' | 'contentConfig' | 'adapter' | 'seoConfigAdapter'
 >
 
+/** Check if adapter supports version history (append-only adapters do) */
 export function hasVersioning(adapter: unknown): boolean {
   const a = adapter as Record<string, unknown>
   return typeof a.listVersions === 'function' && typeof a.getVersion === 'function'

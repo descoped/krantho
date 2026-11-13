@@ -110,15 +110,28 @@ export async function loadContentDates(contentDir: string): Promise<ContentDates
 /** When a content file last changed, by its path; undefined dates the import now */
 export type ContentDateOf = (filePath: string) => string | undefined
 
+/** Each directory's dates, read once per process: the loader and a static build's files open the same ones */
+const directoryDates = new Map<string, Promise<ContentDates | null>>()
+
+function datesOf(directory: string): Promise<ContentDates | null> {
+  let dates = directoryDates.get(directory)
+  if (!dates) {
+    dates = readContentDates(directory)
+    directoryDates.set(directory, dates)
+  }
+  return dates
+}
+
 /**
  * Look up a content file's last commit date, by its path, across the
  * directories a site reads its files from. A file outside them, or every file
- * without the full history, has none.
+ * without the full history, has none. Each directory's history is read once
+ * per process.
  */
 export async function gitDateLookup(directories: readonly string[]): Promise<ContentDateOf> {
   const dates = new Map<string, string>()
   for (const directory of new Set(directories.map((dir) => resolve(dir)))) {
-    const found = await readContentDates(directory)
+    const found = await datesOf(directory)
     for (const [key, date] of Object.entries(found ?? {})) dates.set(join(directory, key), date)
   }
   return (filePath) => dates.get(resolve(filePath))

@@ -51,9 +51,6 @@ export function createEmptyResult(
   }
 }
 
-/**
- * Markdown processor with @ notation support
- */
 /** Options for {@link MarkdownProcessor} */
 export interface MarkdownProcessorOptions {
   /**
@@ -65,18 +62,34 @@ export interface MarkdownProcessorOptions {
   basePath?: string | undefined
 }
 
-/** A root-relative URL (`/guide`, not `//host` or `https:`) under the base path */
+/** A path without the slashes it ends with: `/docs-site/` is `/docs-site` */
+function withoutTrailingSlashes(path: string): string {
+  let end = path.length
+  while (end > 0 && path[end - 1] === '/') end--
+  return path.slice(0, end)
+}
+
+/**
+ * A root-relative URL (`/guide`, not `//host` or `https:`) under the base
+ * path. A URL already under it — `/docs-site`, `/docs-site/guide`,
+ * `/docs-site?q`, `/docs-site#top` — is left as written.
+ */
 function underBasePath(url: string, basePath: string): string {
   if (!url.startsWith('/') || url.startsWith('//')) return url
-  if (url === basePath || url.startsWith(`${basePath}/`)) return url
+  if (url.startsWith(basePath) && ['', '/', '?', '#'].includes(url.charAt(basePath.length))) {
+    return url
+  }
   return `${basePath}${url}`
 }
 
+/**
+ * Markdown processor with @ notation support
+ */
 export class MarkdownProcessor implements IMarkdownProcessor {
   private readonly basePath: string
 
   constructor(options: MarkdownProcessorOptions = {}) {
-    this.basePath = (options.basePath ?? '').replace(/\/+$/, '')
+    this.basePath = withoutTrailingSlashes(options.basePath ?? '')
   }
 
   async parse(content: string): Promise<string> {

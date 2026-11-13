@@ -30,7 +30,7 @@ describe('renderContent', () => {
     const links = [
       '[Guide](/docs/guide/) ![Logo](/images/logo.svg)',
       '[Site](https://example.com/x) [Other](//cdn.example.com/a.js) [Near](guide/) [Top](#top)',
-      '[Already](/repo/docs/x/) [Root](/repo)',
+      '[Already](/repo/docs/x/) [Root](/repo) [Query](/repo?q=1) [Anchor](/repo#top) [Near](/repository/)',
       '',
       '## Links',
       '',
@@ -54,6 +54,9 @@ describe('renderContent', () => {
       expect(html).toContain('href="#top"')
       expect(html).toContain('href="/repo/docs/x/"')
       expect(html).toContain('href="/repo"')
+      expect(html).toContain('href="/repo?q=1"')
+      expect(html).toContain('href="/repo#top"')
+      expect(html).toContain('href="/repo/repository/"')
     })
 
     it('leaves URLs as written without a base path, also after a render with one', async () => {
