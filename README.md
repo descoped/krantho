@@ -128,7 +128,7 @@ The LLM features use a Console API key from `KRANTHO_LLM_ANTHROPIC_API_KEY`, bil
 
 ## Development
 
-Requires Node 22.9 or later and pnpm 10. The example apps and `krantho-site` load the repository root `.env` when you run their `dev` script. Copy [`.env.example`](.env.example) to `.env` and fill in only what you need. It is for development: the infra secrets for Vercel and Neon live in the deployer's own infra stack, outside this repository, which no dev server loads. Every variable is optional for local development: with none set, the apps start with no auth, SQLite under `.krantho/`, a temporary session secret, and AI enrichment reporting that no LLM provider is configured.
+Requires Node 22.9 or later and pnpm 10. The example apps and `krantho-site` load the repository root `.env` when you run their `dev` script. Copy [`.env.example`](.env.example) to `.env` and fill in only what you need. It is for development: production secrets live outside this repository, and no dev server loads them. Every variable is optional for local development: with none set, the apps start with no auth, SQLite under `.krantho/`, a temporary session secret, and AI enrichment reporting that no LLM provider is configured.
 
 To run AI enrichment on your Claude subscription while developing, set `KRANTHO_LLM_CLAUDE_CODE_OAUTH_TOKEN` in `.env` to the token `claude setup-token` prints and choose the `claude-code` provider (Haiku only). The `anthropic` provider never reads it and uses `KRANTHO_LLM_ANTHROPIC_API_KEY`. Subscription tokens are for development on your own machine only — deployments use the `anthropic` provider with a Console API key. See [`docs/ai.md`](docs/ai.md#credentials).
 

@@ -37,6 +37,12 @@ and they are the site's, not the project's:
 - **Every published release deploys** krantho.com (`.github/workflows/deploy-site.yml`): a
   pre-release to preview, a release to production. The workflow refuses a tag that is not
   semver, does not match the versioned files, or is not higher than the latest release.
+- **A site-only release** ships content and site changes between package releases: run the
+  workflow by hand with `environment: production` and the ref `main`. It deploys only when the
+  ref's versioned files carry the latest release's version, publishes nothing to npm and needs
+  no version PR.
+- **Release notes describe the release**, never the deployment: no deployment URL, Vercel
+  account or rollback command (`.claude/rules/public-content.md`).
 - **The `/changelog` page has an entry of its own** for each release:
   `krantho-site/content/releases/vX-Y-Z.md`, its `version` set to the release version, written in
   the version PR with the `CHANGELOG.md` entry. `krantho-site/scripts/check-release-entry.mjs`

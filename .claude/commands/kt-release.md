@@ -53,7 +53,12 @@ gh release create vX.Y.Z --target main --title vX.Y.Z --notes "…"
 
 Notes: what changed for users, one line per change with its PR number; say whether the release
 needs a database reset (the operator's deployment runbook — new and changed content files,
-a changelog entry included, do not).
+a changelog entry included, do not). The notes never name the deployment: no deployment URL,
+Vercel account or rollback command (`.claude/rules/public-content.md`).
+
+A site-only release (content and site changes, no packages) is not this command:
+`gh workflow run deploy-site.yml -f ref=main -f environment=production`
+(`.claude/rules/releases.md`).
 
 ## 4. Verify krantho.com
 
