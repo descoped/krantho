@@ -191,7 +191,7 @@ async function freshInstance() {
 }
 
 function location(res: ApiResponse): string {
-  return res.headers?.['Location'] ?? ''
+  return res.headers?.Location ?? ''
 }
 
 /** The `name=value` pair a browser sends back for a Set-Cookie value */

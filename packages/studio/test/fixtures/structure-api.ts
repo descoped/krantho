@@ -212,8 +212,8 @@ function statusOf(type: string, jobId: string | null, gate: FillGate | undefined
     // A running job lists its items as they are, the current one generating
     items: running
       ? items.map((item) => ({
-          collection: item['collection'],
-          slug: item['slug'],
+          collection: item.collection,
+          slug: item.slug,
           status: 'generating',
         }))
       : items,
@@ -231,7 +231,7 @@ export function fillRoutes(sent: Sent, gate?: FillGate): Routes {
   return {
     'POST /api/seo/enrich': (body) => {
       sent.push({ key: 'POST /api/seo/enrich', body })
-      const type = String((body as Record<string, unknown>)['type'])
+      const type = String((body as Record<string, unknown>).type)
       return json({ jobId: `job-${type}`, status: 'running', type, totalItems: 1 }, 202)
     },
     'GET /api/seo/enrich/status': (_body, url) => {

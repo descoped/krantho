@@ -86,7 +86,7 @@ interface SavedProps extends DataModeProps {
 /** Why the graph editor only browses: the API saves a page's SEO settings for admins, under no one else's lock */
 function graphReadOnly(ws: Workspace): string | null {
   if (ws.readOnly) return 'Read-only: the graph can be browsed and exported, not changed.'
-  if (!ws.schema?.contract.metadata['seo'])
+  if (!ws.schema?.contract.metadata.seo)
     return 'This content form does not include structured data overrides.'
   return null
 }
@@ -163,7 +163,7 @@ function SeoCards({ ws, source, document, initialGraphOpen }: SavedProps): React
             seo: config as unknown as Record<string, unknown>,
           })
         }
-        draftConfig={ws.draft.draft.metadata['seo'] as unknown as SeoConfigData | undefined}
+        draftConfig={ws.draft.draft.metadata.seo as unknown as SeoConfigData | undefined}
       />
       <RichResultsCard rich={data.rich} />
       <FindingsCard findings={data.findings} version={meta.version} />

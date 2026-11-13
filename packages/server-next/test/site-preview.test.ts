@@ -106,12 +106,11 @@ describe('site preview', () => {
     )
     const ref = { collection: 'pages', slug: 'about' }
     const listedTitle = async () =>
-      (await loader.listPublished('pages')).find((doc) => doc.slug === 'about')?.fields['title']
+      (await loader.listPublished('pages')).find((doc) => doc.slug === 'about')?.fields.title
     const summaryTitle = async () =>
-      (await loader.listPublishedSummaries('pages')).find((doc) => doc.slug === 'about')?.fields[
-        'title'
-      ]
-    expect((await loader.getPublished(ref))?.fields['title']).toBe('About')
+      (await loader.listPublishedSummaries('pages')).find((doc) => doc.slug === 'about')?.fields
+        .title
+    expect((await loader.getPublished(ref))?.fields.title).toBe('About')
     expect(await summaryTitle()).toBe('About')
     expect(await loader.isPreview()).toBe(false)
 
@@ -121,7 +120,7 @@ describe('site preview', () => {
     expect(response.headers.get('location')).toBe('http://localhost:4002/about')
     expect(draft.enable).toHaveBeenCalledOnce()
     expect(await loader.isPreview()).toBe(true)
-    expect((await loader.getPublished(ref))?.fields['title']).toBe('Draft about')
+    expect((await loader.getPublished(ref))?.fields.title).toBe('Draft about')
     // Lists and summaries show what visitors see; only a document read is its current version
     expect(await listedTitle()).toBe('About')
     expect(await summaryTitle()).toBe('About')

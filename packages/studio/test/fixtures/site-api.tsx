@@ -78,7 +78,7 @@ interface Call {
  * server. A test whose result depends on how fast the server answers fails on every run, not
  * now and then on a loaded machine. CI runs Studio tests once with a delay.
  */
-const API_DELAY_MS = Number(process.env['KRANTHO_TEST_API_DELAY_MS'] ?? 0)
+const API_DELAY_MS = Number(process.env.KRANTHO_TEST_API_DELAY_MS ?? 0)
 
 // The requests the current fake API has taken and not yet answered, and all it has taken. Each
 // install starts afresh, so a request left over from an earlier test counts for nothing.

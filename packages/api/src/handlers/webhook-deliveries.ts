@@ -10,10 +10,10 @@ export const webhookDeliveries: ApiHandler = async (req, ctx) => {
     return { status: 200, body: { deliveries: [], total: 0 } }
   }
 
-  const limit = req.query['limit'] ? Number.parseInt(req.query['limit'], 10) : 50
-  const offset = req.query['offset'] ? Number.parseInt(req.query['offset'], 10) : 0
+  const limit = req.query.limit ? Number.parseInt(req.query.limit, 10) : 50
+  const offset = req.query.offset ? Number.parseInt(req.query.offset, 10) : 0
   const validStatuses = ['pending', 'delivered', 'failed'] as const
-  const rawStatus = req.query['status']
+  const rawStatus = req.query.status
   const status = validStatuses.includes(rawStatus as (typeof validStatuses)[number])
     ? (rawStatus as 'pending' | 'delivered' | 'failed')
     : undefined

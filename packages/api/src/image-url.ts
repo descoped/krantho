@@ -36,7 +36,7 @@ export function resolveVariant(
   query: Record<string, string | undefined>,
   headers?: Record<string, string> | undefined,
 ): ImageVariant {
-  const rawAspect = query['aspect']
+  const rawAspect = query.aspect
   const aspect = rawAspect && ASPECT_PATTERN.test(rawAspect) ? rawAspect : undefined
   return { preset: resolvePreset(query), format: resolveFormat(item, query, headers), aspect }
 }
@@ -53,9 +53,9 @@ export function variantCacheKey(id: string, variant: ImageVariant, rev: string):
 }
 
 function resolvePreset(query: Record<string, string | undefined>): ImagePreset {
-  const rawW = query['w']
+  const rawW = query.w
   const width = rawW ? Number.parseInt(rawW, 10) : Number.NaN
-  return Number.isNaN(width) ? parsePreset(query['preset']) : clampToPreset(width)
+  return Number.isNaN(width) ? parsePreset(query.preset) : clampToPreset(width)
 }
 
 function resolveFormat(
@@ -63,8 +63,8 @@ function resolveFormat(
   query: Record<string, string | undefined>,
   headers: Record<string, string> | undefined,
 ): ImageFormat | 'original' {
-  const fmt = query['fmt']
+  const fmt = query.fmt
   const explicitRaster = fmt !== undefined && FORMATS.has(fmt)
   if (item.mimeType === SVG && !explicitRaster) return 'original'
-  return parseFormat(fmt, headers?.['accept'])
+  return parseFormat(fmt, headers?.accept)
 }

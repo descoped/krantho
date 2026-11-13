@@ -105,11 +105,11 @@ function parse(url: string, init: RequestInit): WireRequest {
   const headers = init.headers as Record<string, string>
   return {
     url,
-    authorization: headers['authorization'],
-    model: String(body['model']),
-    messages: (body['messages'] ?? []) as WireMessage[],
-    tools: (body['tools'] ?? []) as WireTool[],
-    toolChoice: body['tool_choice'],
+    authorization: headers.authorization,
+    model: String(body.model),
+    messages: (body.messages ?? []) as WireMessage[],
+    tools: (body.tools ?? []) as WireTool[],
+    toolChoice: body.tool_choice,
     body,
   }
 }
@@ -118,14 +118,14 @@ function parse(url: string, init: RequestInit): WireRequest {
 function openObjects(schema: unknown, path: string, found: string[] = []): string[] {
   if (typeof schema !== 'object' || schema === null) return found
   const node = schema as Record<string, unknown>
-  const properties = node['properties'] as Record<string, unknown> | undefined
-  if (node['type'] === 'object' && (!properties || Object.keys(properties).length === 0)) {
+  const properties = node.properties as Record<string, unknown> | undefined
+  if (node.type === 'object' && (!properties || Object.keys(properties).length === 0)) {
     found.push(path)
   }
   for (const [name, value] of Object.entries(properties ?? {})) {
     openObjects(value, `${path}.${name}`, found)
   }
-  openObjects(node['items'], `${path}[]`, found)
+  openObjects(node.items, `${path}[]`, found)
   return found
 }
 
@@ -147,9 +147,7 @@ function refusal(
     const turns = request.messages.filter((m) => m.tool_calls)
     for (const [turn, message] of turns.entries()) {
       const first = message.tool_calls?.[0]
-      const extra = first?.['extra_content'] as
-        | { google?: { thought_signature?: string } }
-        | undefined
+      const extra = first?.extra_content as { google?: { thought_signature?: string } } | undefined
       if (extra?.google?.thought_signature !== emitted.signatures[turn]) {
         return 'Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance.'
       }
@@ -179,7 +177,7 @@ function followDeclaration(
   tool: WireTool | undefined,
   args: Record<string, unknown>,
 ): Record<string, unknown> {
-  const properties = (tool?.function.parameters['properties'] ?? {}) as Record<
+  const properties = (tool?.function.parameters.properties ?? {}) as Record<
     string,
     { type?: string }
   >
@@ -222,11 +220,11 @@ function stream(
           arguments: JSON.stringify(followDeclaration(declared, call.args)),
         },
       }
-      if (vendor !== 'gemini') wire['index'] = position
+      if (vendor !== 'gemini') wire.index = position
       if (vendor === 'gemini' && position === 0) {
         const signature = `sig-${String(emitted.signatures.length)}`
         emitted.signatures.push(signature)
-        wire['extra_content'] = { google: { thought_signature: signature } }
+        wire.extra_content = { google: { thought_signature: signature } }
       }
       return wire
     })

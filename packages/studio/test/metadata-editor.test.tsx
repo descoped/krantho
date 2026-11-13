@@ -96,7 +96,7 @@ describe('an optional group not in use', () => {
     ...contract,
     metadata: {
       editorial: {
-        ...(contract.metadata['editorial'] as ContentContract['metadata'][string]),
+        ...(contract.metadata.editorial as ContentContract['metadata'][string]),
         required: false,
       },
     },

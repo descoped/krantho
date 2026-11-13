@@ -229,22 +229,22 @@ describe('the request a profile shapes', () => {
 
   it('asks a reasoning model for its lowest effort, in max_completion_tokens', async () => {
     const body = await chatBody('gpt-5-mini')
-    expect(body['reasoning_effort']).toBe('minimal')
-    expect(body['max_completion_tokens']).toBe(100)
+    expect(body.reasoning_effort).toBe('minimal')
+    expect(body.max_completion_tokens).toBe(100)
     expect(body).not.toHaveProperty('max_tokens')
     expect(body).not.toHaveProperty('temperature')
   })
 
   it('adds the headroom to the cap of a model that reasons at its lowest effort', async () => {
     const body = await chatBody('gpt-6-astra')
-    expect(body['reasoning_effort']).toBe('low')
-    expect(body['max_completion_tokens']).toBe(100 + 1024)
+    expect(body.reasoning_effort).toBe('low')
+    expect(body.max_completion_tokens).toBe(100 + 1024)
   })
 
   it('sends a model without a profile nothing it did not send before', async () => {
     const body = await chatBody('gpt-4o')
     expect(body).not.toHaveProperty('reasoning_effort')
-    expect(body['max_completion_tokens']).toBe(100)
+    expect(body.max_completion_tokens).toBe(100)
   })
 
   it('sends the temperature a site sets, and no effort when it names default', async () => {
@@ -252,7 +252,7 @@ describe('the request a profile shapes', () => {
       'gpt-5.1': { reasoningEffort: 'default', temperature: 0.4 },
     })
     expect(body).not.toHaveProperty('reasoning_effort')
-    expect(body['temperature']).toBe(0.4)
+    expect(body.temperature).toBe(0.4)
   })
 
   it('sends a provider that is not openai no reasoning effort, whatever the model is called', async () => {
@@ -262,8 +262,8 @@ describe('the request a profile shapes', () => {
 
   it('sends a completion the same: effort and max_completion_tokens, never max_tokens', async () => {
     const body = await completionBody('gpt-5.5')
-    expect(body['reasoning_effort']).toBe('none')
-    expect(body['max_completion_tokens']).toBe(100)
+    expect(body.reasoning_effort).toBe('none')
+    expect(body.max_completion_tokens).toBe(100)
     expect(body).not.toHaveProperty('max_tokens')
   })
 
@@ -281,7 +281,7 @@ describe('the request a profile shapes', () => {
       maxTokens: 100,
     })
     const body = sentRequest(fetchMock).body
-    expect(body['max_tokens']).toBe(100)
+    expect(body.max_tokens).toBe(100)
     expect(body).not.toHaveProperty('max_completion_tokens')
   })
 

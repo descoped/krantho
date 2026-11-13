@@ -131,5 +131,5 @@ export interface MediaConfig {
 /** Check if adapter supports version history (append-only adapters do) */
 export function hasVersioning(adapter: unknown): boolean {
   const a = adapter as Record<string, unknown>
-  return typeof a['listVersions'] === 'function' && typeof a['getVersion'] === 'function'
+  return typeof a.listVersions === 'function' && typeof a.getVersion === 'function'
 }

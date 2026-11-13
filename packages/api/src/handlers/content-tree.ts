@@ -21,7 +21,7 @@ export const listContentTree: ApiHandler = async (req, ctx) => {
     projection: 'meta',
     collections: names,
     sort: 'slug',
-    locale: parseLocaleParam(req.query['locale']),
+    locale: parseLocaleParam(req.query.locale),
   })
   const documents = groupByCollection(items, names, (meta) => meta.collection)
   const collections = names.map((name) => ({ name, documents: documents.get(name) ?? [] }))

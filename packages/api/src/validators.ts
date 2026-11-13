@@ -135,10 +135,10 @@ export function validateCrop(
     return { isValid: false, error: 'Crop must be an object' }
   }
   const c = crop as Record<string, unknown>
-  const x = typeof c['x'] === 'number' ? c['x'] : NaN
-  const y = typeof c['y'] === 'number' ? c['y'] : NaN
-  const w = typeof c['width'] === 'number' ? c['width'] : NaN
-  const h = typeof c['height'] === 'number' ? c['height'] : NaN
+  const x = typeof c.x === 'number' ? c.x : NaN
+  const y = typeof c.y === 'number' ? c.y : NaN
+  const w = typeof c.width === 'number' ? c.width : NaN
+  const h = typeof c.height === 'number' ? c.height : NaN
   if (
     Number.isNaN(x) ||
     Number.isNaN(y) ||
@@ -173,10 +173,10 @@ export function validateHotspot(
     return { isValid: false, error: 'Hotspot must be an object' }
   }
   const h = hotspot as Record<string, unknown>
-  const x = typeof h['x'] === 'number' ? h['x'] : NaN
-  const y = typeof h['y'] === 'number' ? h['y'] : NaN
-  const w = typeof h['width'] === 'number' ? h['width'] : NaN
-  const ht = typeof h['height'] === 'number' ? h['height'] : NaN
+  const x = typeof h.x === 'number' ? h.x : NaN
+  const y = typeof h.y === 'number' ? h.y : NaN
+  const w = typeof h.width === 'number' ? h.width : NaN
+  const ht = typeof h.height === 'number' ? h.height : NaN
   if (
     Number.isNaN(x) ||
     Number.isNaN(y) ||

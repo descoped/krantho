@@ -1,4 +1,4 @@
-import { loadSeoText } from '$lib/seo'
+import { loadSeoText } from '#lib/seo.ts'
 
 export function GET(): Response {
   const content = loadSeoText('llms.txt')

@@ -56,15 +56,15 @@ const WEBSITE = { '@type': 'WebSite', properties: {} }
 describe('reference resolution', () => {
   it('should point the author at the site Person', () => {
     const graph = compose({ site: { entities: [ORGANIZATION, PERSON] } })
-    expect(byType(graph, 'Article')?.['author']).toEqual({ '@id': 'https://example.org/#person' })
+    expect(byType(graph, 'Article')?.author).toEqual({ '@id': 'https://example.org/#person' })
   })
 
   it('should make the publishing Organization the author when no Person is configured', () => {
     const graph = compose({ site: { entities: [ORGANIZATION, WEBSITE] } })
     const article = byType(graph, 'Article')
-    expect(article?.['author']).toEqual({ '@id': 'https://example.org/#business' })
-    expect(article?.['publisher']).toEqual({ '@id': 'https://example.org/#business' })
-    expect(article?.['isPartOf']).toEqual({ '@id': 'https://example.org/#website' })
+    expect(article?.author).toEqual({ '@id': 'https://example.org/#business' })
+    expect(article?.publisher).toEqual({ '@id': 'https://example.org/#business' })
+    expect(article?.isPartOf).toEqual({ '@id': 'https://example.org/#website' })
     expect(validateGraph({ '@context': 'https://schema.org', '@graph': graph })).toEqual([])
   })
 
@@ -72,15 +72,15 @@ describe('reference resolution', () => {
     const graph = compose({
       site: { entities: [{ '@type': 'ProfessionalService', properties: {} }] },
     })
-    expect(byType(graph, 'Article')?.['author']).toEqual({ '@id': 'https://example.org/#business' })
+    expect(byType(graph, 'Article')?.author).toEqual({ '@id': 'https://example.org/#business' })
   })
 
   it('should leave out what nothing in the site configuration can satisfy, with a finding', () => {
     const findings: Finding[] = []
     const article = byType(compose({ findings }), 'Article')
-    expect(article?.['author']).toBeUndefined()
-    expect(article?.['publisher']).toBeUndefined()
-    expect(article?.['isPartOf']).toBeUndefined()
+    expect(article?.author).toBeUndefined()
+    expect(article?.publisher).toBeUndefined()
+    expect(article?.isPartOf).toBeUndefined()
     expect(findings.map((f) => [f.code, f.property])).toEqual([
       ['unresolved-reference', 'author'],
       ['unresolved-reference', 'publisher'],
@@ -94,22 +94,22 @@ describe('reference resolution', () => {
       site: { entities: [ORGANIZATION] },
       fields: { title: 'Post', author: 'Grace' },
     })
-    expect(byType(graph, 'Article')?.['author']).toEqual({ '@type': 'Person', name: 'Grace' })
+    expect(byType(graph, 'Article')?.author).toEqual({ '@type': 'Person', name: 'Grace' })
   })
 
   it('should leave configured references as set', () => {
     const graph = compose({ properties: { about: { '@id': 'https://example.org/#topic' } } })
-    expect(byType(graph, 'Article')?.['about']).toEqual({ '@id': 'https://example.org/#topic' })
+    expect(byType(graph, 'Article')?.about).toEqual({ '@id': 'https://example.org/#topic' })
   })
 })
 
 describe('values a builder does not list', () => {
   it('should carry dateModified, image and the page language onto an Article', () => {
     const article = byType(compose({ site: { entities: [ORGANIZATION] } }), 'Article')
-    expect(article?.['dateModified']).toBe('2026-09-20T12:00:00Z')
-    expect(article?.['datePublished']).toBe('2026-09-01T08:00:00Z')
-    expect(article?.['image']).toBe('https://example.org/post.png')
-    expect(article?.['inLanguage']).toBe('nb')
+    expect(article?.dateModified).toBe('2026-09-20T12:00:00Z')
+    expect(article?.datePublished).toBe('2026-09-01T08:00:00Z')
+    expect(article?.image).toBe('https://example.org/post.png')
+    expect(article?.inLanguage).toBe('nb')
   })
 
   it("should carry the site's identity onto its Organization", () => {
@@ -129,7 +129,7 @@ describe('values a builder does not list', () => {
     const site = {
       entities: [{ '@type': 'Organization', properties: { logo: 'https://example.org/alt.png' } }],
     }
-    expect(byType(compose({ site }), 'Organization')?.['logo']).toBe('https://example.org/alt.png')
+    expect(byType(compose({ site }), 'Organization')?.logo).toBe('https://example.org/alt.png')
   })
 
   it('should not give a document entity the site identity', () => {
@@ -137,8 +137,8 @@ describe('values a builder does not list', () => {
       compose({ type: 'Restaurant', fields: { title: 'Chez Acme' } }),
       'Restaurant',
     )
-    expect(restaurant?.['name']).toBe('Chez Acme')
-    expect(restaurant?.['logo']).toBeUndefined()
+    expect(restaurant?.name).toBe('Chez Acme')
+    expect(restaurant?.logo).toBeUndefined()
   })
 })
 
@@ -284,13 +284,13 @@ describe('resolvePageEntities', () => {
       ['Article', 'https://example.org/blog/post/#article', 'document'],
     ])
     const article = Object.fromEntries((entities[1]?.properties ?? []).map((p) => [p.property, p]))
-    expect(article['headline']).toMatchObject({
+    expect(article.headline).toMatchObject({
       value: 'Set by an editor',
       source: 'manual',
       editable: true,
     })
-    expect(article['image']).toMatchObject({ source: 'auto', origin: 'the content field "image"' })
-    expect(article['url']).toMatchObject({
+    expect(article.image).toMatchObject({ source: 'auto', origin: 'the content field "image"' })
+    expect(article.url).toMatchObject({
       value: 'https://example.org/blog/post',
       source: 'computed',
       origin: "the page's path",
@@ -299,7 +299,7 @@ describe('resolvePageEntities', () => {
     const organization = Object.fromEntries(
       (entities[0]?.properties ?? []).map((p) => [p.property, p]),
     )
-    expect(organization['logo']).toMatchObject({ source: 'site', origin: 'site.logo' })
+    expect(organization.logo).toMatchObject({ source: 'site', origin: 'site.logo' })
   })
 
   it('should list only the values the graph carries', async () => {

@@ -179,7 +179,7 @@ export function asUser(
   const headers: Record<string, string> = { 'content-type': contentType }
   if (user) {
     const { id, email, name, roles } = user
-    headers['authorization'] = `Bearer ${signJwt({ sub: id, email, name, roles }, JWT_SECRET)}`
+    headers.authorization = `Bearer ${signJwt({ sub: id, email, name, roles }, JWT_SECRET)}`
   }
   return { method, path, params: {}, query: {}, body, headers }
 }

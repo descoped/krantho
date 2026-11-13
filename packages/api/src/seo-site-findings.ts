@@ -66,9 +66,9 @@ async function pageSummary(
     ...metaFindings(ctx, {
       ...doc.fields,
       ...properties,
-      title: properties['headline'] ?? properties['name'] ?? doc.fields['title'],
+      title: properties.headline ?? properties.name ?? doc.fields.title,
       'meta-description':
-        properties['description'] ?? doc.fields['meta-description'] ?? doc.fields['description'],
+        properties.description ?? doc.fields['meta-description'] ?? doc.fields.description,
     }),
     ...structuredFindings(seo, graph),
   ]

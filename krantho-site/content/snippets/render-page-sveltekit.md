@@ -10,7 +10,7 @@ status: published
 
 ```ts
 import { error } from '@sveltejs/kit'
-import { loadContent, loadJsonLd } from '$lib/cms'
+import { loadContent, loadJsonLd } from '#lib/cms.ts'
 
 // /features/<slug>. Reads happen inside the page render, so each one records
 // its cache tags: behind a CDN, a change in /studio purges the pages that showed it.

@@ -45,11 +45,11 @@ const portableDocument = z
 export const importContent: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'editor')
   if (denied) return denied
-  const checked = validateCollectionParam(req.params['collection'], ctx)
+  const checked = validateCollectionParam(req.params.collection, ctx)
   if (!checked.isValid) return checked.response
   const body = validateRequestBody(req.body)
   if (!body.isValid) return body.response
-  const items = body.body['items']
+  const items = body.body.items
   if (!Array.isArray(items) || items.length === 0)
     return { status: 400, body: { error: 'Request body must include a non-empty "items" array' } }
   const contract = await getActiveContract(checked.collectionDef, ctx.adapter)

@@ -14,7 +14,7 @@ describe('v013 content contracts on a database from before it', () => {
   const clients: Sql[] = []
 
   beforeAll(() => {
-    const url = process.env['KRANTHO_TEST_POSTGRES_URL']
+    const url = process.env.KRANTHO_TEST_POSTGRES_URL
     if (!url) throw new Error('KRANTHO_TEST_POSTGRES_URL not set — globalSetup did not run.')
     admin = postgres(url, { max: 1 })
   })
@@ -29,7 +29,7 @@ describe('v013 content contracts on a database from before it', () => {
     const name = `krantho_v013_${randomUUID().replaceAll('-', '')}`
     await admin.unsafe(`CREATE DATABASE ${name}`)
     databases.push(name)
-    const url = new URL(process.env['KRANTHO_TEST_POSTGRES_URL'] as string)
+    const url = new URL(process.env.KRANTHO_TEST_POSTGRES_URL as string)
     url.pathname = `/${name}`
     sql = postgres(url.toString(), { max: 1, onnotice: () => {} })
     clients.push(sql)
@@ -70,7 +70,7 @@ describe('v013 content contracts on a database from before it', () => {
     const rows = await sql<{ authored: { metadata: Record<string, unknown> } }[]>`
       SELECT authored FROM content ORDER BY slug, version`
     expect(rows).toHaveLength(3)
-    for (const row of rows) expect(row.authored.metadata['seo']).toEqual(config)
+    for (const row of rows) expect(row.authored.metadata.seo).toEqual(config)
     expect(await sql`SELECT id FROM seo_config`).toEqual([{ id: 'site' }])
   })
 

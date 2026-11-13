@@ -44,8 +44,8 @@ export const DOCUMENT_SEO_METADATA_SCHEMA: Record<string, unknown> = {
 export function documentSeoConfig(
   metadata: Readonly<Record<string, Record<string, unknown>>>,
 ): SeoConfigData | null {
-  const group = metadata['seo']
-  if (!group || !Array.isArray(group['entities'])) return null
+  const group = metadata.seo
+  if (!group || !Array.isArray(group.entities)) return null
   return group as unknown as SeoConfigData
 }
 
@@ -53,16 +53,16 @@ export function documentSeoProperties(
   metadata: Readonly<Record<string, Record<string, unknown>>>,
 ): Record<string, unknown> {
   const graph = documentSeoConfig(metadata)?.entities[0]?.properties ?? {}
-  const sharing = metadata['sharing'] ?? {}
-  const editorial = metadata['editorial'] ?? {}
-  const publication = metadata['publication'] ?? {}
+  const sharing = metadata.sharing ?? {}
+  const editorial = metadata.editorial ?? {}
+  const publication = metadata.publication ?? {}
   return {
     ...graph,
-    ...(sharing['title'] !== undefined ? { headline: sharing['title'] } : {}),
-    ...(sharing['description'] !== undefined ? { description: sharing['description'] } : {}),
-    ...(sharing['image'] !== undefined ? { image: sharing['image'] } : {}),
-    ...(sharing['canonicalUrl'] !== undefined ? { url: sharing['canonicalUrl'] } : {}),
-    ...(editorial['byline'] !== undefined ? { author: editorial['byline'] } : {}),
-    ...(publication['date'] !== undefined ? { datePublished: publication['date'] } : {}),
+    ...(sharing.title !== undefined ? { headline: sharing.title } : {}),
+    ...(sharing.description !== undefined ? { description: sharing.description } : {}),
+    ...(sharing.image !== undefined ? { image: sharing.image } : {}),
+    ...(sharing.canonicalUrl !== undefined ? { url: sharing.canonicalUrl } : {}),
+    ...(editorial.byline !== undefined ? { author: editorial.byline } : {}),
+    ...(publication.date !== undefined ? { datePublished: publication.date } : {}),
   }
 }

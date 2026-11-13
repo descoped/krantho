@@ -11,7 +11,7 @@ export const authLogin: ApiHandler = async (req, ctx) => {
   }
 
   const body = req.body as Record<string, unknown> | undefined
-  const token = typeof body?.['token'] === 'string' ? body['token'] : undefined
+  const token = typeof body?.token === 'string' ? body.token : undefined
 
   if (!token) {
     return { status: 400, body: { error: 'Token is required' } }

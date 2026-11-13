@@ -16,7 +16,7 @@ export interface ProjectOptions {
 }
 
 function detectPackageManager(): PackageManager {
-  const agent = process.env['npm_config_user_agent'] ?? ''
+  const agent = process.env.npm_config_user_agent ?? ''
   if (agent.startsWith('pnpm')) return 'pnpm'
   if (agent.startsWith('yarn')) return 'yarn'
   return 'npm'
@@ -47,7 +47,7 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
         ],
       },
       {
-        type: (_, values) => (values['framework'] === 'nextjs' ? 'select' : null),
+        type: (_, values) => (values.framework === 'nextjs' ? 'select' : null),
         name: 'ui',
         message: 'UI library:',
         choices: [
@@ -57,7 +57,7 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
         ],
       },
       {
-        type: (_, values) => (values['framework'] === 'sveltekit' ? 'select' : null),
+        type: (_, values) => (values.framework === 'sveltekit' ? 'select' : null),
         name: 'ui',
         message: 'UI library:',
         choices: [
@@ -99,12 +99,12 @@ export async function runPrompts(targetArg?: string): Promise<ProjectOptions> {
   )
 
   return {
-    name: targetArg ?? response['name'],
-    framework: response['framework'],
-    ui: response['ui'] ?? 'tailwind',
-    auth: response['auth'] ?? false,
-    seo: response['seo'] ?? true,
-    sampleContent: response['sampleContent'] ?? true,
+    name: targetArg ?? response.name,
+    framework: response.framework,
+    ui: response.ui ?? 'tailwind',
+    auth: response.auth ?? false,
+    seo: response.seo ?? true,
+    sampleContent: response.sampleContent ?? true,
     packageManager: detectPackageManager(),
     port: 3000,
   }

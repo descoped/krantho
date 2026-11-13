@@ -137,8 +137,8 @@ describe('webhooks from the configuration', () => {
     const capabilities = (await (await call('GET', '/api/capabilities')).json()) as {
       features: Record<string, string>
     }
-    expect(capabilities.features['webhooks']).toBe('enabled')
-    expect(capabilities.features['webhookDeliveries']).toBe('enabled')
+    expect(capabilities.features.webhooks).toBe('enabled')
+    expect(capabilities.features.webhookDeliveries).toBe('enabled')
   })
 
   it('reports no webhooks when none are configured', async () => {
@@ -149,7 +149,7 @@ describe('webhooks from the configuration', () => {
     const capabilities = (await (await call('GET', '/api/capabilities')).json()) as {
       features: Record<string, string>
     }
-    expect(capabilities.features['webhooks']).toBe('disabled')
+    expect(capabilities.features.webhooks).toBe('disabled')
   })
 
   it('retries a failed delivery that is due, from the next request', async () => {

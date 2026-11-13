@@ -58,7 +58,7 @@ async function versions(id: string): Promise<Array<{ version: number; is_current
 }
 
 beforeAll(async () => {
-  const connectionUri = process.env['KRANTHO_TEST_POSTGRES_URL']
+  const connectionUri = process.env.KRANTHO_TEST_POSTGRES_URL
   if (!connectionUri) {
     throw new Error('KRANTHO_TEST_POSTGRES_URL not set — globalSetup did not run.')
   }

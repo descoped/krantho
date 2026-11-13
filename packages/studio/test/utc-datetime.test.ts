@@ -3,13 +3,13 @@ import { localInputToUtc, utcToLocalInput } from '../src/editor/utc-datetime.js'
 import { formatTimestamp } from '../src/lib/format.js'
 
 describe('UTC timestamps in a datetime-local input', () => {
-  const zone = process.env['TZ']
+  const zone = process.env.TZ
   beforeAll(() => {
-    process.env['TZ'] = 'Europe/Oslo'
+    process.env.TZ = 'Europe/Oslo'
   })
   afterAll(() => {
-    if (zone === undefined) delete process.env['TZ']
-    else process.env['TZ'] = zone
+    if (zone === undefined) delete process.env.TZ
+    else process.env.TZ = zone
   })
 
   it('shows a stored UTC moment on the viewer clock', () => {

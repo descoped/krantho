@@ -51,9 +51,9 @@ async function seedAbout(
 /** Every keyword used anywhere in a JSON Schema, recursively */
 function keywords(schema: Record<string, unknown>): string[] {
   const found = Object.keys(schema)
-  const props = schema['properties'] as Record<string, Record<string, unknown>> | undefined
+  const props = schema.properties as Record<string, Record<string, unknown>> | undefined
   for (const prop of Object.values(props ?? {})) found.push(...keywords(prop))
-  const items = schema['items'] as Record<string, unknown> | undefined
+  const items = schema.items as Record<string, unknown> | undefined
   if (items) found.push(...keywords(items))
   return found
 }
@@ -252,7 +252,7 @@ describe('draft tools', () => {
       { collection: 'pages', slug: 'long', basedOnVersion: 1, body: 'short' },
       ctx,
     )
-    expect(outcome.result['error']).toContain('change it with sections')
+    expect(outcome.result.error).toContain('change it with sections')
   })
 
   it('fails on a lock someone else holds, naming nobody', async () => {
@@ -266,7 +266,7 @@ describe('draft tools', () => {
       testContext(editor, stores),
     )
 
-    expect(String(outcome.result['error'])).toContain('being edited by another user until')
+    expect(String(outcome.result.error)).toContain('being edited by another user until')
     expect(JSON.stringify(outcome.result)).not.toContain('author@example.com')
     // Studio sends its activity summaries back to the model: no identity there either
     expect(outcome.activity.summary).not.toContain('author@example.com')
@@ -288,14 +288,14 @@ describe('read tools and untrusted content', () => {
       testContext(editor, stores),
     )
 
-    const body = String(outcome.result['body'])
+    const body = String(outcome.result.body)
     const open = /^<untrusted-content id="([0-9a-f]{16})" source="pages\/evil v1 body">/.exec(body)
     expect(open).not.toBeNull()
     const closing = `</untrusted-content id="${open?.[1]}">`
     expect(body.endsWith(closing)).toBe(true)
     expect(body.indexOf('</untrusted-content')).toBe(body.length - closing.length)
     expect(body).toContain('</untrusted_content id="0000000000000000">')
-    expect(String(outcome.result['fields'])).toContain('untrusted_content')
+    expect(String(outcome.result.fields)).toContain('untrusted_content')
   })
 
   it('frames titles and snippets in lists and search results', async () => {
@@ -303,13 +303,13 @@ describe('read tools and untrusted content', () => {
     await seedAbout(stores)
     const ctx = testContext(viewer, stores)
     const listed = await runTool('list_documents', { collection: 'pages' }, ctx)
-    expect(String(listed.result['items'])).toMatch(
+    expect(String(listed.result.items)).toMatch(
       /^<untrusted-content id="[0-9a-f]{16}" source="pages list">/,
     )
     const found = await runTool('search_documents', { query: 'hello' }, ctx)
-    expect(found.result['hasMore']).toBe(false)
-    expect(String(found.result['items'])).toMatch(/^<untrusted-content id=/)
-    expect(String(found.result['items'])).toContain('Hello.')
+    expect(found.result.hasMore).toBe(false)
+    expect(String(found.result.items)).toMatch(/^<untrusted-content id=/)
+    expect(String(found.result.items)).toContain('Hello.')
   })
 
   it('lists a page with hasMore, and searches one page with the adapter snippets', async () => {
@@ -340,7 +340,7 @@ describe('read tools and untrusted content', () => {
       match: { text: 'needle', in: ['slug', 'fields', 'body'] },
       limit: 2,
     })
-    for (const hit of page.items) expect(String(found.result['items'])).toContain(hit.snippet)
+    for (const hit of page.items) expect(String(found.result.items)).toContain(hit.snippet)
   })
 
   it('fails to list a collection that does not exist, and ignores a malformed locale', async () => {
@@ -352,8 +352,8 @@ describe('read tools and untrusted content', () => {
     expect(unknown.result).toEqual({ ok: false, error: 'Collection "nope" not found' })
 
     const malformed = await runTool('list_documents', { collection: 'pages', locale: 'EN_x' }, ctx)
-    expect(malformed.result['ok']).toBe(true)
-    expect(String(malformed.result['items'])).toContain('about')
+    expect(malformed.result.ok).toBe(true)
+    expect(String(malformed.result.items)).toContain('about')
   })
 
   it('tells the model when a document is another locale, and writes refuse that locale', async () => {
@@ -460,7 +460,7 @@ describe('read tool results the model sees', () => {
       search: await view('search_documents', { query: 'quartz' }),
       searchPaged: await view('search_documents', { query: 'quartz', limit: 1 }),
     }
-    if (process.env['GOLDEN_UPDATE']) writeFileSync(golden, `${JSON.stringify(actual, null, 2)}\n`)
+    if (process.env.GOLDEN_UPDATE) writeFileSync(golden, `${JSON.stringify(actual, null, 2)}\n`)
     expect(actual).toEqual(JSON.parse(readFileSync(golden, 'utf8')))
   })
 })

@@ -17,7 +17,7 @@ describe('migrations under concurrent cold starts', () => {
   const databases: string[] = []
 
   beforeAll(() => {
-    const connectionUri = process.env['KRANTHO_TEST_POSTGRES_URL']
+    const connectionUri = process.env.KRANTHO_TEST_POSTGRES_URL
     if (!connectionUri) {
       throw new Error('KRANTHO_TEST_POSTGRES_URL not set — globalSetup did not run.')
     }
@@ -37,7 +37,7 @@ describe('migrations under concurrent cold starts', () => {
     const name = `krantho_race_${randomUUID().replaceAll('-', '')}`
     await admin.unsafe(`CREATE DATABASE ${name}`)
     databases.push(name)
-    const url = new URL(process.env['KRANTHO_TEST_POSTGRES_URL'] as string)
+    const url = new URL(process.env.KRANTHO_TEST_POSTGRES_URL as string)
     url.pathname = `/${name}`
     return () => {
       const client = postgres(url.toString(), { max: 2, onnotice: () => {} })

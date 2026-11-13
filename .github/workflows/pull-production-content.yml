@@ -47,7 +47,7 @@ jobs:
           echo "open=$open" >> "$GITHUB_OUTPUT"
           if [ "$open" != "0" ]; then echo "An earlier pull is still open: merge it and close its issue."; fi
 
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         if: steps.open.outputs.open == '0'
         with:
           go-version-file: cli/go.mod

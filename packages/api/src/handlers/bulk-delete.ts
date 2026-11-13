@@ -14,18 +14,18 @@ export const bulkDelete: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const bodyValidated = validateRequestBody(req.body)
   if (!bodyValidated.isValid) return bodyValidated.response
 
-  const slugs = bodyValidated.body['slugs']
+  const slugs = bodyValidated.body.slugs
   if (!Array.isArray(slugs) || slugs.length === 0) {
     return { status: 400, body: { error: 'Request body must include a non-empty "slugs" array' } }
   }
 
-  const requestedLocale = bodyValidated.body['locale']
+  const requestedLocale = bodyValidated.body.locale
   const locale =
     requestedLocale === undefined
       ? ctx.config.site.defaultLocale

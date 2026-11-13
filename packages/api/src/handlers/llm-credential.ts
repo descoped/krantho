@@ -8,7 +8,7 @@ import type { ISecretVault } from '@krantho/persistence'
  * the provider is allowed. `NODE_ENV` is one of the deliberate direct environment reads.
  */
 export function claudeCodeRefusal(provider: string): string | null {
-  if (provider !== CLAUDE_CODE_PROVIDER || process.env['NODE_ENV'] !== 'production') return null
+  if (provider !== CLAUDE_CODE_PROVIDER || process.env.NODE_ENV !== 'production') return null
   return 'The claude-code provider is for development on your own machine. Use the anthropic provider with an API key in a deployment.'
 }
 

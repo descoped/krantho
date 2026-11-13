@@ -71,9 +71,7 @@ describe('the assistant surface when enabled', () => {
   it('reports the capability and lists the routes under the Assistant tag', async () => {
     const api = testApi(testStores())
     const caps = await api.handle(asUser(admin, 'GET', '/api/capabilities'))
-    expect((caps.body as { features: Record<string, string> }).features['assistant']).toBe(
-      'enabled',
-    )
+    expect((caps.body as { features: Record<string, string> }).features.assistant).toBe('enabled')
     const spec = JSON.stringify((await api.handle(asUser(admin, 'GET', '/api/openapi.json'))).body)
     expect(spec).toContain('/api/assistant/chat')
     expect(spec).toContain('"Assistant"')

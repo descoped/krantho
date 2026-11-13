@@ -38,7 +38,7 @@ describe('GET /api/content/:collection?view=summary', () => {
       hasMore: boolean
     }
     expect(hasMore).toBe(false)
-    expect(items.map((item) => (item['fields'] as { title: string }).title)).toEqual([
+    expect(items.map((item) => (item.fields as { title: string }).title)).toEqual([
       'About',
       'Pricing',
     ])
@@ -66,7 +66,7 @@ describe('GET /api/content/:collection?view=summary', () => {
 
     expect(res.status).toBe(200)
     const { items } = res.body as { items: Array<Record<string, unknown>> }
-    expect(items.map((item) => item['slug'])).toEqual(['about', 'pricing'])
+    expect(items.map((item) => item.slug)).toEqual(['about', 'pricing'])
     for (const item of items) {
       expect(Object.keys(item)).not.toContain('fields')
       expect(Object.keys(item)).not.toContain('body')

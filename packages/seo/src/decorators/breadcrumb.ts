@@ -32,8 +32,7 @@ export const breadcrumbDecorator: Decorator = {
       graph.push(list)
     }
     const node = nodeById(graph, page.pageId)
-    if (node && list['@id'] && node['breadcrumb'] === undefined)
-      node['breadcrumb'] = ref(list['@id'])
+    if (node && list['@id'] && node.breadcrumb === undefined) node.breadcrumb = ref(list['@id'])
     return graph
   },
 }

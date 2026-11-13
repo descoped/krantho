@@ -4,7 +4,7 @@ import { parseLocaleParam, requireParam, validateCollectionParam } from '../vali
 
 /** GET /api/content/:collection/:slug/versions — list version history */
 export const listVersions: ApiHandler = async (req, ctx) => {
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const slugResult = requireParam(req.params, 'slug')
@@ -15,7 +15,7 @@ export const listVersions: ApiHandler = async (req, ctx) => {
     return { status: 501, body: { error: 'Adapter does not support versioning' } }
   }
 
-  const locale = parseLocaleParam(req.query['locale'])
+  const locale = parseLocaleParam(req.query.locale)
   const versions = await ctx.adapter.listVersions(validated.collection, slug, locale)
 
   return { status: 200, body: { versions } }

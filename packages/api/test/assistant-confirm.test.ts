@@ -221,7 +221,7 @@ describe('POST /api/assistant/confirm', () => {
       results: [{ status: 'done', message: 'Saved draft pages/about (v2)' }],
     })
     const doc = await stores.adapter.getContent('pages', 'about', 'en')
-    expect(doc?.fields['title']).toBe('About us')
+    expect(doc?.fields.title).toBe('About us')
     expect(doc?.meta.status).toBe('draft')
   })
 

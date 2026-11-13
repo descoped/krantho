@@ -31,12 +31,12 @@
     "@krantho/core": "workspace:*",
     "@krantho/persistence": "workspace:*",
     "@krantho/seo-shared": "workspace:*",
-    "postgres": "^3.4.9"
+    "postgres": "^4.1.1"
   },
   "devDependencies": {
     "@krantho/persistence-sqlite": "workspace:*",
     "@testcontainers/postgresql": "^12.2.1",
-    "@types/node": "^25.9.9",
-    "typescript": "^6.0.3"
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
   }
 }

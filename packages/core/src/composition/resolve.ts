@@ -96,7 +96,7 @@ async function resolveCollection(
           slug: document.slug,
           ...(await rendered(document)),
           excerpt:
-            typeof document.fields['excerpt'] === 'string' ? document.fields['excerpt'] : undefined,
+            typeof document.fields.excerpt === 'string' ? document.fields.excerpt : undefined,
         }),
       ),
   )

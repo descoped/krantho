@@ -47,12 +47,12 @@ export const seoCollectionImpact: ApiHandler = async (req, ctx) => {
     return { status: 501, body: { error: 'SEO configuration not available' } }
   }
 
-  const collectionName = req.params['name']
+  const collectionName = req.params.name
   if (!collectionName) {
     return { status: 400, body: { error: 'Collection name required' } }
   }
 
-  const archetypeName = req.query['archetype']
+  const archetypeName = req.query.archetype
   if (!archetypeName) {
     return { status: 400, body: { error: 'Archetype query parameter required' } }
   }
@@ -150,7 +150,7 @@ export const seoCollectionImpact: ApiHandler = async (req, ctx) => {
     }
 
     if (orphanedProperties.length > 0 || missingRequired.length > 0) {
-      const title = typeof doc.fields['title'] === 'string' ? doc.fields['title'] : doc.meta.slug
+      const title = typeof doc.fields.title === 'string' ? doc.fields.title : doc.meta.slug
       affectedDocuments.push({
         slug: doc.meta.slug,
         title,

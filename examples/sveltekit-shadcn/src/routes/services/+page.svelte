@@ -1,7 +1,7 @@
 <script lang="ts">
-  import ServiceCard from '$lib/components/ServiceCard.svelte'
+  import ServiceCard from '#lib/components/ServiceCard.svelte'
   import { CMSText } from '@krantho/ui-svelte'
-  import { textFields } from '$lib/text'
+  import { textFields } from '#lib/text.ts'
 
   let { data } = $props()
 

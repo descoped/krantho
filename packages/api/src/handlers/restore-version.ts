@@ -15,14 +15,14 @@ export const restoreVersion: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const slugResult = requireParam(req.params, 'slug')
   if (!slugResult.isValid) return slugResult.response
   const slug = slugResult.value
 
-  const version = parsePositiveInt(req.params['version'])
+  const version = parsePositiveInt(req.params.version)
   if (version === undefined || version < 1) {
     return { status: 400, body: { error: 'Invalid version number' } }
   }
@@ -32,7 +32,7 @@ export const restoreVersion: ApiHandler = async (req, ctx) => {
   }
 
   const changedBy = changedByFromAuth(ctx.auth)
-  const locale = parseLocaleParam(req.query['locale'])
+  const locale = parseLocaleParam(req.query.locale)
   const locked = await lockedByOther(ctx, { collection: validated.collection, slug, locale })
   if (locked) return locked
 

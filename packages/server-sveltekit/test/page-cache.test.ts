@@ -88,7 +88,7 @@ async function renderPage(e: FakeEvent): Promise<Response> {
   const slug = e.url.pathname === '/' ? 'home' : e.url.pathname.slice(1)
   const doc = await loader.getPublished({ collection: 'pages', slug })
   if (!doc) return new Response('Not found', { status: 404 })
-  return new Response(`<h1>${String(doc.fields['title'])}</h1>`, {
+  return new Response(`<h1>${String(doc.fields.title)}</h1>`, {
     headers: { 'content-type': 'text/html' },
   })
 }

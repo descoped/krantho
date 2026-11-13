@@ -25,21 +25,19 @@ async function defaultsTarget(
 ): Promise<DefaultsTarget | ApiResponse> {
   const denied = requireRole(ctx.auth, 'editor')
   if (denied) return denied
-  const checked = validateCollectionParam(req.params['collection'], ctx)
+  const checked = validateCollectionParam(req.params.collection, ctx)
   if (!checked.isValid) return checked.response
   const body = validateRequestBody(req.body)
   if (!body.isValid) return body.response
   if (!canGetContent(ctx.adapter)) return reply(501, { error: 'Adapter cannot read documents' })
   const input = body.body
-  const locale =
-    typeof input['locale'] === 'string' ? input['locale'] : ctx.config.site.defaultLocale
-  const sourceCollection =
-    typeof input['sourceCollection'] === 'string' ? input['sourceCollection'] : ''
-  const sourceSlug = typeof input['sourceSlug'] === 'string' ? input['sourceSlug'] : ''
+  const locale = typeof input.locale === 'string' ? input.locale : ctx.config.site.defaultLocale
+  const sourceCollection = typeof input.sourceCollection === 'string' ? input.sourceCollection : ''
+  const sourceSlug = typeof input.sourceSlug === 'string' ? input.sourceSlug : ''
   if (!ctx.contentConfig.collections.has(sourceCollection))
     return reply(404, { error: 'Default collection not found' })
   const source = await ctx.adapter.getContent(sourceCollection, sourceSlug, locale)
-  const current = await ctx.adapter.getContent(checked.collection, req.params['slug'] ?? '', locale)
+  const current = await ctx.adapter.getContent(checked.collection, req.params.slug ?? '', locale)
   if (!source || !current || source.meta.locale !== locale || current.meta.locale !== locale)
     return reply(404, { error: 'Document not found' })
   const contract = await getActiveContract(checked.collectionDef, ctx.adapter)
@@ -49,7 +47,7 @@ async function defaultsTarget(
 /** The declared groups to fill: the ones asked for that the source shares by definition */
 function slotsToApply(target: DefaultsTarget): string[] | ApiResponse {
   const { contract, source, input } = target
-  const asked = input['slots']
+  const asked = input.slots
   if (
     asked !== undefined &&
     (!Array.isArray(asked) ||
@@ -70,12 +68,12 @@ async function commitDefaults(
   applied: AppliedDefaults,
 ): Promise<ApiResponse> {
   const { current, source, input } = target
-  if (input['sourceVersion'] !== source.meta.version)
+  if (input.sourceVersion !== source.meta.version)
     return reply(409, {
       error: 'Shared defaults changed since the preview. Review them again.',
       sourceVersion: source.meta.version,
     })
-  if (typeof input['_version'] !== 'number')
+  if (typeof input._version !== 'number')
     return reply(400, { error: 'A document version is required to apply defaults' })
   const provenance: DefaultProvenance = {
     collection: source.meta.collection,
@@ -93,7 +91,7 @@ async function commitDefaults(
     fields: current.fields,
     body: current.body,
     metadata: applied.metadata,
-    expectedVersion: input['_version'],
+    expectedVersion: input._version,
     changedBy: changedByFromAuth(ctx.auth),
     defaults: [...current.defaults, provenance],
   })
@@ -128,7 +126,7 @@ export const applyDocumentDefaults: ApiHandler = async (req, ctx) => {
       error: 'Defaults do not satisfy this document',
       details: formatZodErrors(validation.error.issues),
     })
-  if (input['apply'] !== true || applied.paths.length === 0)
+  if (input.apply !== true || applied.paths.length === 0)
     return reply(200, {
       metadata: applied.metadata,
       paths: applied.paths,

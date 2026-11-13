@@ -10,7 +10,7 @@ describe('renderContent', () => {
     expect(rendered.content).toContain('# Krantho')
     expect(rendered.html).toContain('<h1>Krantho</h1>')
     expect(Object.keys(rendered.sections)).toEqual(['Details'])
-    expect(rendered.sections['Details']).toContain('More about Krantho.')
+    expect(rendered.sections.Details).toContain('More about Krantho.')
   })
 
   it('leaves @-references alone when at-notation is off', async () => {

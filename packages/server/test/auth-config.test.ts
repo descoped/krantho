@@ -85,7 +85,7 @@ async function accessToken(handler: KranthoHandler): Promise<string> {
 
 describe('jwt secret precedence', () => {
   it('honours a jwtSecret set in code when no environment variable is set', async () => {
-    delete process.env['KRANTHO_JWT_SECRET']
+    delete process.env.KRANTHO_JWT_SECRET
     const handler = await boot({ jwtSecret: 'secret-from-code' })
 
     const token = await accessToken(handler)
@@ -106,7 +106,7 @@ describe('jwt secret precedence', () => {
 
 describe('token role', () => {
   it('fails the boot when the configured role is not a role', async () => {
-    delete process.env['KRANTHO_TOKEN_ROLE']
+    delete process.env.KRANTHO_TOKEN_ROLE
     await expect(boot({ jwtSecret: 'x', role: 'superuser' })).rejects.toThrow(/auth\.token\.role/)
   })
 })

@@ -37,7 +37,7 @@ describe('SQLiteAdapter live version', () => {
 
   async function liveTitle(slug: string, collection = 'pages', locale?: string): Promise<unknown> {
     const doc = await adapter.getPublished(collection, slug, locale)
-    return doc?.fields['title'] ?? null
+    return doc?.fields.title ?? null
   }
 
   async function meta(
@@ -61,7 +61,7 @@ describe('SQLiteAdapter live version', () => {
     await save('home', 'Edited')
 
     expect(await liveTitle('home')).toBe('Published')
-    expect((await adapter.getContent('pages', 'home'))?.fields['title']).toBe('Edited')
+    expect((await adapter.getContent('pages', 'home'))?.fields.title).toBe('Edited')
     expect(await meta('home')).toEqual({ version: 2, liveVersion: 1, status: 'published' })
   })
 
@@ -71,7 +71,7 @@ describe('SQLiteAdapter live version', () => {
     await save('home', 'Second', 'publish')
 
     const live = await adapter.getPublished('pages', 'home')
-    expect(live?.fields['title']).toBe('Second')
+    expect(live?.fields.title).toBe('Second')
     expect(live?.meta.status).toBe('published')
     expect(await meta('home')).toEqual({ version: 3, liveVersion: 3, status: 'published' })
   })
@@ -171,7 +171,7 @@ describe('SQLiteAdapter live version', () => {
 
     await adapter.restoreVersion('pages', 'home', 1)
     expect(await liveTitle('home')).toBe('V2')
-    expect((await adapter.getContent('pages', 'home'))?.fields['title']).toBe('V1')
+    expect((await adapter.getContent('pages', 'home'))?.fields.title).toBe('V1')
     expect(await meta('home')).toEqual({ version: 4, liveVersion: 3, status: 'published' })
   })
 
@@ -213,7 +213,7 @@ describe('SQLiteAdapter live version', () => {
         sort: 'slug',
       })
     const english = (await published('en')).items
-    expect(english.map((doc) => doc.fields['title'])).toEqual(['Contact', 'Home'])
+    expect(english.map((doc) => doc.fields.title)).toEqual(['Contact', 'Home'])
     expect((await published()).items).toHaveLength(3)
   })
 
@@ -300,7 +300,7 @@ describe('v010 live-version backfill', () => {
 
     v010ContentLiveVersion.apply(adapter.database)
 
-    expect((await adapter.getPublished('pages', 'home'))?.fields['title']).toBe('home v3')
+    expect((await adapter.getPublished('pages', 'home'))?.fields.title).toBe('home v3')
     expect(await adapter.getPublished('pages', 'old')).toBeNull()
     expect(await adapter.getPublished('pages', 'never')).toBeNull()
   })

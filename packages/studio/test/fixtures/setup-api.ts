@@ -256,7 +256,7 @@ function llmRoutes(state: SetupState): Routes {
 /** `GET /api/schema/pages`: the code fields as JSON Schema, the runtime ones marked `_runtime` */
 function schemaOf(state: SetupState): Record<string, unknown> {
   const runtime = Object.fromEntries(
-    state.runtimeFields.map((field) => [field['name'], { type: 'string', _runtime: true }]),
+    state.runtimeFields.map((field) => [field.name, { type: 'string', _runtime: true }]),
   )
   return {
     contract: {
@@ -303,16 +303,13 @@ function schemaRoutes(state: SetupState): Routes {
       }),
     'PUT /api/schema/pages/fields': record(state, 'PUT /api/schema/pages/fields', (body) => {
       const field = body as Record<string, unknown>
-      state.runtimeFields = [
-        ...state.runtimeFields.filter((f) => f['name'] !== field['name']),
-        field,
-      ]
+      state.runtimeFields = [...state.runtimeFields.filter((f) => f.name !== field.name), field]
       return json({ message: 'Field saved', field })
     }),
   }
   for (const name of ['subtitle', 'teaser']) {
     routes[`DELETE /api/schema/pages/fields/${name}`] = record(state, `DELETE ${name}`, () => {
-      state.runtimeFields = state.runtimeFields.filter((f) => f['name'] !== name)
+      state.runtimeFields = state.runtimeFields.filter((f) => f.name !== name)
       return json({ message: 'Field deleted', field: name })
     })
   }
@@ -322,10 +319,10 @@ function schemaRoutes(state: SetupState): Routes {
 /** `GET /api/webhooks/deliveries` filtered as the SQLite adapter filters, and Retry */
 function deliveryRoutes(state: SetupState): Routes {
   const failed = (d: Record<string, unknown>): boolean =>
-    d['deliveredAt'] === null && Number(d['attempts']) >= 5
+    d.deliveredAt === null && Number(d.attempts) >= 5
   const matches: Record<string, (d: Record<string, unknown>) => boolean> = {
-    pending: (d) => d['deliveredAt'] === null && !failed(d),
-    delivered: (d) => d['deliveredAt'] !== null,
+    pending: (d) => d.deliveredAt === null && !failed(d),
+    delivered: (d) => d.deliveredAt !== null,
     failed,
   }
   return {
@@ -364,7 +361,7 @@ function checkpointRoutes(state: SetupState): Routes {
       return json({ restored: state.checkpoints.at(-1), message: 'Restored from checkpoint v1' })
     }),
     'DELETE /api/checkpoints/1': record(state, 'DELETE checkpoint 1', () => {
-      state.checkpoints = state.checkpoints.filter((c) => c['version'] !== 1)
+      state.checkpoints = state.checkpoints.filter((c) => c.version !== 1)
       return json({ deleted: true, version: 1 })
     }),
   }
@@ -395,7 +392,7 @@ function userRoutes(state: SetupState): Routes {
     routes[`PUT /api/users/${id}`] = record(state, `PUT /api/users/${id}`, (body) => {
       const changes = body as { role?: string; isActive?: boolean; name?: string }
       state.users = state.users.map((user) =>
-        user['id'] !== id
+        user.id !== id
           ? user
           : {
               ...user,
@@ -404,7 +401,7 @@ function userRoutes(state: SetupState): Routes {
               ...(changes.isActive !== undefined ? { isActive: changes.isActive } : {}),
             },
       )
-      return json(state.users.find((user) => user['id'] === id))
+      return json(state.users.find((user) => user.id === id))
     })
   }
   return routes

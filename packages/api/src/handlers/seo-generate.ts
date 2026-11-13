@@ -18,9 +18,9 @@ export const seoGenerate: ApiHandler = async (_req, ctx) => {
   try {
     const xml = serializeSitemapXml(await buildSitemapUrls(ctx))
     await writeFile(join(basePath, 'sitemap.xml'), xml, 'utf-8')
-    results['sitemap'] = 'generated'
+    results.sitemap = 'generated'
   } catch {
-    results['sitemap'] = 'failed'
+    results.sitemap = 'failed'
   }
 
   // structured-data.json and faq-pages.json require @krantho/tools (CLI-only)

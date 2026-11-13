@@ -10,12 +10,12 @@ import { CategoryBadge } from './CategoryBadge.js'
  * exactOptionalPropertyTypes. Properties are accessed with type narrowing.
  */
 export function CanvasEntityNode({ data }: { data: Record<string, unknown> }): React.ReactElement {
-  const type = data['type'] as string
-  const id = data['id'] as string | undefined
-  const category = data['category'] as CatalogCategory | null
-  const requiredSet = data['requiredSet'] as number
-  const requiredTotal = data['requiredTotal'] as number
-  const selected = data['selected'] as boolean
+  const type = data.type as string
+  const id = data.id as string | undefined
+  const category = data.category as CatalogCategory | null
+  const requiredSet = data.requiredSet as number
+  const requiredTotal = data.requiredTotal as number
+  const selected = data.selected as boolean
 
   return (
     <div

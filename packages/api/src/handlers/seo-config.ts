@@ -17,7 +17,7 @@ export const seoCatalog: ApiHandler = async (req, ctx) => {
   // Dynamic import to avoid bundling seo package in all builds
   const seo = await loadSeoModule()
   const { SCHEMA_CATALOG, CATEGORY_LABELS } = seo
-  const typeParam = req.query['type']
+  const typeParam = req.query.type
 
   if (typeParam) {
     const catalogType = seo.getCatalogType(typeParam)
@@ -97,16 +97,16 @@ export const getSeoConfig: ApiHandler = async (req, ctx) => {
     return { status: 501, body: { error: 'SEO configuration not available' } }
   }
 
-  const id = req.params['id'] ?? req.query['id']
+  const id = req.params.id ?? req.query.id
   if (!id) {
     // List all configs
-    const scope = req.query['scope'] as 'site' | 'collection' | 'document' | undefined
+    const scope = req.query.scope as 'site' | 'collection' | 'document' | undefined
     const configs = await ctx.seoConfigAdapter.listConfigs(scope)
     return { status: 200, body: { configs } }
   }
 
   if (documentOfSeoId(id)) {
-    const entry = await documentSeo(ctx, id, req.query['locale'])
+    const entry = await documentSeo(ctx, id, req.query.locale)
     return {
       status: 200,
       body: {
@@ -136,9 +136,9 @@ function entityOf(e: Record<string, unknown>): SeoConfigEntity {
   return {
     '@type': String(e['@type'] ?? ''),
     ...(e['@id'] ? { '@id': String(e['@id']) } : {}),
-    ...(e['role'] ? { role: String(e['role']) } : {}),
-    properties: (typeof e['properties'] === 'object' && e['properties'] !== null
-      ? e['properties']
+    ...(e.role ? { role: String(e.role) } : {}),
+    properties: (typeof e.properties === 'object' && e.properties !== null
+      ? e.properties
       : {}) as Record<string, unknown>,
   }
 }
@@ -151,9 +151,9 @@ function configOf(
   payload: Record<string, unknown>,
   scope: string,
 ): { config: SeoConfigData } | { error: string } {
-  const nested = payload['config'] as Record<string, unknown> | undefined
+  const nested = payload.config as Record<string, unknown> | undefined
   const pick = (key: string): unknown => nested?.[key] ?? payload[key]
-  const rawEntities = Array.isArray(nested?.['entities']) ? nested['entities'] : payload['entities']
+  const rawEntities = Array.isArray(nested?.entities) ? nested.entities : payload.entities
   const entities = Array.isArray(rawEntities) ? (rawEntities as Array<Record<string, unknown>>) : []
   const rawFieldMappings = pick('fieldMappings')
   const fieldMappings =
@@ -188,7 +188,7 @@ export const saveSeoConfig: ApiHandler = async (req, ctx) => {
   if (!bodyCheck.isValid) return bodyCheck.response
 
   const payload = bodyCheck.body as Record<string, unknown>
-  const id = (req.params['id'] ?? req.query['id'] ?? payload['id']) as string | undefined
+  const id = (req.params.id ?? req.query.id ?? payload.id) as string | undefined
   if (!id) {
     return { status: 400, body: { error: 'Config ID is required' } }
   }
@@ -208,12 +208,12 @@ export const saveSeoConfig: ApiHandler = async (req, ctx) => {
     const entry = await documentSeo(
       ctx,
       id,
-      typeof payload['locale'] === 'string' ? payload['locale'] : req.query['locale'],
+      typeof payload.locale === 'string' ? payload.locale : req.query.locale,
     )
     if (!entry) return { status: 404, body: { error: 'Document not found' } }
-    if (typeof payload['_version'] !== 'number')
+    if (typeof payload._version !== 'number')
       return { status: 400, body: { error: 'A document version is required' } }
-    const saved = await saveDocumentSeo(ctx, entry.document, config, payload['_version'])
+    const saved = await saveDocumentSeo(ctx, entry.document, config, payload._version)
     return saved.ok ? { status: 200, body: { ...saved, message: 'Saved draft' } } : saved.response
   }
   await ctx.seoConfigAdapter.saveConfig({ id, scope, config })
@@ -232,14 +232,14 @@ export const deleteSeoConfig: ApiHandler = async (req, ctx) => {
     return { status: 501, body: { error: 'SEO configuration not available' } }
   }
 
-  const id = req.params['id'] ?? req.query['id']
+  const id = req.params.id ?? req.query.id
   if (!id) {
     return { status: 400, body: { error: 'Config ID is required' } }
   }
 
   if (documentOfSeoId(id)) {
     const payload = req.body as { _version?: unknown; locale?: string } | undefined
-    const entry = await documentSeo(ctx, id, payload?.locale ?? req.query['locale'])
+    const entry = await documentSeo(ctx, id, payload?.locale ?? req.query.locale)
     if (!entry) return { status: 404, body: { error: 'Document not found' } }
     if (typeof payload?._version !== 'number')
       return { status: 400, body: { error: 'A document version is required' } }

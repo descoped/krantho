@@ -67,7 +67,7 @@ const answerSummaryTool = defineTool({
       fields: { ...current.fields, [field]: input.summary },
       body: current.body,
     })
-    if (outcome.result['ok'] !== true || outcome.result['pending']) return outcome
+    if (outcome.result.ok !== true || outcome.result.pending) return outcome
     return { ...outcome, result: { ...outcome.result, field } }
   },
 })

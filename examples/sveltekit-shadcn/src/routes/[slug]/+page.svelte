@@ -1,6 +1,6 @@
 <script lang="ts">
   import { CMSText, CMSMarkdown } from '@krantho/ui-svelte'
-  import { textFields } from '$lib/text'
+  import { textFields } from '#lib/text.ts'
 
   let { data } = $props()
 

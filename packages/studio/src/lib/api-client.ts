@@ -24,9 +24,7 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
   if (!response.ok) {
     const errorBody = body as Record<string, unknown>
     const message =
-      typeof errorBody['error'] === 'string'
-        ? errorBody['error']
-        : `Request failed: ${response.status}`
+      typeof errorBody.error === 'string' ? errorBody.error : `Request failed: ${response.status}`
     throw new ApiError(message, response.status, errorBody)
   }
 
@@ -49,9 +47,7 @@ export async function requestText(path: string, options?: RequestInit): Promise<
       // Non-JSON error body — fall through with empty object
     }
     const message =
-      typeof errorBody['error'] === 'string'
-        ? errorBody['error']
-        : `Request failed: ${response.status}`
+      typeof errorBody.error === 'string' ? errorBody.error : `Request failed: ${response.status}`
     throw new ApiError(message, response.status, errorBody)
   }
 

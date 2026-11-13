@@ -89,7 +89,7 @@ describe('runPageRequest tags', () => {
     const { value, tags } = await runPageRequest({ preview: false }, () =>
       loader.getPublished(home),
     )
-    expect(value?.fields['title']).toBe('Home')
+    expect(value?.fields.title).toBe('Home')
     expect(tags).toEqual(['k:site', 'k:d:pages:home'])
   })
 
@@ -166,18 +166,18 @@ describe('runPageRequest preview', () => {
       doc: await loader.getPublished(home),
       jsonLd: JSON.stringify(await loader.jsonLd(home)),
     }))
-    expect(preview.value.doc?.fields['title']).toBe('Draft home')
+    expect(preview.value.doc?.fields.title).toBe('Draft home')
     expect(preview.value.jsonLd).toContain('Draft home')
     expect(preview.tags).toEqual(jsonLdTags('pages', 'home'))
 
     const published = await runPageRequest({ preview: false }, () => loader.getPublished(home))
-    expect(published.value?.fields['title']).toBe('Home')
+    expect(published.value?.fields.title).toBe('Home')
   })
 
   it('lists the live version of each summary to a preview request too, read uncached', async () => {
     await saveHomeDraft()
     const titles = (docs: Array<{ slug: string; fields: Record<string, unknown> }>) =>
-      docs.find((doc) => doc.slug === 'home')?.fields['title']
+      docs.find((doc) => doc.slug === 'home')?.fields.title
 
     const preview = await runPageRequest({ preview: true }, () =>
       loader.listPublishedSummaries('pages'),
@@ -206,8 +206,8 @@ describe('runPageRequest preview', () => {
       runPageRequest({ preview: true }, () => loader.getPublished(home)),
       runPageRequest({ preview: false }, () => loader.getPublished(home)),
     ])
-    expect(preview.value?.fields['title']).toBe('Draft home')
-    expect(published.value?.fields['title']).toBe('Home')
+    expect(preview.value?.fields.title).toBe('Draft home')
+    expect(published.value?.fields.title).toBe('Home')
   })
 })
 
@@ -215,8 +215,8 @@ describe('outside a page request', () => {
   it('reads the published version and records nothing', async () => {
     await saveHomeDraft()
 
-    expect((await loader.getPublished(home))?.fields['title']).toBe('Home')
-    expect((await loader.preview.getPublished(home))?.fields['title']).toBe('Draft home')
+    expect((await loader.getPublished(home))?.fields.title).toBe('Home')
+    expect((await loader.preview.getPublished(home))?.fields.title).toBe('Draft home')
 
     // A later request starts with no tags from reads made outside it
     const { tags } = await runPageRequest({ preview: false }, async () => 'rendered')

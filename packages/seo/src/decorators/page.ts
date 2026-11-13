@@ -59,7 +59,7 @@ export const pageDecorator: Decorator = {
     fill(node, 'name', page.title)
     if (website?.['@id']) fill(node, 'isPartOf', ref(website['@id']))
     if (main?.['@id']) fill(node, 'mainEntity', ref(main['@id']))
-    fill(node, 'primaryImageOfPage', imageObject(main?.['image']))
+    fill(node, 'primaryImageOfPage', imageObject(main?.image))
     fill(node, 'dateModified', page.dateModified)
     fill(node, 'inLanguage', page.language)
     return graph

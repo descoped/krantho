@@ -92,7 +92,7 @@ export async function createKranthoHandler(
   options: KranthoHandlerOptions,
 ): Promise<KranthoHandler> {
   const config = loadConfig({ code: options.config, env: process.env })
-  for (const warning of productionWarnings(config, process.env['NODE_ENV'])) {
+  for (const warning of productionWarnings(config, process.env.NODE_ENV)) {
     console.warn(`[krantho] WARNING: ${warning}`)
   }
   await startSeo(config)
@@ -137,7 +137,7 @@ export async function createKranthoHandler(
   let listSitemap: () => Promise<readonly string[]> = async () => []
   const indexNow = indexNowChangeListener(
     config,
-    process.env['NODE_ENV'],
+    process.env.NODE_ENV,
     changedUrlsFor(config.site.baseUrl, Object.fromEntries(contentConfig.collections), () =>
       listSitemap(),
     ),

@@ -49,7 +49,7 @@ export class PostgresPageCacheStore implements IPageCacheStore {
       VALUES (
         ${key},
         ${encodePageCacheValue(value)},
-        ${this.sql.array(uniquePageCacheTags(tags))}::text[],
+        ${uniquePageCacheTags(tags)}::text[],
         floor(extract(epoch FROM clock_timestamp()) * 1000)::bigint
       )
       ON CONFLICT (key) DO UPDATE SET
@@ -65,7 +65,7 @@ export class PostgresPageCacheStore implements IPageCacheStore {
         COALESCE(bool_or(expired_at >= ${Math.floor(since)}::bigint), false) AS expired,
         COALESCE(bool_or(stale_at >= ${Math.floor(since)}::bigint), false) AS stale
       FROM page_cache_tags
-      WHERE tag = ANY(${this.sql.array(uniquePageCacheTags(tags))}::text[])`
+      WHERE tag = ANY(${uniquePageCacheTags(tags)}::text[])`
     const row = rows[0]
     if (row?.expired) return 'expired'
     return row?.stale ? 'stale' : 'fresh'
@@ -83,7 +83,7 @@ export class PostgresPageCacheStore implements IPageCacheStore {
       WITH clock AS (SELECT floor(extract(epoch FROM clock_timestamp()) * 1000)::bigint AS ms)
       INSERT INTO page_cache_tags (tag, stale_at, expired_at)
       SELECT t, clock.ms, CASE WHEN ${options.expire}::boolean THEN clock.ms END
-      FROM unnest(${this.sql.array(uniquePageCacheTags(tags).sort())}::text[]) AS t, clock
+      FROM unnest(${uniquePageCacheTags(tags).sort()}::text[]) AS t, clock
       ORDER BY t
       ON CONFLICT (tag) DO UPDATE SET
         stale_at = GREATEST(page_cache_tags.stale_at, EXCLUDED.stale_at),
@@ -94,7 +94,7 @@ export class PostgresPageCacheStore implements IPageCacheStore {
     if (tags.length === 0) return 0
     const rows = await this.sql<{ count: string }[]>`
       SELECT COUNT(*) AS count FROM page_cache_entries
-      WHERE tags && ${this.sql.array(uniquePageCacheTags(tags))}::text[]`
+      WHERE tags && ${uniquePageCacheTags(tags)}::text[]`
     return Number(rows[0]?.count ?? 0)
   }
 }

@@ -26,8 +26,8 @@ describe('defineArchetype', () => {
   it('creates an archetype with schemas and default mappings', () => {
     const arch = defineArchetype({ schemas: ['LocalBusiness', 'WebSite'] })
     expect(arch.schemas).toEqual(['LocalBusiness', 'WebSite'])
-    expect(arch.mappings['title']).toBe('name')
-    expect(arch.mappings['description']).toBe('description')
+    expect(arch.mappings.title).toBe('name')
+    expect(arch.mappings.description).toBe('description')
   })
 
   it('merges custom mappings with defaults', () => {
@@ -36,7 +36,7 @@ describe('defineArchetype', () => {
       mappings: { 'custom-field': 'headline' },
     })
     expect(arch.mappings['custom-field']).toBe('headline')
-    expect(arch.mappings['title']).toBe('name') // default preserved
+    expect(arch.mappings.title).toBe('name') // default preserved
   })
 
   it('throws when no schemas provided', () => {
@@ -136,9 +136,9 @@ describe('composeGraph generic fallback', () => {
       | undefined
 
     expect(restaurant).toBeDefined()
-    expect(restaurant?.['name']).toBe('Acme Eatery')
-    expect(restaurant?.['servesCuisine']).toBe('Italian')
-    expect(restaurant?.['priceRange']).toBe('$$')
+    expect(restaurant?.name).toBe('Acme Eatery')
+    expect(restaurant?.servesCuisine).toBe('Italian')
+    expect(restaurant?.priceRange).toBe('$$')
     expect(restaurant?.['@id']).toBe('https://acme.example.com/locations/acme-eatery/#restaurant')
   })
 
@@ -155,8 +155,8 @@ describe('composeGraph generic fallback', () => {
       | Record<string, unknown>
       | undefined
 
-    expect(restaurant?.['url']).toBe('https://acme.example.com/r/acme')
-    expect(restaurant?.['mainEntityOfPage']).toBe('https://acme.example.com/r/acme')
+    expect(restaurant?.url).toBe('https://acme.example.com/r/acme')
+    expect(restaurant?.mainEntityOfPage).toBe('https://acme.example.com/r/acme')
   })
 
   it('mixes builder-typed and generic-fallback entities in the same archetype', () => {
@@ -179,15 +179,15 @@ describe('composeGraph generic fallback', () => {
     // fragment and headline is read from the title field.
     expect(article).toBeDefined()
     expect(article?.['@id']).toBe('https://acme.example.com/blog/eat-here/#article')
-    expect(article?.['headline']).toBe('Eat Here')
+    expect(article?.headline).toBe('Eat Here')
     // No site Person or Organization to point at: the author is left out
     // rather than referring to a node the graph does not define.
-    expect(article?.['author']).toBeUndefined()
+    expect(article?.author).toBeUndefined()
 
     // Restaurant has no definition: @id uses the lowercased type fragment
     // and its catalog properties were taken from fields.
     expect(restaurant).toBeDefined()
     expect(restaurant?.['@id']).toBe('https://acme.example.com/blog/eat-here/#restaurant')
-    expect(restaurant?.['name']).toBe('Acme Eatery')
+    expect(restaurant?.name).toBe('Acme Eatery')
   })
 })

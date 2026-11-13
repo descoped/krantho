@@ -1,6 +1,6 @@
 import { resolveConfig } from '@krantho/config'
-import { loadContent } from '$lib/cms'
-import { loadSeoJson } from '$lib/seo'
+import { loadContent } from '#lib/cms.ts'
+import { loadSeoJson } from '#lib/seo.ts'
 import config from '../../krantho.config'
 
 const { site } = resolveConfig(config, process.env)

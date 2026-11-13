@@ -54,7 +54,7 @@ describe('SEO tools', () => {
 
     expect(outcome.result).toMatchObject({ ok: true, field: 'description' })
     // Generated from the document's text: it returns to the model framed as untrusted
-    expect(String(outcome.result['description'])).toMatch(
+    expect(String(outcome.result.description)).toMatch(
       /^<untrusted-content id="[0-9a-f]+" source="pages\/about">\nHandmade furniture from a seaside workshop\.\n<\/untrusted-content/,
     )
     // The tool's own model call counts toward the request's token budget
@@ -85,7 +85,7 @@ describe('SEO tools', () => {
     )
 
     expect(outcome.result).toMatchObject({ ok: true, skipped: true })
-    expect(String(outcome.result['reason'])).toContain('Already has description')
+    expect(String(outcome.result.reason)).toContain('Already has description')
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
@@ -224,7 +224,7 @@ describe('AEO tools', () => {
       testContext(editor, stores),
     )
     expect(outcome.result).toMatchObject({ ok: true, proposed: true })
-    expect(String(outcome.result['reason'])).toContain('no question field')
+    expect(String(outcome.result.reason)).toContain('no question field')
     expect(outcome.activity.proposal?.items).toEqual([{ label: 'Q?', text: 'A.' }])
   })
 
@@ -334,6 +334,6 @@ describe('publish and delete proposals', () => {
     const action = pendingAction(outcome, admin.id)
     expect(action).toMatchObject({ kind: 'delete', documents: [{ slug: 'free', baseVersion: 1 }] })
     expect(outcome.activity.pending?.destructive).toBe(true)
-    expect(String((outcome.result['leftOut'] as string[])[0])).toContain('referenced by notes/n1')
+    expect(String((outcome.result.leftOut as string[])[0])).toContain('referenced by notes/n1')
   })
 })

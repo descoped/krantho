@@ -22,7 +22,7 @@ function Harness({ grows }: { grows: 'right' | 'left' }) {
 const handle = (): HTMLElement => screen.getByRole('separator', { name: 'Resize column' })
 
 afterEach(() => {
-  delete document.body.dataset['resizing']
+  delete document.body.dataset.resizing
 })
 
 describe('the resize handle', () => {
@@ -66,13 +66,13 @@ describe('the resize handle', () => {
   it('follows a drag, within the bounds, and is done when the pointer is released', () => {
     render(<Harness grows="right" />)
     fireEvent.pointerDown(handle(), { button: 0, clientX: 100, pointerId: 1 })
-    expect(document.body.dataset['resizing']).toBe('true')
+    expect(document.body.dataset.resizing).toBe('true')
     fireEvent.pointerMove(handle(), { clientX: 150, pointerId: 1 })
     expect(handle()).toHaveAttribute('aria-valuenow', '350')
     fireEvent.pointerMove(handle(), { clientX: 900, pointerId: 1 })
     expect(handle()).toHaveAttribute('aria-valuenow', '400')
     fireEvent.pointerUp(handle(), { pointerId: 1 })
-    expect(document.body.dataset['resizing']).toBeUndefined()
+    expect(document.body.dataset.resizing).toBeUndefined()
     fireEvent.pointerMove(handle(), { clientX: 120, pointerId: 1 })
     expect(handle()).toHaveAttribute('aria-valuenow', '400')
   })

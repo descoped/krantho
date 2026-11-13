@@ -172,7 +172,7 @@ Both look in the project directory (`--dir`, default `.`) for a framework config
 | Config file | Framework | Dev | Build |
 |-------------|-----------|-----|-------|
 | `next.config.ts`, `.js` or `.mjs` | Next.js | `next dev` | `next build` |
-| `svelte.config.js` or `.ts` | SvelteKit | `vite dev` | `vite build` |
+| `@sveltejs/kit` in `package.json` | SvelteKit | `vite dev` | `vite build` |
 | `vite.config.ts` or `.js` | Vite | `vite` | `vite build` |
 
 The command runs through `pnpm exec` when the directory has a `pnpm-lock.yaml`, and through `npx` otherwise. `--dry-run` prints the command instead of running it:

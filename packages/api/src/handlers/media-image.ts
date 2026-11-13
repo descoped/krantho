@@ -43,7 +43,7 @@ export const mediaImage: ApiHandler = async (req, ctx) => {
 
   const variant = resolveVariant(item, req.query, req.headers)
   const rev = imageRevision(item)
-  if (req.query['rev'] !== rev || req.query['fmt'] !== variant.format) {
+  if (req.query.rev !== rev || req.query.fmt !== variant.format) {
     return redirectToVariant(item.id, variant, rev)
   }
 

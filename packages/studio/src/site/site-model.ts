@@ -100,7 +100,7 @@ function localeVersions(meta: ContentSummaryItem['meta'], context: RowContext): 
 
 export function toSiteRow(item: ContentSummaryItem, context: RowContext): SiteRow {
   const { meta, fields } = item
-  const title = fields['title']
+  const title = fields.title
   const pages = context.collection.pages
   return {
     collection: meta.collection,

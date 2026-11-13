@@ -21,16 +21,16 @@ export const publishContent: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'editor')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const slugResult = requireParam(req.params, 'slug')
   if (!slugResult.isValid) return slugResult.response
   const slug = slugResult.value
-  const locale = parseLocaleParam(req.query['locale']) ?? ctx.config.site.defaultLocale
+  const locale = parseLocaleParam(req.query.locale) ?? ctx.config.site.defaultLocale
 
   const body = req.body as Record<string, unknown> | undefined
-  const requested = body?.['status']
+  const requested = body?.status
   if (requested !== undefined && (typeof requested !== 'string' || !PUBLICATION_OF[requested])) {
     const valid = Object.keys(PUBLICATION_OF).join(', ')
     return { status: 400, body: { error: `Invalid status: ${String(requested)}. Valid: ${valid}` } }

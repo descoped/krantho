@@ -285,8 +285,7 @@ export class PostgresAdapter implements IPersistenceAdapter {
   ): Promise<void> {
     await this.ensureInitialized()
     const loc = locale ?? this.defaultLocale
-    const status =
-      typeof fields['status'] === 'string' ? fields['status'] : this.defaultStatus.filesystem
+    const status = typeof fields.status === 'string' ? fields.status : this.defaultStatus.filesystem
 
     // Check if content exists and is unchanged
     const existing = await this.sql<ContentRow[]>`

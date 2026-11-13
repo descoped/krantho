@@ -46,6 +46,47 @@ export interface Spies {
   draft: () => Draft
 }
 
+/** What the harness shares with the test: the latest draft and a way to replace its body */
+interface HarnessState {
+  current: Draft
+  replace: (body: string) => void
+}
+
+type HarnessProps = Partial<LiveModeProps> & {
+  state: HarnessState
+  spies: Pick<LiveModeProps, 'onSelect' | 'onFound' | 'onStructure'>
+}
+
+/** Live mode with the draft and the selection kept in state, as the editor keeps them */
+function Harness({ state, spies, ...more }: HarnessProps): ReactElement {
+  const [draft, setDraft] = useState<Draft>(state.current)
+  const [selection, setSelection] = useState<PanelSelection>(NOTHING_SELECTED)
+  state.current = draft
+  state.replace = (next) => setDraft((d) => ({ ...d, body: next }))
+  return (
+    <LiveMode
+      preview={{ src: SRC, path: PATH }}
+      collection="pages"
+      slug="pricing"
+      schema={SCHEMA}
+      draft={draft}
+      designed={['Problem', 'Approach']}
+      readOnly={false}
+      savedVersion={3}
+      selection={selection}
+      onField={(name, value) => setDraft((d) => ({ ...d, fields: { ...d.fields, [name]: value } }))}
+      onBody={(body) => setDraft((d) => ({ ...d, body }))}
+      onFound={spies.onFound}
+      onStructure={spies.onStructure}
+      onSelect={(next, focus) => {
+        spies.onSelect(next, focus)
+        setSelection(next)
+      }}
+      {...more}
+    />
+  )
+}
+
 /** Live mode with the editor's draft and the panel's selection held as the editor holds them */
 export function renderLive(
   overrides: Partial<LiveModeProps> = {},
@@ -56,49 +97,21 @@ export function renderLive(
   replaceBody: (body: string) => void
 } {
   const spies = { onSelect: vi.fn(), onFound: vi.fn(), onStructure: vi.fn() }
-  let current: Draft = {
-    metadata: {},
-
-    fields: { title: 'Pricing', description: 'What it costs', hero: 'm1' },
-    body,
+  const state: HarnessState = {
+    current: {
+      metadata: {},
+      fields: { title: 'Pricing', description: 'What it costs', hero: 'm1' },
+      body,
+    },
+    replace: () => undefined,
   }
-  let replace: (body: string) => void = () => undefined
-  function Harness(more: Partial<LiveModeProps>): ReactElement {
-    const [draft, setDraft] = useState<Draft>(current)
-    const [selection, setSelection] = useState<PanelSelection>(NOTHING_SELECTED)
-    current = draft
-    replace = (next) => setDraft((d) => ({ ...d, body: next }))
-    return (
-      <LiveMode
-        preview={{ src: SRC, path: PATH }}
-        collection="pages"
-        slug="pricing"
-        schema={SCHEMA}
-        draft={draft}
-        designed={['Problem', 'Approach']}
-        readOnly={false}
-        savedVersion={3}
-        selection={selection}
-        onField={(name, value) =>
-          setDraft((d) => ({ ...d, fields: { ...d.fields, [name]: value } }))
-        }
-        onBody={(body) => setDraft((d) => ({ ...d, body }))}
-        onFound={spies.onFound}
-        onStructure={spies.onStructure}
-        onSelect={(next, focus) => {
-          spies.onSelect(next, focus)
-          setSelection(next)
-        }}
-        {...more}
-      />
-    )
-  }
-  const view = render(<Harness {...overrides} />)
+  const view = render(<Harness state={state} spies={spies} {...overrides} />)
   return {
     ...spies,
-    draft: () => current,
-    rerender: (more) => view.rerender(<Harness {...overrides} {...more} />),
-    replaceBody: (next) => act(() => replace(next)),
+    draft: () => state.current,
+    rerender: (more) =>
+      view.rerender(<Harness state={state} spies={spies} {...overrides} {...more} />),
+    replaceBody: (next) => act(() => state.replace(next)),
   }
 }
 

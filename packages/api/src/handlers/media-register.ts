@@ -14,10 +14,10 @@ export const mediaRegister: ApiHandler = async (req, ctx) => {
     return { status: 400, body: { error: 'Request body is required' } }
   }
 
-  const filename = body['filename']
-  const url = body['url']
-  const mimeType = body['mimeType']
-  const size = body['size']
+  const filename = body.filename
+  const url = body.url
+  const mimeType = body.mimeType
+  const size = body.size
 
   if (typeof filename !== 'string' || !filename) {
     return { status: 400, body: { error: 'Missing required field: filename' } }
@@ -35,9 +35,9 @@ export const mediaRegister: ApiHandler = async (req, ctx) => {
     return { status: 400, body: { error: 'Missing required field: size' } }
   }
 
-  const width = typeof body['width'] === 'number' ? body['width'] : null
-  const height = typeof body['height'] === 'number' ? body['height'] : null
-  const altText = typeof body['altText'] === 'string' ? body['altText'] : undefined
+  const width = typeof body.width === 'number' ? body.width : null
+  const height = typeof body.height === 'number' ? body.height : null
+  const altText = typeof body.altText === 'string' ? body.altText : undefined
 
   const item = await ctx.mediaStorage.register({
     filename,

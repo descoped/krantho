@@ -23,8 +23,8 @@ export const mediaDelete: ApiHandler = async (req, ctx) => {
 
   const result: Record<string, unknown> = { message: 'Deleted' }
   if (references.length > 0) {
-    result['warning'] = 'Media was referenced by content items'
-    result['references'] = references
+    result.warning = 'Media was referenced by content items'
+    result.references = references
   }
 
   return { status: 200, body: result }

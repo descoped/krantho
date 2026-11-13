@@ -190,8 +190,8 @@ describe('GET /api/seo/findings', () => {
     expect(pages.map((page) => page.slug)).toEqual(['talk'])
     const [talk] = pages
     expect(talk?.path).toBe('/talk')
-    expect(talk?.readers['page']?.errors).toBe(1)
-    const google = talk?.readers['google']
+    expect(talk?.readers.page?.errors).toBe(1)
+    const google = talk?.readers.google
     expect((google?.errors ?? 0) + (google?.warnings ?? 0)).toBeGreaterThan(0)
     expect(talk?.features).toContainEqual(
       expect.objectContaining({ reader: 'google', type: 'Event', eligible: false }),
@@ -296,7 +296,7 @@ describe('GET /api/seo/catalog?type=', () => {
     expect(rules).toEqual([
       expect.objectContaining({ reader: 'google', type: 'Event', status: 'active' }),
     ])
-    expect(rules[0]?.['source']).toMatch(/^https:\/\/developers\.google\.com\//)
+    expect(rules[0]?.source).toMatch(/^https:\/\/developers\.google\.com\//)
   })
 })
 
@@ -436,7 +436,7 @@ describe('the robots.txt override in the site configuration', () => {
       seoConfigs: stores.seo,
     })
     const nodes = (graph as { '@graph': Array<Record<string, unknown>> })['@graph']
-    expect(nodes.find((node) => node['@type'] === 'Organization')?.['name']).toBe('Example')
+    expect(nodes.find((node) => node['@type'] === 'Organization')?.name).toBe('Example')
     const resolved = await seoResolved(documentRequest('pages', 'about'), ctx)
     const findings = await seoSiteFindings(siteRequest, ctx)
     for (const answer of [graph, resolved.body, findings.body]) {

@@ -6,7 +6,7 @@ import { validateCollectionParam } from '../validators.js'
 
 /** GET /api/schema/:collection — JSON Schema for a collection's fields (code + runtime) */
 export const getSchema: ApiHandler = async (req, ctx) => {
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const jsonSchema = collectionToJsonSchema(validated.collectionDef)
@@ -48,25 +48,25 @@ function runtimeFieldToJsonSchema(field: RuntimeFieldDefinition): Record<string,
     case 'date':
     case 'color':
     case 'reference':
-      prop['type'] = 'string'
+      prop.type = 'string'
       break
     case 'number':
-      prop['type'] = 'number'
+      prop.type = 'number'
       break
     case 'boolean':
-      prop['type'] = 'boolean'
+      prop.type = 'boolean'
       break
     case 'url':
-      prop['type'] = 'string'
-      prop['format'] = 'uri'
+      prop.type = 'string'
+      prop.format = 'uri'
       break
     case 'email':
-      prop['type'] = 'string'
-      prop['format'] = 'email'
+      prop.type = 'string'
+      prop.format = 'email'
       break
     case 'enum':
-      prop['type'] = 'string'
-      if (field.enumValues) prop['enum'] = field.enumValues
+      prop.type = 'string'
+      if (field.enumValues) prop.enum = field.enumValues
       break
   }
 
@@ -80,16 +80,16 @@ function runtimeFieldToJsonSchema(field: RuntimeFieldDefinition): Record<string,
       _runtime: true,
     }
 
-  if (field.default !== undefined) prop['default'] = field.default
-  if (field.description) prop['description'] = field.description
+  if (field.default !== undefined) prop.default = field.default
+  if (field.description) prop.description = field.description
   if (field.min !== undefined) {
     prop[field.type === 'number' ? 'minimum' : 'minLength'] = field.min
   }
   if (field.max !== undefined) {
     prop[field.type === 'number' ? 'maximum' : 'maxLength'] = field.max
   }
-  if (field.pattern) prop['pattern'] = field.pattern
-  if (field.refCollection) prop['description'] = `ref:${field.refCollection}`
+  if (field.pattern) prop.pattern = field.pattern
+  if (field.refCollection) prop.description = `ref:${field.refCollection}`
 
   return prop
 }

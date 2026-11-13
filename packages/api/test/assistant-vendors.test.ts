@@ -70,7 +70,7 @@ const textOf = (events: StreamedEvent[]): string =>
   events.flatMap((event) => (event.type === 'text' ? [String(event.text)] : [])).join('')
 const activities = (events: StreamedEvent[]) =>
   events.flatMap((event) =>
-    event.type === 'activity' ? [event['activity'] as { tool: string; status: string }] : [],
+    event.type === 'activity' ? [event.activity as { tool: string; status: string }] : [],
   )
 
 describe.each(['gemini', 'openrouter', 'ollama'] as const)('the assistant on %s', (vendor) => {
@@ -96,7 +96,7 @@ describe.each(['gemini', 'openrouter', 'ollama'] as const)('the assistant on %s'
     const { events } = await converse(vendor, [{ calls: [read] }, { text: 'Done.' }])
     const usage = events.filter((event) => event.type === 'usage')
     expect(usage.length).toBeGreaterThan(0)
-    expect(Number(usage.at(-1)?.['inputTokens'])).toBeGreaterThan(0)
+    expect(Number(usage.at(-1)?.inputTokens)).toBeGreaterThan(0)
   })
 })
 
@@ -119,7 +119,7 @@ describe('the assistant on gemini', () => {
     const { mock, events } = await converse('gemini', [{ calls: [read] }, { text: 'Done.' }])
     expect(events.filter((event) => event.type === 'error')).toEqual([])
     const call = mock.requests[1]?.messages.find((message) => message.tool_calls)?.tool_calls?.[0]
-    expect(call?.['extra_content']).toEqual({ google: { thought_signature: 'sig-0' } })
+    expect(call?.extra_content).toEqual({ google: { thought_signature: 'sig-0' } })
   })
 
   it('proposes a change whose fields the model wrote as a JSON string', async () => {
@@ -143,8 +143,8 @@ describe('the assistant on gemini', () => {
 
     expect(events.filter((event) => event.type === 'error')).toEqual([])
     const sent = mock.requests[0]?.tools.find((tool) => tool.function.name === 'update_draft')
-    const properties = sent?.function.parameters['properties'] as Record<string, { type: string }>
-    expect(properties['fields']?.type).toBe('string')
+    const properties = sent?.function.parameters.properties as Record<string, { type: string }>
+    expect(properties.fields?.type).toBe('string')
     // The string reached the tool as an object: a replaced title is proposed, not written
     const update = activities(events).find((activity) => activity.tool === 'update_draft')
     expect(update?.status).toBe('pending')

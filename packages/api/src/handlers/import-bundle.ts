@@ -9,7 +9,7 @@ export const importBundle: ApiHandler = async (req, ctx) => {
   if (denied) return denied
   const body = validateRequestBody(req.body)
   if (!body.isValid) return body.response
-  const content = body.body['content']
+  const content = body.body.content
   if (!content || typeof content !== 'object' || Array.isArray(content)) {
     return { status: 400, body: { error: 'Bundle must contain a content object' } }
   }

@@ -20,10 +20,10 @@ type EnrichScope =
  * or item scope must name a configured collection, and an item its slug.
  */
 function enrichScope(payload: Record<string, unknown>, ctx: ApiContext): EnrichScope | string {
-  const collection = typeof payload['collection'] === 'string' ? payload['collection'] : undefined
-  const slug = typeof payload['slug'] === 'string' ? payload['slug'] : undefined
+  const collection = typeof payload.collection === 'string' ? payload.collection : undefined
+  const slug = typeof payload.slug === 'string' ? payload.slug : undefined
   const named = slug !== undefined ? 'item' : collection !== undefined ? 'collection' : 'all'
-  const scope = payload['scope'] ?? named
+  const scope = payload.scope ?? named
   if (scope === 'all') return { scope }
   if (scope !== 'collection' && scope !== 'item') return 'scope is all, collection or item'
   if (collection === undefined || !ctx.contentConfig.collections.has(collection)) {
@@ -112,7 +112,7 @@ export const seoEnrich: ApiHandler = async (req, ctx) => {
   const payload = bodyCheck.body as Record<string, unknown>
   const target = enrichScope(payload, ctx)
   if (typeof target === 'string') return { status: 400, body: { error: target } }
-  const type = (payload['type'] as string) ?? 'meta-descriptions'
+  const type = (payload.type as string) ?? 'meta-descriptions'
 
   const llm = await resolveAdapter(ctx).catch((err: unknown) =>
     err instanceof Error ? err.message : 'Failed to create LLM adapter',
@@ -131,7 +131,7 @@ export const seoEnrich: ApiHandler = async (req, ctx) => {
   if (items.length === 0) {
     return { status: 200, body: { jobId: null, message: 'No items to enrich' } }
   }
-  const job = await startJob(ctx, llm, type, payload['force'] === true, items)
+  const job = await startJob(ctx, llm, type, payload.force === true, items)
   return {
     status: 202,
     body: { jobId: job.id, status: 'running', type, totalItems: items.length },
@@ -156,7 +156,7 @@ async function resumeIfLost(job: EnrichJob, ctx: ApiContext): Promise<void> {
 
 /** GET /api/seo/enrich/status — poll job progress, from whichever instance answers */
 export const seoEnrichStatus: ApiHandler = async (req, ctx) => {
-  const jobId = req.query['jobId']
+  const jobId = req.query.jobId
   const current = await currentJob(ctx)
 
   if (!current || (jobId && current.id !== jobId)) {

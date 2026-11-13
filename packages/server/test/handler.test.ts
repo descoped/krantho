@@ -65,7 +65,7 @@ describe('createKranthoHandler', () => {
     expect(response.status).toBe(200)
     const body = (await response.json()) as { name: string; schema: Record<string, unknown> }
     expect(body.name).toBe('pages')
-    expect(body.schema['type']).toBe('object')
+    expect(body.schema.type).toBe('object')
   })
 
   it('returns 404 for unknown collection', async () => {

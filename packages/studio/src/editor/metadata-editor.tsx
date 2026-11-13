@@ -125,10 +125,7 @@ export function MetadataEditor(props: {
           const present = values !== undefined || group.required
           const update = (next: Record<string, unknown>): void =>
             props.onMetadata({ ...props.metadata, [slot]: next })
-          if (
-            slot === 'seo' &&
-            (group.schema['properties'] as Record<string, unknown>)?.['entities']
-          )
+          if (slot === 'seo' && (group.schema.properties as Record<string, unknown>)?.entities)
             return (
               <div key={slot} className="metadata-group metadata-graph-link">
                 <div>

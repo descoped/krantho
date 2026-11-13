@@ -67,9 +67,9 @@ describe('definePage()', () => {
 
     expect(page.route).toBe('/')
     expect(Object.keys(page.content)).toEqual(['hero', 'services', 'posts'])
-    expect(page.content['hero']?.type).toBe('slug')
-    expect(page.content['services']?.type).toBe('sections')
-    expect(page.content['posts']?.type).toBe('collection')
+    expect(page.content.hero?.type).toBe('slug')
+    expect(page.content.services?.type).toBe('sections')
+    expect(page.content.posts?.type).toBe('collection')
   })
 
   it('throws when route is empty', () => {

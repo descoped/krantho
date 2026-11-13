@@ -83,7 +83,7 @@ describe('GET /api/auth/refresh', () => {
     )
 
     expect(res.status).toBe(302)
-    expect(res.headers?.['Location']).toBe('/studio/pages?tab=seo')
+    expect(res.headers?.Location).toBe('/studio/pages?tab=seo')
     expect(res.headers?.['Cache-Control']).toBe('no-store')
     expect(res.cookies?.[0]).toMatch(/^krantho_access=[^;]+\./)
     expect(res.cookies?.[1]).toMatch(/^krantho_refresh=[^;]+;/)
@@ -97,7 +97,7 @@ describe('GET /api/auth/refresh', () => {
         request('GET', withToken, returnTo),
         context(oidcAuth, store().adapter),
       )
-      expect(res.headers?.['Location']).toBe('/studio/')
+      expect(res.headers?.Location).toBe('/studio/')
     }
   })
 
@@ -115,7 +115,7 @@ describe('GET /api/auth/refresh', () => {
         context(oidcAuth, state.adapter),
       )
       expect(res.status).toBe(302)
-      expect(res.headers?.['Location']).toBe(
+      expect(res.headers?.Location).toBe(
         `/api/auth/login/oidc?returnTo=${encodeURIComponent('/studio/media')}`,
       )
       expect(res.cookies).toEqual([])
@@ -141,14 +141,14 @@ describe('GET /api/auth/refresh', () => {
     )
 
     expect(res.status).toBe(302)
-    expect(res.headers?.['Location']).toBe('/studio/')
+    expect(res.headers?.Location).toBe('/studio/')
   })
 
   it('starts a sign-in when sessions are not stored', async () => {
     const res = await authRefreshRedirect(request('GET', withToken), context(oidcAuth, undefined))
 
     expect(res.status).toBe(302)
-    expect(res.headers?.['Location']).toBe(
+    expect(res.headers?.Location).toBe(
       `/api/auth/login/oidc?returnTo=${encodeURIComponent('/studio/')}`,
     )
   })

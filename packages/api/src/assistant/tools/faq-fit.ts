@@ -23,7 +23,7 @@ export function declaresString(schema: ZodObject<ZodRawShape>, key: string): boo
   const field = schema.shape[key]
   if (!field) return false
   try {
-    return z.toJSONSchema(field, { unrepresentable: 'any' })['type'] === 'string'
+    return z.toJSONSchema(field, { unrepresentable: 'any' }).type === 'string'
   } catch {
     return false
   }
@@ -72,9 +72,9 @@ async function takenSlugs(
 function candidateFor(schema: ZodObject<ZodRawShape>, entry: FaqEntry): Omit<FaqCandidate, 'slug'> {
   const hasAnswer = declaresString(schema, 'answer')
   const fields: Record<string, unknown> = { question: entry.question }
-  if (hasAnswer) fields['answer'] = entry.answer
-  if (declaresString(schema, 'title')) fields['title'] = entry.question
-  if ('status' in schema.shape) fields['status'] = 'draft'
+  if (hasAnswer) fields.answer = entry.answer
+  if (declaresString(schema, 'title')) fields.title = entry.question
+  if ('status' in schema.shape) fields.status = 'draft'
   return { fields, body: hasAnswer ? '' : entry.answer }
 }
 

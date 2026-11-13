@@ -286,7 +286,7 @@ Edit the `@theme` block in the example's local CSS (`app/globals.css` or `src/ap
 | Framework | How Content Loads | Package |
 |-----------|-------------------|---------|
 | Next.js (React) | React Server Components call `getCMSContent(collection, slug)` (or `requirePublished` from `lib/krantho.ts`) at render time. No client JS. | `@krantho/ui-react/server` over `createContentLoader` from `@krantho/server-next` |
-| SvelteKit (Svelte) | `+page.server.ts` calls `loadContent(collection, slug)`, passes data to page via `$props()` | `createContentLoader` from `@krantho/server-sveltekit` + `renderContent` from `@krantho/core` via `$lib/cms.ts` |
+| SvelteKit (Svelte) | `+page.server.ts` calls `loadContent(collection, slug)`, passes data to page via `$props()` | `createContentLoader` from `@krantho/server-sveltekit` + `renderContent` from `@krantho/core` via `#lib/cms.ts` |
 | React SSR (Express) | `entry-server.tsx` calls `loadContent(collection, slug)` for the route and the globals, renders React, and hands the content to the client in `window.__CMS_CACHE__` | `createContentLoader` from `@krantho/server-node` + `renderContent` from `@krantho/core` via `src/lib/cms.ts` |
 | React SPA | Fetches JSON pre-built from `content/*.md` at build time; no database, no API | local `useContent` hook |
 
@@ -320,7 +320,7 @@ const { fields, sections } = await requirePublished('pages', 'home')
 ```typescript
 // +page.server.ts
 import { error } from '@sveltejs/kit'
-import { loadContent } from '$lib/cms'
+import { loadContent } from '#lib/cms.ts'
 
 export async function load() {
   const home = await loadContent('pages', 'home') // null unless published
@@ -405,7 +405,7 @@ React SEO components are server components — they read the JSON-LD graph, comp
 
 ```svelte
 <!-- +page.server.ts reads the page's JSON-LD graph -->
-import { loadJsonLd } from '$lib/cms'
+import { loadJsonLd } from '#lib/cms.ts'
 const jsonLd = await loadJsonLd('pages', 'home')
 
 <!-- +layout.svelte renders site-level structured data -->
@@ -422,7 +422,7 @@ import { JsonLd } from '@krantho/ui-svelte'
 </svelte:head>
 ```
 
-Svelte pages read JSON-LD with `loadJsonLd()` from `$lib/cms` in `+page.server.ts` (composed in-process from the published version) and render it inline via `<svelte:head>`. The `$lib/seo.ts` helper provides file-based loaders for generated JSON.
+Svelte pages read JSON-LD with `loadJsonLd()` from `#lib/cms` in `+page.server.ts` (composed in-process from the published version) and render it inline via `<svelte:head>`. The `#lib/seo.ts` helper provides file-based loaders for generated JSON.
 
 ### SEO Routes
 
@@ -454,7 +454,7 @@ The SvelteKit and React SSR examples answer `/sitemap.xml` and `/robots.txt` wit
 
 **React SSR implementation:** `server.ts` answers `/sitemap.xml` and `/robots.txt` from the krantho API it mounts, with `Cache-Control: no-cache`, and `/llms.txt` from the generated file.
 
-SvelteKit routes use `$lib/seo.ts` helpers instead of importing from `@krantho/core` barrel (avoids Node ESM resolution issues with the barrel export).
+SvelteKit routes use `#lib/seo.ts` helpers instead of importing from `@krantho/core` barrel (avoids Node ESM resolution issues with the barrel export).
 
 ### Meta Tags
 
@@ -590,9 +590,9 @@ sveltekit-tailwind/
 **SvelteKit-specific patterns:**
 - Data loading happens in `+page.server.ts` (runs on server only), data passes to `+page.svelte` via `$props()`
 - `+layout.server.ts` loads site-wide data (site config, structured data, FAQ) — available to all routes via layout inheritance
-- `$lib/seo.ts` provides `loadSeoJson()`, `loadSeoText()` — file-based loaders that read generated files from `../content/seo/generated/` using `fs.readFileSync`. Per-page JSON-LD graphs come from `loadJsonLd()` in `$lib/cms`
+- `#lib/seo.ts` provides `loadSeoJson()`, `loadSeoText()` — file-based loaders that read generated files from `../content/seo/generated/` using `fs.readFileSync`. Per-page JSON-LD graphs come from `loadJsonLd()` in `#lib/cms`
 - Site-level structured data (`JsonLd` from `@krantho/ui-svelte`) renders in `+layout.svelte`. Per-page JSON-LD renders inline via `<svelte:head>`
-- CMS components (`CMSText`, `CMSMarkdown`) are local in `$lib/components/` (not yet migrated to `@krantho/ui-svelte`)
+- CMS components (`CMSText`, `CMSMarkdown`) are local in `#lib/components/` (not yet migrated to `@krantho/ui-svelte`)
 
 ### sveltekit-shadcn (4004)
 
@@ -633,7 +633,7 @@ sveltekit-shadcn/
 └── tsconfig.json
 ```
 
-**Difference from sveltekit-tailwind**: CMS components live under `$lib/components/cms/` (not `$lib/components/`). Has a `ui/card.svelte` (Shadcn convention) but it's unused — service cards use the shared `.service-card` CSS class instead.
+**Difference from sveltekit-tailwind**: CMS components live under `#lib/components/cms/` (not `#lib/components/`). Has a `ui/card.svelte` (Shadcn convention) but it's unused — service cards use the shared `.service-card` CSS class instead.
 
 ### react-ssr (4005)
 
@@ -768,7 +768,7 @@ A published page document renders on every example without a template of its own
 2. For a layout of its own, create `src/routes/newpage/+page.server.ts`:
    ```typescript
    import { error } from '@sveltejs/kit'
-   import { loadContent, loadJsonLd } from '$lib/cms'
+   import { loadContent, loadJsonLd } from '#lib/cms.ts'
    export async function load() {
      const page = await loadContent('pages', 'newpage')
      if (!page) error(404, 'Not found')
@@ -779,7 +779,7 @@ A published page document renders on every example without a template of its own
 3. Create `src/routes/newpage/+page.svelte`:
    ```svelte
    <script lang="ts">
-     import { CMSText, CMSMarkdown } from '$lib/components'
+     import { CMSText, CMSMarkdown } from '#lib/components/index.ts'
      let { data } = $props()
    </script>
 

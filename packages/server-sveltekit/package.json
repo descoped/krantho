@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@krantho/schema": "workspace:*",
-    "@types/node": "^25.9.9",
+    "@types/node": "^26.6.6",
     "typescript": "^6.0.3",
     "zod": "^4.6.7"
   }

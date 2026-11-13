@@ -79,13 +79,13 @@ function compactProperty(
 ): Record<string, unknown> {
   const compact: Record<string, unknown> = {
     name,
-    type: prop['type'] ?? 'any',
+    type: prop.type ?? 'any',
     required: required.has(name),
   }
   for (const key of ['enum', 'maxLength', 'description'] as const) {
     if (prop[key] !== undefined) compact[key] = prop[key]
   }
-  if (prop['_runtime'] === true) compact['runtime'] = true
+  if (prop._runtime === true) compact.runtime = true
   return compact
 }
 
@@ -223,8 +223,8 @@ export function documentView(
   const budget = Math.max(0, run.ctx.config.assistant.limits.toolResultChars - used)
   const body = truncate(doc.body, budget)
   const bodyTruncated = body.length < doc.body.length
-  result['body'] = run.frame(`${collection}/${slug} v${version} body`, body)
-  result['bodyTruncated'] = bodyTruncated
+  result.body = run.frame(`${collection}/${slug} v${version} body`, body)
+  result.bodyTruncated = bodyTruncated
   return { result, bodyTruncated }
 }
 
@@ -252,9 +252,8 @@ const getDocumentTool = defineTool({
     const doc = response.body as ContentDocument
     const { result } = documentView(run, doc)
     if (doc.meta.locale !== locale) {
-      result['fallbackFrom'] = locale
-      result['note'] =
-        `There is no ${locale} version; this is the ${doc.meta.locale} version. Writes to ${locale} cannot use it.`
+      result.fallbackFrom = locale
+      result.note = `There is no ${locale} version; this is the ${doc.meta.locale} version. Writes to ${locale} cannot use it.`
     }
     return {
       result,

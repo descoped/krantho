@@ -302,7 +302,7 @@ test.describe('Structure › Scopes & archetypes', () => {
         page.getByText("Site entities saved. Every page's structured data has changed."),
       ).toBeVisible()
       const person = (await seoConfig(target, 'site')).entities.find((e) => e['@type'] === 'Person')
-      expect(person?.properties['jobTitle']).toBe('Chief e2e officer')
+      expect(person?.properties.jobTitle).toBe('Chief e2e officer')
       await expect(entities.getByRole('button', { name: /Import/ })).toBeVisible()
     })
   })

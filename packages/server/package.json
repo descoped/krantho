@@ -37,7 +37,7 @@
     "@krantho/schema": "workspace:*",
     "@krantho/seo-shared": "workspace:*",
     "@krantho/studio": "workspace:*",
-    "chokidar": "^5.0.0",
+    "chokidar": "^6.0.0",
     "gray-matter": "^4.0.3",
     "yaml": "^2.9.1"
   },
@@ -49,7 +49,7 @@
     "@krantho/media-vercel-blob": "workspace:*",
     "@krantho/persistence-postgres": "workspace:*",
     "@vercel/functions": "^3.9.9",
-    "postgres": "^3.4.0"
+    "postgres": "^4.1.1"
   },
   "peerDependenciesMeta": {
     "@aws-sdk/client-cloudfront": {
@@ -84,9 +84,9 @@
     "@krantho/media-s3": "workspace:*",
     "@krantho/media-vercel-blob": "workspace:*",
     "@testcontainers/postgresql": "^12.2.1",
-    "@types/node": "^25.9.9",
+    "@types/node": "^26.6.6",
     "@vercel/functions": "^3.11.2",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "zod": "^4.6.7"
   }
 }

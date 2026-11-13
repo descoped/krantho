@@ -28,7 +28,7 @@ Collections read the shared `../content/` directory; it is imported into SQLite 
 
 ## Production server
 
-The example builds with `@sveltejs/adapter-node`: a plain Node server that runs in any container or VM. On Vercel, which runs functions rather than a Node server, `svelte.config.js` picks `@sveltejs/adapter-vercel` instead — Vercel sets `VERCEL` during its build — so the code is the same on every host.
+The example builds with `@sveltejs/adapter-node`: a plain Node server that runs in any container or VM. On Vercel, which runs functions rather than a Node server, `vite.config.ts` passes `@sveltejs/adapter-vercel` to SvelteKit instead — Vercel sets `VERCEL` during its build — so the code is the same on every host.
 
 ```bash
 pnpm run build

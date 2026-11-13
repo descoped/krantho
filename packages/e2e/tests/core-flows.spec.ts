@@ -119,7 +119,7 @@ test.describe('core flows', () => {
 
     await page.getByRole('tab', { name: 'Structure' }).click()
     await expect(page.getByRole('textbox', { name: 'title', exact: true })).toHaveValue(
-      String(doc.fields['title']),
+      String(doc.fields.title),
     )
   })
 

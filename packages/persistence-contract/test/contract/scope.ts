@@ -12,7 +12,7 @@ export function scopeCases({ run, ids }: ContractQueries): void {
       expect(await ids({ state: 'published', projection: 'meta' })).toEqual(ALL_LIVE)
       const { items } = await run({ state: 'published', projection: 'full' })
       const charlie = items.find((item) => item.meta.slug === 'charlie')
-      expect(charlie?.fields['title']).toBe('Charlie live')
+      expect(charlie?.fields.title).toBe('Charlie live')
       expect(charlie?.body).toBe('Charlie live body.')
       expect(charlie?.meta.version).toBe(1)
     })

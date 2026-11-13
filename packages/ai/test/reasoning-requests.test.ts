@@ -50,21 +50,21 @@ async function chat(provider: Provider, model: string, extra: { profiles?: never
 describe('the reasoning setting each provider reads', () => {
   it('sends Gemini reasoning_effort and max_tokens', async () => {
     const body = await chat('gemini', 'gemini-3.6-flash')
-    expect(body['reasoning_effort']).toBe('minimal')
-    expect(body['max_tokens']).toBe(100)
+    expect(body.reasoning_effort).toBe('minimal')
+    expect(body.max_tokens).toBe(100)
   })
 
   it('adds the headroom of a Gemini model that cannot stop thinking', async () => {
     const body = await chat('gemini', 'gemini-2.5-pro')
-    expect(body['reasoning_effort']).toBe('low')
-    expect(body['max_tokens']).toBe(100 + 1024)
+    expect(body.reasoning_effort).toBe('low')
+    expect(body.max_tokens).toBe(100 + 1024)
   })
 
   it("sends OpenRouter's reasoning object, and not reasoning_effort", async () => {
     const body = await chat('openrouter', 'openai/gpt-5-mini')
-    expect(body['reasoning']).toEqual({ effort: 'minimal' })
+    expect(body.reasoning).toEqual({ effort: 'minimal' })
     expect(body).not.toHaveProperty('reasoning_effort')
-    expect(body['max_tokens']).toBe(100)
+    expect(body.max_tokens).toBe(100)
   })
 
   it('sends an OpenRouter model of another vendor nothing', async () => {
@@ -75,8 +75,8 @@ describe('the reasoning setting each provider reads', () => {
 
   it('sends Ollama reasoning_effort and max_tokens, never max_completion_tokens', async () => {
     const body = await chat('ollama', 'qwen3:8b')
-    expect(body['reasoning_effort']).toBe('none')
-    expect(body['max_tokens']).toBe(100)
+    expect(body.reasoning_effort).toBe('none')
+    expect(body.max_tokens).toBe(100)
     expect(body).not.toHaveProperty('max_completion_tokens')
   })
 
@@ -99,7 +99,7 @@ describe('a reasoning setting the provider refuses', () => {
     const first = await collect(adapter.stream(request))
     expect(first.some((event) => event.type === 'error')).toBe(false)
     expect(fetchMock).toHaveBeenCalledTimes(2)
-    expect(sentRequest(fetchMock, 0).body['reasoning_effort']).toBe('minimal')
+    expect(sentRequest(fetchMock, 0).body.reasoning_effort).toBe('minimal')
     expect(sentRequest(fetchMock, 1).body).not.toHaveProperty('reasoning_effort')
 
     await collect(adapter.stream(request))
@@ -121,7 +121,7 @@ describe('a reasoning setting the provider refuses', () => {
     const result = await adapter.complete('Hi', { maxTokens: 100 })
 
     expect(result.text).toBe('OK')
-    expect(sentRequest(fetchMock, 0).body['reasoning']).toEqual({ effort: 'minimal' })
+    expect(sentRequest(fetchMock, 0).body.reasoning).toEqual({ effort: 'minimal' })
     expect(sentRequest(fetchMock, 1).body).not.toHaveProperty('reasoning')
   })
 

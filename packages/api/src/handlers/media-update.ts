@@ -28,36 +28,36 @@ export const mediaUpdate: ApiHandler = async (req, ctx) => {
 
   const updates: MediaUpdateData = {}
 
-  if (typeof body['altText'] === 'string') updates.altText = body['altText']
-  if (typeof body['folder'] === 'string' || body['folder'] === null)
-    updates.folder = body['folder'] as string | null
-  if (Array.isArray(body['tags'])) {
-    const tags = body['tags'].filter((t): t is string => typeof t === 'string')
+  if (typeof body.altText === 'string') updates.altText = body.altText
+  if (typeof body.folder === 'string' || body.folder === null)
+    updates.folder = body.folder as string | null
+  if (Array.isArray(body.tags)) {
+    const tags = body.tags.filter((t): t is string => typeof t === 'string')
     updates.tags = tags
   }
-  if (body['crop'] !== undefined) {
-    if (body['crop'] === null) {
+  if (body.crop !== undefined) {
+    if (body.crop === null) {
       updates.crop = null
     } else {
-      const cropResult = validateCrop(body['crop'])
+      const cropResult = validateCrop(body.crop)
       if (!cropResult.isValid) {
         return { status: 400, body: { error: cropResult.error } }
       }
       updates.crop = cropResult.crop
     }
   }
-  if (body['hotspot'] !== undefined) {
-    if (body['hotspot'] === null) {
+  if (body.hotspot !== undefined) {
+    if (body.hotspot === null) {
       updates.hotspot = null
     } else {
-      const hotspotResult = validateHotspot(body['hotspot'])
+      const hotspotResult = validateHotspot(body.hotspot)
       if (!hotspotResult.isValid) {
         return { status: 400, body: { error: hotspotResult.error } }
       }
       updates.hotspot = hotspotResult.hotspot
     }
   }
-  if (typeof body['filename'] === 'string') updates.filename = body['filename']
+  if (typeof body.filename === 'string') updates.filename = body.filename
 
   const item = await ctx.mediaStorage.update(id, updates)
   if (!item) {

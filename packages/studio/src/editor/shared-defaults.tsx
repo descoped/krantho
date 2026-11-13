@@ -115,7 +115,7 @@ export function SharedDefaults({ ws, slot }: { ws: Workspace; slot: string }): R
             <option value="">Choose document</option>
             {items.map((item) => (
               <option key={item.meta.slug} value={item.meta.slug}>
-                {String(item.fields['title'] ?? item.meta.slug)}
+                {String(item.fields.title ?? item.meta.slug)}
               </option>
             ))}
           </select>

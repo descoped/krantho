@@ -11,10 +11,10 @@
     "@krantho/persistence-fs": "workspace:*",
     "@krantho/persistence-postgres": "workspace:*",
     "@krantho/persistence-sqlite": "workspace:*",
-    "postgres": "^3.4.9"
+    "postgres": "^4.1.1"
   },
   "devDependencies": {
-    "typescript": "^6.0.3",
-    "@types/node": "^25.9.9"
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
   }
 }

@@ -7,7 +7,7 @@ import { CONTRACT_SEED, type ContractSeed, queryContract, seedAdapter } from './
 
 /** The URL of the container the global setup started */
 function containerUrl(): string {
-  const url = process.env['KRANTHO_TEST_POSTGRES_URL']
+  const url = process.env.KRANTHO_TEST_POSTGRES_URL
   if (!url) {
     throw new Error(
       'KRANTHO_TEST_POSTGRES_URL not set: the global setup did not run. Check vitest.config.ts.',

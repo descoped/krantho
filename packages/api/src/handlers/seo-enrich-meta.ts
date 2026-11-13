@@ -58,12 +58,12 @@ export async function prepareMetaDescription(
   _seoConfigAdapter: ISeoConfigAdapter | null,
   force: boolean,
 ): Promise<{ skip: string } | MetaDescriptionSource> {
-  const description = documentSeoProperties(content.metadata)['description']
+  const description = documentSeoProperties(content.metadata).description
   if (typeof description === 'string' && description.length > 0 && !force) {
     return { skip: `Authored description exists (${description.length} chars) — preserved` }
   }
   // Resolve which CMS field holds the description dynamically
-  const properties = content.contract?.fields['properties']
+  const properties = content.contract?.fields.properties
   const field = buildSeoFieldMap(
     Object.keys(properties && typeof properties === 'object' ? properties : content.fields),
   ).description
@@ -141,7 +141,7 @@ export async function enrichMetaDescription(
     return 'skipped'
   }
 
-  if (!source.field && !contract.metadata['sharing']) {
+  if (!source.field && !contract.metadata.sharing) {
     item.status = 'skipped'
     item.result = 'No description property is declared by this document contract'
     return 'skipped'
@@ -152,8 +152,8 @@ export async function enrichMetaDescription(
   const fields = { ...content.fields }
   const metadata = structuredClone(content.metadata)
   if (source.field) fields[source.field] = desc
-  else if (contract.metadata['sharing']) {
-    metadata['sharing'] = { ...metadata['sharing'], description: desc }
+  else if (contract.metadata.sharing) {
+    metadata.sharing = { ...metadata.sharing, description: desc }
   } else {
     item.status = 'skipped'
     item.result = 'No description property is declared by this document contract'

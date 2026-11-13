@@ -55,8 +55,8 @@ describe('Code blocks in the visual editor', () => {
     const markdown = editor.action((ctx) => {
       const schema = ctx.get(schemaCtx)
       const pre = document.createElement('pre')
-      pre.dataset['language'] = 'ts'
-      pre.dataset['meta'] = 'title="app.ts" stack="next"'
+      pre.dataset.language = 'ts'
+      pre.dataset.meta = 'title="app.ts" stack="next"'
       pre.innerHTML = '<code>const a = 1</code>'
       const clipboard = document.createElement('div')
       clipboard.append(pre)
@@ -64,7 +64,7 @@ describe('Code blocks in the visual editor', () => {
       const html = DOMSerializer.fromSchema(schema).serializeFragment(pasted.content)
       const wrapper = document.createElement('div')
       wrapper.append(html)
-      expect(wrapper.querySelector('pre')?.dataset['meta']).toBe('title="app.ts" stack="next"')
+      expect(wrapper.querySelector('pre')?.dataset.meta).toBe('title="app.ts" stack="next"')
       return ctx.get(serializerCtx)(DOMParser.fromSchema(schema).parse(wrapper))
     })
     await editor.destroy()

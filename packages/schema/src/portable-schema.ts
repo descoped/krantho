@@ -28,10 +28,7 @@ export function retainPortableExtension(
   const extra = portableJsonSchema(additions)
   definitions.set(extended, {
     ...base,
-    properties: { ...(base['properties'] as object), ...(extra['properties'] as object) },
-    required: [
-      ...((base['required'] as string[]) ?? []),
-      ...((extra['required'] as string[]) ?? []),
-    ],
+    properties: { ...(base.properties as object), ...(extra.properties as object) },
+    required: [...((base.required as string[]) ?? []), ...((extra.required as string[]) ?? [])],
   })
 }

@@ -43,9 +43,9 @@ describe('buildEvent', () => {
 
     const event = findEntity(graph, 'Event')
     expect(event).toBeDefined()
-    expect(event?.['name']).toBe('Annual Conference 2026')
-    expect(event?.['startDate']).toBe('2026-09-15T09:00:00')
-    expect(event?.['location']).toEqual({
+    expect(event?.name).toBe('Annual Conference 2026')
+    expect(event?.startDate).toBe('2026-09-15T09:00:00')
+    expect(event?.location).toEqual({
       '@type': 'Place',
       name: 'Acme Convention Center, San Francisco',
     })
@@ -81,7 +81,7 @@ describe('buildEvent', () => {
     })
 
     const event = findEntity(graph, 'Event')
-    expect((event?.['organizer'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((event?.organizer as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#business',
     )
   })
@@ -112,9 +112,9 @@ describe('buildEvent', () => {
     })
 
     const event = findEntity(graph, 'Event')
-    const location = event?.['location'] as Record<string, unknown>
+    const location = event?.location as Record<string, unknown>
     expect(location['@type']).toBe('Place')
-    expect((location['address'] as Record<string, unknown>)['streetAddress']).toBe('123 Main St')
+    expect((location.address as Record<string, unknown>).streetAddress).toBe('123 Main St')
   })
 
   it('omits empty optional fields from output', () => {
@@ -128,10 +128,10 @@ describe('buildEvent', () => {
     })
 
     const event = findEntity(graph, 'Event')
-    expect(event?.['endDate']).toBeUndefined()
-    expect(event?.['eventStatus']).toBeUndefined()
-    expect(event?.['eventAttendanceMode']).toBeUndefined()
-    expect(event?.['offers']).toBeUndefined()
+    expect(event?.endDate).toBeUndefined()
+    expect(event?.eventStatus).toBeUndefined()
+    expect(event?.eventAttendanceMode).toBeUndefined()
+    expect(event?.offers).toBeUndefined()
   })
 
   it('wraps offers as an Offer sub-entity', () => {
@@ -150,9 +150,9 @@ describe('buildEvent', () => {
     })
 
     const event = findEntity(graph, 'Event')
-    const offers = event?.['offers'] as Record<string, unknown>
+    const offers = event?.offers as Record<string, unknown>
     expect(offers['@type']).toBe('Offer')
-    expect(offers['price']).toBe('$50')
+    expect(offers.price).toBe('$50')
   })
 
   it('passes through offers object when provided (Offer sub-entity)', () => {
@@ -178,11 +178,11 @@ describe('buildEvent', () => {
     })
 
     const event = findEntity(graph, 'Event')
-    const offers = event?.['offers'] as Record<string, unknown>
+    const offers = event?.offers as Record<string, unknown>
     expect(offers['@type']).toBe('Offer')
-    expect(offers['price']).toBe('99')
-    expect(offers['priceCurrency']).toBe('USD')
-    expect(offers['availability']).toBe('https://schema.org/InStock')
+    expect(offers.price).toBe('99')
+    expect(offers.priceCurrency).toBe('USD')
+    expect(offers.availability).toBe('https://schema.org/InStock')
   })
 
   it('omits required fields from the entity when missing', () => {
@@ -198,11 +198,11 @@ describe('buildEvent', () => {
 
     const event = findEntity(graph, 'Event')
     expect(event).toBeDefined()
-    expect(event?.['name']).toBe('Incomplete Event')
+    expect(event?.name).toBe('Incomplete Event')
     // Missing required fields are dropped by compact(), letting
     // validateRichResult flag them downstream.
-    expect(event?.['startDate']).toBeUndefined()
-    expect(event?.['location']).toBeUndefined()
+    expect(event?.startDate).toBeUndefined()
+    expect(event?.location).toBeUndefined()
   })
 })
 
@@ -228,10 +228,10 @@ describe('buildRecipe', () => {
 
     const recipe = findEntity(graph, 'Recipe')
     expect(recipe).toBeDefined()
-    expect(recipe?.['name']).toBe('Chocolate Chip Cookies')
-    expect(recipe?.['image']).toBe('https://example.com/cookies.jpg')
-    expect(recipe?.['recipeIngredient'] as string[]).toHaveLength(3)
-    expect(recipe?.['recipeInstructions'] as Array<Record<string, unknown>>).toHaveLength(3)
+    expect(recipe?.name).toBe('Chocolate Chip Cookies')
+    expect(recipe?.image).toBe('https://example.com/cookies.jpg')
+    expect(recipe?.recipeIngredient as string[]).toHaveLength(3)
+    expect(recipe?.recipeInstructions as Array<Record<string, unknown>>).toHaveLength(3)
   })
 
   it('wraps each instruction as a HowToStep entity', () => {
@@ -250,10 +250,10 @@ describe('buildRecipe', () => {
     })
 
     const recipe = findEntity(graph, 'Recipe')
-    const steps = recipe?.['recipeInstructions'] as Array<Record<string, unknown>>
+    const steps = recipe?.recipeInstructions as Array<Record<string, unknown>>
     expect(steps[0]?.['@type']).toBe('HowToStep')
-    expect(steps[0]?.['text']).toBe('Step one')
-    expect(steps[1]?.['text']).toBe('Step two')
+    expect(steps[0]?.text).toBe('Step one')
+    expect(steps[1]?.text).toBe('Step two')
   })
 
   it('parses comma-separated string ingredients for legacy CMS compatibility', () => {
@@ -272,7 +272,7 @@ describe('buildRecipe', () => {
     })
 
     const recipe = findEntity(graph, 'Recipe')
-    expect(recipe?.['recipeIngredient']).toEqual(['lettuce', 'tomato', 'cucumber'])
+    expect(recipe?.recipeIngredient).toEqual(['lettuce', 'tomato', 'cucumber'])
   })
 
   it('cross-links author to site Person via @id', () => {
@@ -292,7 +292,7 @@ describe('buildRecipe', () => {
     })
 
     const recipe = findEntity(graph, 'Recipe')
-    expect((recipe?.['author'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((recipe?.author as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#person',
     )
   })
@@ -342,10 +342,10 @@ describe('buildRecipe', () => {
     })
 
     const recipe = findEntity(graph, 'Recipe')
-    const nutrition = recipe?.['nutrition'] as Record<string, unknown>
+    const nutrition = recipe?.nutrition as Record<string, unknown>
     expect(nutrition['@type']).toBe('NutritionInformation')
-    expect(nutrition['calories']).toBe('250 calories')
-    expect(nutrition['fatContent']).toBe('12 g')
+    expect(nutrition.calories).toBe('250 calories')
+    expect(nutrition.fatContent).toBe('12 g')
   })
 
   it('omits empty optional fields from output', () => {
@@ -364,10 +364,10 @@ describe('buildRecipe', () => {
     })
 
     const recipe = findEntity(graph, 'Recipe')
-    expect(recipe?.['prepTime']).toBeUndefined()
-    expect(recipe?.['cookTime']).toBeUndefined()
-    expect(recipe?.['recipeYield']).toBeUndefined()
-    expect(recipe?.['nutrition']).toBeUndefined()
+    expect(recipe?.prepTime).toBeUndefined()
+    expect(recipe?.cookTime).toBeUndefined()
+    expect(recipe?.recipeYield).toBeUndefined()
+    expect(recipe?.nutrition).toBeUndefined()
   })
 
   it('reads alternate CMS field names (prep-time, cook-time, total-time)', () => {
@@ -389,9 +389,9 @@ describe('buildRecipe', () => {
     })
 
     const recipe = findEntity(graph, 'Recipe')
-    expect(recipe?.['prepTime']).toBe('PT5M')
-    expect(recipe?.['cookTime']).toBe('PT10M')
-    expect(recipe?.['totalTime']).toBe('PT15M')
+    expect(recipe?.prepTime).toBe('PT5M')
+    expect(recipe?.cookTime).toBe('PT10M')
+    expect(recipe?.totalTime).toBe('PT15M')
   })
 
   it('omits required fields from the entity when missing', () => {
@@ -407,11 +407,11 @@ describe('buildRecipe', () => {
 
     const recipe = findEntity(graph, 'Recipe')
     expect(recipe).toBeDefined()
-    expect(recipe?.['name']).toBe('Bare Recipe')
+    expect(recipe?.name).toBe('Bare Recipe')
     // Missing required fields are dropped by compact(), letting
     // validateRichResult flag them downstream.
-    expect(recipe?.['image']).toBeUndefined()
-    expect(recipe?.['recipeIngredient']).toBeUndefined()
-    expect(recipe?.['recipeInstructions']).toBeUndefined()
+    expect(recipe?.image).toBeUndefined()
+    expect(recipe?.recipeIngredient).toBeUndefined()
+    expect(recipe?.recipeInstructions).toBeUndefined()
   })
 })

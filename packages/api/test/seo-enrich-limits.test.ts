@@ -240,7 +240,7 @@ describe('SEO enrichment job', () => {
       { kind: 'document', collection: 'pages', slug: 'home', locale: 'en', live: false },
     ])
     expect(
-      (await stores.adapter.getPublished('pages', 'home', 'en'))?.fields['description'],
+      (await stores.adapter.getPublished('pages', 'home', 'en'))?.fields.description,
     ).toBeUndefined()
   })
 

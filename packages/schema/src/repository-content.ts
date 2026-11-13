@@ -45,7 +45,7 @@ export function parseRepositoryContent(
       'The file contract differs from the active contract. Review and adopt the active definition explicitly.',
     )
   const id = envelope.identity
-  let locale = typeof data['locale'] === 'string' ? data['locale'] : undefined
+  let locale = typeof data.locale === 'string' ? data.locale : undefined
   if (id !== undefined) {
     const identity = z
       .object({

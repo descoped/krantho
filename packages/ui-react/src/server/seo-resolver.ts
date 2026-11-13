@@ -68,16 +68,16 @@ export const resolveSeoContent = cache(
 
     // Resolve with priority: seo properties → CMS fields (via field map) → site defaults
     const title =
-      str(seoProps['headline']) ||
-      str(seoProps['name']) ||
+      str(seoProps.headline) ||
+      str(seoProps.name) ||
       resolveSeoField(fieldMap, 'title', cmsFields) ||
       slug
 
     const description =
-      str(seoProps['description']) || resolveSeoField(fieldMap, 'description', cmsFields) || ''
+      str(seoProps.description) || resolveSeoField(fieldMap, 'description', cmsFields) || ''
 
     const image =
-      str(seoProps['image']) ||
+      str(seoProps.image) ||
       resolveSeoField(fieldMap, 'image', cmsFields) ||
       str(siteProps['og-default-image']) ||
       undefined
@@ -87,24 +87,23 @@ export const resolveSeoContent = cache(
     const ogDescription = resolveSeoField(fieldMap, 'ogDescription', cmsFields) || description
     const ogImage = resolveSeoField(fieldMap, 'ogImage', cmsFields) || image
     const ogType = resolveSeoField(fieldMap, 'ogType', cmsFields) || 'website'
-    const siteName = str(siteProps['name']) || undefined
+    const siteName = str(siteProps.name) || undefined
     const twitterHandle = str(siteProps['twitter-handle']) || undefined
 
     const canonicalUrl =
-      str(seoProps['url']) || resolveSeoField(fieldMap, 'canonicalUrl', cmsFields) || undefined
+      str(seoProps.url) || resolveSeoField(fieldMap, 'canonicalUrl', cmsFields) || undefined
 
     return {
       title,
       description,
       image,
       canonical: canonicalUrl,
-      author:
-        str(seoProps['author']) || resolveSeoField(fieldMap, 'author', cmsFields) || undefined,
+      author: str(seoProps.author) || resolveSeoField(fieldMap, 'author', cmsFields) || undefined,
       datePublished:
-        str(seoProps['datePublished']) ||
+        str(seoProps.datePublished) ||
         resolveSeoField(fieldMap, 'datePublished', cmsFields) ||
         undefined,
-      dateModified: str(seoProps['dateModified']) || undefined,
+      dateModified: str(seoProps.dateModified) || undefined,
       og: {
         title: ogTitle,
         description: ogDescription,

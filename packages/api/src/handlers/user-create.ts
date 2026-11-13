@@ -16,9 +16,9 @@ export const userCreate: ApiHandler = async (req, ctx) => {
     return { status: 400, body: { error: 'Request body is required' } }
   }
 
-  const email = typeof body['email'] === 'string' ? body['email'] : undefined
-  const name = typeof body['name'] === 'string' ? body['name'] : undefined
-  const role = typeof body['role'] === 'string' ? body['role'] : 'viewer'
+  const email = typeof body.email === 'string' ? body.email : undefined
+  const name = typeof body.name === 'string' ? body.name : undefined
+  const role = typeof body.role === 'string' ? body.role : 'viewer'
 
   if (!email) {
     return { status: 400, body: { error: 'Email is required' } }

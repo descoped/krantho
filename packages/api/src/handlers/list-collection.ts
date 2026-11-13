@@ -8,7 +8,7 @@ import { listPage } from './list-query.js'
  * `view=meta` lists the meta alone: what a screen that shows rows needs, at a fraction of the size.
  */
 export const listCollection: ApiHandler = async (req, ctx) => {
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
   return listPage(req.query, ctx, [validated.collection])
 }

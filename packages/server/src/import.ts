@@ -132,7 +132,7 @@ export async function autoImport(
           {
             ...result.data,
             publication: publicationOfFile(
-              typeof fields['status'] === 'string' ? fields['status'] : defaultStatus,
+              typeof fields.status === 'string' ? fields.status : defaultStatus,
             ),
             expectedVersion: 0,
           },

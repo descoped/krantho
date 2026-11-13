@@ -338,7 +338,7 @@ interface ReportedProvider {
 }
 
 function providerOf(body: Record<string, unknown>, name: string): ReportedProvider {
-  const found = (body['providers'] as ReportedProvider[]).find((entry) => entry.provider === name)
+  const found = (body.providers as ReportedProvider[]).find((entry) => entry.provider === name)
   if (!found) throw new Error(`No ${name} in the report`)
   return found
 }
@@ -428,7 +428,7 @@ describe('a provider is on when it has a key', () => {
   it('reports nothing on, and nothing in use, when no provider has a key', async () => {
     const body = await settingsBody({ provider: null })
     expect(body).toMatchObject({ configured: false, provider: null, model: null })
-    for (const entry of body['providers'] as ReportedProvider[]) expect(entry.ready).toBe(false)
+    for (const entry of body.providers as ReportedProvider[]) expect(entry.ready).toBe(false)
   })
 
   it('never lends a provider the key of another', async () => {
@@ -445,7 +445,7 @@ describe('a provider is on when it has a key', () => {
       provider: null,
       env: { KRANTHO_LLM_API_KEY: ENV_KEY, CLAUDE_CODE_OAUTH_TOKEN: OAUTH },
     })
-    for (const entry of body['providers'] as ReportedProvider[]) expect(entry.ready).toBe(false)
+    for (const entry of body.providers as ReportedProvider[]) expect(entry.ready).toBe(false)
     const headers = await sentHeaders({ env: { KRANTHO_LLM_API_KEY: ENV_KEY } })
     expect(headers['x-api-key']).toBe('')
     expect(headers.authorization).toBeUndefined()

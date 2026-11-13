@@ -14,8 +14,8 @@ export const authMe: ApiHandler = async (req, ctx) => {
     }
   }
 
-  const cookieToken = parseCookie(req.headers?.['cookie'], accessCookieName(auth.session))
-  const authHeader = req.headers?.['authorization']
+  const cookieToken = parseCookie(req.headers?.cookie, accessCookieName(auth.session))
+  const authHeader = req.headers?.authorization
   const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : undefined
   const token = cookieToken ?? bearerToken
 

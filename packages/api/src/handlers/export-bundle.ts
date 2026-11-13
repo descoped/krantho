@@ -22,7 +22,7 @@ export const exportBundle: ApiHandler = async (req, ctx): Promise<ApiResponse> =
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
 
-  const state = req.query['state'] ?? 'current'
+  const state = req.query.state ?? 'current'
   if (state !== 'current' && state !== 'published')
     return { status: 400, body: { error: 'State must be current or published' } }
   if (!canQuery(ctx.adapter))

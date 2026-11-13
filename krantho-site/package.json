@@ -27,16 +27,16 @@
     "marked": "^18.2.0",
     "minisearch": "^7.2.0",
     "next": "~16.4.6",
-    "postgres": "^3.4.9",
+    "postgres": "^4.1.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "shiki": "^4.6.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/node": "^25.9.9",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "note": "The krantho website, built with krantho on the workspace's own packages."
 }

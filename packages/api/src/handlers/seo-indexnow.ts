@@ -11,6 +11,6 @@ export const SEO_INDEXNOW_KEY_PATH = '/api/seo/indexnow/:key'
  */
 export const seoIndexNowKey: ApiHandler = async (req, ctx) => {
   const key = ctx.config.seo.indexNow.key
-  if (!key || req.params['key'] !== key) return { status: 404, body: { error: 'Not found' } }
+  if (!key || req.params.key !== key) return { status: 404, body: { error: 'Not found' } }
   return { status: 200, body: key, headers: { 'content-type': 'text/plain; charset=utf-8' } }
 }

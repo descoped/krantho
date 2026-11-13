@@ -51,10 +51,10 @@ async function extractIdentity(
       })
       if (userinfoRes.ok) {
         const userinfo = (await userinfoRes.json()) as Record<string, unknown>
-        email = typeof userinfo['email'] === 'string' ? userinfo['email'] : undefined
-        emailVerified = readEmailVerified(userinfo['email_verified'])
+        email = typeof userinfo.email === 'string' ? userinfo.email : undefined
+        emailVerified = readEmailVerified(userinfo.email_verified)
         if (!name) {
-          name = typeof userinfo['name'] === 'string' ? userinfo['name'] : undefined
+          name = typeof userinfo.name === 'string' ? userinfo.name : undefined
         }
       }
     } catch {
@@ -234,19 +234,19 @@ export const authCallback: ApiHandler = async (req, ctx) => {
   const clearState = clearOidcStateCookie(auth, req.headers)
   const refuse = (message: string): ApiResponse => refuseSignIn(auth, message, clearState)
 
-  const code = req.query['code']
-  const state = req.query['state']
-  const error = req.query['error']
+  const code = req.query.code
+  const state = req.query.state
+  const error = req.query.error
 
   if (error) {
-    const desc = req.query['error_description'] ?? error
+    const desc = req.query.error_description ?? error
     return refuse(`Authentication failed: ${desc}`)
   }
   if (!code || !state) {
     return refuse('Missing code or state parameter')
   }
 
-  const sealed = parseCookie(req.headers?.['cookie'], oidcStateCookieName(auth.session))
+  const sealed = parseCookie(req.headers?.cookie, oidcStateCookieName(auth.session))
   const pending = openOidcState(sealed, jwtSecret)
   if (!pending || pending.state !== state) {
     return refuse('Invalid or expired state parameter')

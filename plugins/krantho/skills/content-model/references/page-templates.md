@@ -160,7 +160,7 @@ render step (Express) over the loader from `createContentLoader({ config, collec
 ```ts
 // src/routes/features/[slug]/+page.server.ts
 import { error } from '@sveltejs/kit'
-import { loadContent, loadJsonLd } from '$lib/cms'
+import { loadContent, loadJsonLd } from '#lib/cms.ts'
 
 export async function load({ params }) {
   const feature = await loadContent('features', params.slug)
@@ -171,7 +171,7 @@ export async function load({ params }) {
 
 ```ts
 // src/routes/features/+page.server.ts
-import { loadCollection } from '$lib/cms'
+import { loadCollection } from '#lib/cms.ts'
 
 export async function load() {
   return { features: await loadCollection('features') }

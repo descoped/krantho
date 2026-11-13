@@ -37,8 +37,8 @@ export async function saveDocumentSeo(
   changedBy = changedByFromAuth(ctx.auth),
 ): Promise<SaveDocumentResult> {
   const metadata = { ...document.metadata }
-  if (config) metadata['seo'] = config as unknown as Record<string, unknown>
-  else delete metadata['seo']
+  if (config) metadata.seo = config as unknown as Record<string, unknown>
+  else delete metadata.seo
   return saveDocument(ctx, {
     collection: document.meta.collection,
     slug: document.meta.slug,

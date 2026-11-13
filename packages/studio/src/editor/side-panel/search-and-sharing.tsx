@@ -17,7 +17,7 @@ import { useSocialImage } from './use-social-image.js'
 
 /** The fields SEO discovers its concepts in: the schema's and any the draft holds besides */
 function draftMeta(doc: PanelDocument): EffectiveMeta {
-  const description = documentSeoProperties(doc.draft.metadata)['description']
+  const description = documentSeoProperties(doc.draft.metadata).description
   return typeof description === 'string' && description.trim()
     ? { text: description, source: 'metadata' }
     : effectiveMetaDescription(doc.draft.fields)
@@ -25,7 +25,7 @@ function draftMeta(doc: PanelDocument): EffectiveMeta {
 
 function draftTitle(doc: PanelDocument, names: string[]): string {
   const properties = documentSeoProperties(doc.draft.metadata)
-  const own = properties['headline'] ?? properties['name']
+  const own = properties.headline ?? properties.name
   return typeof own === 'string' && own.trim()
     ? own
     : resolveSeoField(buildSeoFieldMap(names), 'title', doc.draft.fields)
@@ -152,7 +152,7 @@ function LengthChecks({
 
 /** The checks that sit under the search fields, and the image the page falls back to without its own */
 function fieldChecks(doc: PanelDocument, limits: SeoLimits): SharingChecks {
-  const ownImage = doc.draft.metadata['sharing']?.['image'] !== undefined
+  const ownImage = doc.draft.metadata.sharing?.image !== undefined
   return {
     description: <MetaMeter meta={draftMeta(doc)} limits={limits} label="Length" />,
     title: (

@@ -15,7 +15,7 @@ export const sequenceDecorator: Decorator = {
     const { name, url } = sequence.partOf
     if (!nodeById(graph, url)) graph.push({ '@type': 'CollectionPage', '@id': url, name, url })
     addValue(node, 'isPartOf', ref(url))
-    node['position'] = sequence.position
+    node.position = sequence.position
     return graph
   },
 }

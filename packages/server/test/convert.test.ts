@@ -15,8 +15,8 @@ describe('toApiRequest', () => {
     const request = new Request('http://localhost:3000/api/content/blog?status=published&limit=10')
     const result = await toApiRequest(request)
 
-    expect(result.query['status']).toBe('published')
-    expect(result.query['limit']).toBe('10')
+    expect(result.query.status).toBe('published')
+    expect(result.query.limit).toBe('10')
   })
 
   it('extracts headers as lowercase keys', async () => {
@@ -25,7 +25,7 @@ describe('toApiRequest', () => {
     })
     const result = await toApiRequest(request)
 
-    expect(result.headers?.['authorization']).toBe('Bearer test-token')
+    expect(result.headers?.authorization).toBe('Bearer test-token')
     expect(result.headers?.['x-custom']).toBe('value')
   })
 
@@ -39,7 +39,7 @@ describe('toApiRequest', () => {
 
     expect(result.method).toBe('POST')
     const body = result.body as Record<string, unknown>
-    expect(body['slug']).toBe('test')
+    expect(body.slug).toBe('test')
   })
 
   it('handles PUT request with body', async () => {
@@ -100,7 +100,7 @@ describe('toResponse', () => {
     })
 
     const json = (await response.json()) as Record<string, unknown>
-    const items = json['items'] as Array<{ slug: string }>
+    const items = json.items as Array<{ slug: string }>
     expect(items).toHaveLength(2)
   })
 

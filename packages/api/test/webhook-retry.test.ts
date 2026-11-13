@@ -97,7 +97,7 @@ describe('POST /api/webhooks/deliveries/:id/retry', () => {
     expect(response.status).toBe(202)
     const { delivery } = response.body as { delivery: Record<string, unknown> }
     expect(delivery).toMatchObject({ id, url: HOOK.url, attempts: MAX_WEBHOOK_ATTEMPTS - 1 })
-    expect(delivery['deliveredAt']).toBeNull()
+    expect(delivery.deliveredAt).toBeNull()
   })
 
   it('sends the stored payload to the configured webhook again, signed with its secret', async () => {

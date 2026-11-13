@@ -108,7 +108,7 @@ function useDismissibleTooltips(containerRef: RefObject<HTMLDivElement | null>):
     }
     const onKeyDown = (event: KeyboardEvent): void => {
       // Only the collapsed rail shows tooltips
-      if (event.key !== 'Escape' || container.dataset['mode'] !== 'collapsed') return
+      if (event.key !== 'Escape' || container.dataset.mode !== 'collapsed') return
       for (const item of container.querySelectorAll('.nav-item:hover, .nav-item:focus')) {
         item.setAttribute('data-tip-dismissed', '')
         dismissed.add(item)

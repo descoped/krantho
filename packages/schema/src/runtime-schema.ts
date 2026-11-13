@@ -226,22 +226,22 @@ function applyZodModifiers(code: string, opts: CodeGenModifierOptions): string {
 }
 
 function jsonSchemaPropertyToZod(prop: Record<string, unknown>, isRequired: boolean): string {
-  const type = typeof prop['type'] === 'string' ? prop['type'] : undefined
+  const type = typeof prop.type === 'string' ? prop.type : undefined
   const enumValues =
-    Array.isArray(prop['enum']) && prop['enum'].every((v) => typeof v === 'string')
-      ? (prop['enum'] as string[])
+    Array.isArray(prop.enum) && prop.enum.every((v) => typeof v === 'string')
+      ? (prop.enum as string[])
       : undefined
-  const format = typeof prop['format'] === 'string' ? prop['format'] : undefined
+  const format = typeof prop.format === 'string' ? prop.format : undefined
 
   // Map JSON Schema format to our internal type names
   const effectiveType = format === 'email' ? 'email' : format === 'uri' ? 'uri' : (type ?? 'string')
 
   const code =
-    type === 'array' && prop['items'] && typeof prop['items'] === 'object'
-      ? `z.array(${jsonSchemaPropertyToZod(prop['items'] as Record<string, unknown>, true)})`
+    type === 'array' && prop.items && typeof prop.items === 'object'
+      ? `z.array(${jsonSchemaPropertyToZod(prop.items as Record<string, unknown>, true)})`
       : buildZodTypeCode({ type: effectiveType, enumValues })
   return applyZodModifiers(code, {
-    defaultValue: prop['default'],
+    defaultValue: prop.default,
     isRequired,
   })
 }

@@ -7,11 +7,19 @@ import (
 	"testing"
 )
 
-// writeFiles creates each named file, empty, in dir.
+// kitPackage is a package.json that lists SvelteKit
+const kitPackage = `{"devDependencies":{"@sveltejs/kit":"^3.2.0"}}`
+
+// writeFiles creates each named file in dir: package.json lists SvelteKit,
+// every other file is empty.
 func writeFiles(t *testing.T, dir string, names ...string) {
 	t.Helper()
 	for _, name := range names {
-		if err := os.WriteFile(filepath.Join(dir, name), nil, 0o644); err != nil {
+		var content []byte
+		if name == "package.json" {
+			content = []byte(kitPackage)
+		}
+		if err := os.WriteFile(filepath.Join(dir, name), content, 0o644); err != nil {
 			t.Fatalf("write %s: %v", name, err)
 		}
 	}
@@ -28,15 +36,14 @@ func TestDetectFramework(t *testing.T) {
 		{"next.config.ts", []string{"next.config.ts"}, "Next.js", "npx next dev", "npx next build"},
 		{"next.config.js", []string{"next.config.js"}, "Next.js", "npx next dev", "npx next build"},
 		{"next.config.mjs", []string{"next.config.mjs"}, "Next.js", "npx next dev", "npx next build"},
-		{"svelte.config.js", []string{"svelte.config.js"}, "SvelteKit", "npx vite dev", "npx vite build"},
-		{"svelte.config.ts", []string{"svelte.config.ts"}, "SvelteKit", "npx vite dev", "npx vite build"},
+		{"@sveltejs/kit in package.json", []string{"package.json"}, "SvelteKit", "npx vite dev", "npx vite build"},
 		{"vite.config.ts", []string{"vite.config.ts"}, "Vite", "npx vite", "npx vite build"},
 		{"vite.config.js", []string{"vite.config.js"}, "Vite", "npx vite", "npx vite build"},
 		{
-			// A real SvelteKit project ships both configs — the svelte
-			// config must win over the vite fallback.
-			"svelte config beats the vite config it ships with",
-			[]string{"svelte.config.js", "vite.config.ts"},
+			// A SvelteKit project configures SvelteKit in its vite config;
+			// the dependency must win over the vite fallback.
+			"sveltekit beats the vite config it ships with",
+			[]string{"package.json", "vite.config.ts"},
 			"SvelteKit", "npx vite dev", "npx vite build",
 		},
 	}
@@ -73,7 +80,7 @@ func TestDetectFramework(t *testing.T) {
 		}
 		for _, name := range []string{
 			"next.config.ts", "next.config.js", "next.config.mjs",
-			"svelte.config.js", "svelte.config.ts",
+			"@sveltejs/kit in package.json",
 			"vite.config.ts", "vite.config.js",
 		} {
 			if !strings.Contains(err.Error(), name) {

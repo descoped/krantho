@@ -50,12 +50,12 @@ function strictCompatible(node: unknown): boolean {
   if (Array.isArray(node)) return node.every(strictCompatible)
   if (typeof node !== 'object' || node === null) return true
   const schema = node as Record<string, unknown>
-  if (schema['type'] === 'object') {
+  if (schema.type === 'object') {
     const { properties, required } = schema
     const names =
       typeof properties === 'object' && properties !== null ? Object.keys(properties) : []
     const listed = Array.isArray(required) ? required : []
-    if (schema['additionalProperties'] !== false) return false
+    if (schema.additionalProperties !== false) return false
     if (!names.every((name) => listed.includes(name))) return false
   }
   return Object.values(schema).every(strictCompatible)
@@ -103,7 +103,7 @@ export class OpenAIFormatAdapter implements LLMAdapter {
     const { profile, maxTokensParam, reasoningParam, baseUrl, model } = this.options
     const body: Record<string, unknown> = { model, messages }
     if (options?.jsonSchema !== undefined && this.supportsJsonSchema) {
-      body['response_format'] = {
+      body.response_format = {
         type: 'json_schema',
         json_schema: {
           name: 'response',

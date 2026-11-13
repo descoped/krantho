@@ -61,7 +61,7 @@ export const updateLocaleSettings: ApiHandler = async (req, ctx) => {
   if (!bodyCheck.isValid) return bodyCheck.response
 
   const payload = bodyCheck.body as Record<string, unknown>
-  const requested = payload['supportedLocales']
+  const requested = payload.supportedLocales
 
   if (!Array.isArray(requested) || !requested.every((l: unknown) => typeof l === 'string')) {
     return { status: 400, body: { error: 'supportedLocales must be an array of locale codes' } }

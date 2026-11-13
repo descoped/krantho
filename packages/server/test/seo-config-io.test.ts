@@ -112,7 +112,7 @@ describe('applySeedConfig', () => {
     )
 
     const config = await adapter.getConfig('site')
-    expect(config?.config.entities[0]?.properties['name']).toBe('Existing')
+    expect(config?.config.entities[0]?.properties.name).toBe('Existing')
   })
 
   it('overwrite mode replaces existing rows', async () => {
@@ -132,7 +132,7 @@ describe('applySeedConfig', () => {
     )
 
     const config = await adapter.getConfig('site')
-    expect(config?.config.entities[0]?.properties['name']).toBe('New')
+    expect(config?.config.entities[0]?.properties.name).toBe('New')
   })
 })
 

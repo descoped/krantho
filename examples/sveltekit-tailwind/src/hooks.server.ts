@@ -1,4 +1,4 @@
-import type { Handle } from '@sveltejs/kit'
+import type { Handle } from '@sveltejs/kit/hooks'
 import { createPageCacheHandle } from '@krantho/server-sveltekit'
 import config from '../krantho.config'
 

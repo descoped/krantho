@@ -106,7 +106,7 @@ export function redact(config: KranthoConfig | KranthoConfigTree): Record<string
     if (getPath(clone, path) !== undefined) setPath(clone, path, REDACTED)
   }
   // A webhook's secret sits inside a list, which no dotted path reaches
-  for (const hook of clone['webhooks'] as WebhookTarget[]) {
+  for (const hook of clone.webhooks as WebhookTarget[]) {
     if (hook.secret !== undefined) hook.secret = REDACTED
   }
 

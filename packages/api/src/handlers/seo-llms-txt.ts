@@ -27,7 +27,7 @@ function oneLine(text: string): string {
 async function siteSummary(ctx: ApiContext, overrides: LlmsTxtOverrides): Promise<string> {
   if (overrides.summary !== undefined) return oneLine(overrides.summary)
   const config = await ctx.seoConfigAdapter?.getConfig('site')
-  const description = config?.config.entities[0]?.properties['description']
+  const description = config?.config.entities[0]?.properties.description
   return typeof description === 'string' ? oneLine(description) : ''
 }
 

@@ -180,7 +180,7 @@ test.describe('pulse', () => {
     const ahead = live.filter(({ meta }) => (meta.liveVersion ?? 0) < meta.version)
     const covered = pages.filter(({ fields }) => hasText(fields['meta-description']))
     const fallback = pages.filter(
-      ({ fields }) => !hasText(fields['meta-description']) && hasText(fields['description']),
+      ({ fields }) => !hasText(fields['meta-description']) && hasText(fields.description),
     )
     const missing = pages.length - covered.length - fallback.length
 
@@ -230,9 +230,9 @@ test.describe('pulse', () => {
     page,
   }) => {
     const cases = [
-      [`Review: ${AHEAD.fields['title']} has unpublished changes`, AHEAD.slug],
-      [`Open: ${LOCKED.fields['title']} is being edited by ${OTHER_USER}`, LOCKED.slug],
-      [`Fix: ${NO_META.fields['title']} has no meta description`, NO_META.slug],
+      [`Review: ${AHEAD.fields.title} has unpublished changes`, AHEAD.slug],
+      [`Open: ${LOCKED.fields.title} is being edited by ${OTHER_USER}`, LOCKED.slug],
+      [`Fix: ${NO_META.fields.title} has no meta description`, NO_META.slug],
     ] as const
     for (const [action, slug] of cases) {
       const main = await openPulse(page)

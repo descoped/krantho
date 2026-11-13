@@ -87,7 +87,7 @@ test.describe('Assistant', () => {
       )
       const saved = await readDocument(target, slug)
       expect(saved.meta.liveVersion).toBeNull()
-      expect(saved.fields['title']).toBe('Opening hours')
+      expect(saved.fields.title).toBe('Opening hours')
     })
   })
 

@@ -118,7 +118,7 @@ The CLI asks the following questions in order:
 - The `dev` script is `next dev --port <port>`; Next.js loads `.env` itself
 
 **SvelteKit projects**:
-- `svelte.config.js`, `vite.config.ts`, `src/app.html`, `src/app.css`
+- `vite.config.ts` (SvelteKit and its adapter), `src/app.html`, `src/app.css`
 - `src/lib/cms.ts` -- `loadContent(collection, slug)` reads the published version through `createContentLoader({ config, collections })` from `@krantho/server-sveltekit` and renders it with `renderContent()`; returns `{ fields, html }`, or `null` when nothing is published (the page answers 404)
 - `src/routes/api/[...path]/+server.ts` -- `createApiHandlers({ config, collections })`
 - `src/routes/studio/[...path]/+server.ts` -- `createStudioHandler({ config })`: Studio at `/studio`, the address the scaffolder tells you to open

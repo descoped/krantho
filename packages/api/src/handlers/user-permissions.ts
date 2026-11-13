@@ -34,8 +34,8 @@ export const userPermissionsSet: ApiHandler = async (req, ctx) => {
   const id = idResult.value
 
   const body = req.body as Record<string, unknown> | undefined
-  const collection = typeof body?.['collection'] === 'string' ? body['collection'] : undefined
-  const role = typeof body?.['role'] === 'string' ? body['role'] : undefined
+  const collection = typeof body?.collection === 'string' ? body.collection : undefined
+  const role = typeof body?.role === 'string' ? body.role : undefined
 
   if (!collection || !role) {
     return { status: 400, body: { error: 'collection and role are required' } }

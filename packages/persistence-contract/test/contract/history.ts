@@ -10,12 +10,12 @@ export function historyCases(factory: ContractFactory): void {
     it('current reads the newer draft, published the live version before it', async () => {
       const current = await run({ state: 'current', projection: 'summary', collections: ['pages'] })
       const draft = current.items.find((item) => item.meta.slug === 'live-draft')
-      expect(draft?.fields['title']).toBe('Newer')
+      expect(draft?.fields.title).toBe('Newer')
       expect(draft?.meta).toMatchObject({ version: 2, liveVersion: 1, status: 'published' })
 
       const live = await run({ state: 'published', projection: 'full', collections: ['pages'] })
       const liveDraft = live.items.find((item) => item.meta.slug === 'live-draft')
-      expect(liveDraft?.fields['title']).toBe('Live')
+      expect(liveDraft?.fields.title).toBe('Live')
       expect(liveDraft?.body).toBe('Live body.')
       expect(liveDraft?.meta.version).toBe(1)
     })

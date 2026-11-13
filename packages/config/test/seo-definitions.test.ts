@@ -56,7 +56,7 @@ properties: {}
     expect(config.site?.entities).toHaveLength(2)
     expect(config.site?.entities[0]?.['@type']).toBe('ProfessionalService')
     expect(config.site?.entities[0]?.role).toBe('primary')
-    expect(config.site?.entities[0]?.properties['name']).toBe('Acme')
+    expect(config.site?.entities[0]?.properties.name).toBe('Acme')
     expect(config.site?.entities[1]?.['@type']).toBe('WebSite')
   })
 
@@ -83,8 +83,8 @@ properties: {}
 
     const config = readSeoDefinitions(tempDir)
     expect(config.collections).toBeDefined()
-    expect(config.collections?.['pages']?.entities).toHaveLength(2)
-    expect(config.collections?.['pages']?.entities[0]?.['@type']).toBe('Article')
+    expect(config.collections?.pages?.entities).toHaveLength(2)
+    expect(config.collections?.pages?.entities[0]?.['@type']).toBe('Article')
   })
 
   it('loads field mappings', async () => {
@@ -128,7 +128,7 @@ kind: item
     )
 
     const config = readSeoDefinitions(tempDir)
-    expect(config.collections['docs']).toEqual({
+    expect(config.collections.docs).toEqual({
       entities: [{ '@type': 'Article', properties: {} }],
       structure: { trail: [{ name: 'Docs', url: '/docs' }], kind: 'item' },
     })
@@ -153,7 +153,7 @@ kind: item
 
     const config = readSeoDefinitions(tempDir)
     expect(config.site?.entities[0]?.['@type']).toBe('Organization')
-    expect(config.site?.entities[0]?.properties['name']).toBe('Test')
+    expect(config.site?.entities[0]?.properties.name).toBe('Test')
   })
 
   it('loads route scopes with slug-encoded patterns', async () => {
@@ -171,7 +171,7 @@ properties:
 
     const config = readSeoDefinitions(tempDir)
     expect(config.routes).toBeDefined()
-    expect(config.routes?.['/services/strategic/*']?.entities[0]?.properties['category']).toBe(
+    expect(config.routes?.['/services/strategic/*']?.entities[0]?.properties.category).toBe(
       'Strategic Consulting',
     )
   })
@@ -308,7 +308,7 @@ describe('loadConfig', () => {
     expect(config.seo.definitions.site?.entities).toEqual([
       { '@type': 'Organization', properties: {} },
     ])
-    expect(config.seo.definitions.collections['posts']?.entities[0]?.['@type']).toBe('Article')
+    expect(config.seo.definitions.collections.posts?.entities[0]?.['@type']).toBe('Article')
     expect(config.sources.get('seo.definitions')).toBe('file')
   })
 

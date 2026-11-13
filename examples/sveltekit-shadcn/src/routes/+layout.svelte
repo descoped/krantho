@@ -1,11 +1,11 @@
 <script lang="ts">
   import '../app.css'
-  import { textFields } from '$lib/text'
+  import { textFields } from '#lib/text.ts'
   import type { Snippet } from 'svelte'
   import type { LayoutData } from './$types'
   import { JsonLd } from '@krantho/ui-svelte'
-  import ThemeToggle from '$lib/components/ThemeToggle.svelte'
-  import Footer from '$lib/components/Footer.svelte'
+  import ThemeToggle from '#lib/components/ThemeToggle.svelte'
+  import Footer from '#lib/components/Footer.svelte'
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props()
 
