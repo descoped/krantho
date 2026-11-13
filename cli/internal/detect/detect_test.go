@@ -89,6 +89,19 @@ func TestDetectFramework(t *testing.T) {
 		}
 	})
 
+	t.Run("a package.json that does not parse is named in the error", func(t *testing.T) {
+		dir := t.TempDir()
+		if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte("{"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+
+		_, err := Detect(dir)
+
+		if err == nil || !strings.Contains(err.Error(), "package.json:") {
+			t.Fatalf("error %v should say package.json could not be parsed", err)
+		}
+	})
+
 	t.Run("pnpm-lock.yaml selects pnpm exec", func(t *testing.T) {
 		dir := t.TempDir()
 		writeFiles(t, dir, "next.config.ts", "pnpm-lock.yaml")

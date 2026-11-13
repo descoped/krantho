@@ -4,7 +4,9 @@ package detect
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -70,13 +72,17 @@ func Detect(dir string) (Framework, error) {
 	if fileExists(filepath.Join(dir, "pnpm-lock.yaml")) {
 		packageManager = "pnpm"
 	}
-	dependencies := packageDependencies(dir)
+	dependencies, manifestErr := packageDependencies(dir)
 	for _, c := range candidates {
 		if c.matches(dir, dependencies) {
 			framework := c.framework
 			framework.PackageManager = packageManager
 			return framework, nil
 		}
+	}
+	if manifestErr != nil {
+		return Framework{}, fmt.Errorf("no framework detected in %s (looked for %s; package.json: %w)",
+			dir, strings.Join(knownMarkers(), ", "), manifestErr)
 	}
 	return Framework{}, fmt.Errorf("no framework detected in %s (looked for %s)",
 		dir, strings.Join(knownMarkers(), ", "))
@@ -97,19 +103,23 @@ func (c candidate) matches(dir string, dependencies map[string]bool) bool {
 }
 
 // packageDependencies names every dependency and devDependency in dir's
-// package.json; none when it is missing or unreadable.
-func packageDependencies(dir string) map[string]bool {
+// package.json: none when there is no package.json, and an error when it
+// cannot be read or parsed.
+func packageDependencies(dir string) (map[string]bool, error) {
 	names := map[string]bool{}
 	data, err := os.ReadFile(filepath.Join(dir, "package.json"))
+	if errors.Is(err, fs.ErrNotExist) {
+		return names, nil
+	}
 	if err != nil {
-		return names
+		return names, err
 	}
 	var manifest struct {
 		Dependencies    map[string]string `json:"dependencies"`
 		DevDependencies map[string]string `json:"devDependencies"`
 	}
-	if json.Unmarshal(data, &manifest) != nil {
-		return names
+	if err := json.Unmarshal(data, &manifest); err != nil {
+		return names, err
 	}
 	for name := range manifest.Dependencies {
 		names[name] = true
@@ -117,7 +127,7 @@ func packageDependencies(dir string) map[string]bool {
 	for name := range manifest.DevDependencies {
 		names[name] = true
 	}
-	return names
+	return names, nil
 }
 
 // DevCommand is the dev-server command line through the package manager's
