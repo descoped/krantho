@@ -121,3 +121,26 @@ jobs:
       - run: pnpm exec vitest run packages/studio
         env:
           KRANTHO_TEST_API_DELAY_MS: '100'
+
+  # The workspace links and bundles its own packages, so its tests never load them the way
+  # an installed site does. This packs every package, installs the packs into a project
+  # create-krantho generates, outside the workspace, and checks that its pages, API and
+  # Studio answer.
+  packed-install:
+    name: Install from packs (${{ matrix.framework }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: [nextjs, sveltekit]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: sh scripts/check-packed-install.sh ${{ matrix.framework }}

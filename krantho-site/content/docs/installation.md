@@ -44,17 +44,22 @@ pnpm add @krantho/node @krantho/server-node @krantho/ui-react @krantho/config @k
 
 ### Allow SQLite's native build
 
-The default SQLite store runs on `better-sqlite3`, whose install step fetches or builds its native binary. pnpm 10 and npm 12 skip install steps until you allow them, and SQLite then fails to load. Allow it once per project:
+The default SQLite store runs on `better-sqlite3`, whose install step fetches or builds its native binary. pnpm and npm 12 skip install steps until you allow them, and SQLite then fails to load. Allow it once per project. With pnpm, put this in `pnpm-workspace.yaml` at the project root and run `pnpm install` again; pnpm 10 reads the first setting, pnpm 11 and later the second:
+
+```yaml
+onlyBuiltDependencies:
+  - better-sqlite3
+allowBuilds:
+  better-sqlite3: true
+```
+
+With npm 12, review the pending install steps and allow `better-sqlite3`:
 
 ```bash
-# pnpm 10: approve better-sqlite3 when asked, which records it in package.json
-pnpm approve-builds
-
-# npm 12: review the pending install steps and allow better-sqlite3
 npm approve-scripts --allow-scripts-pending
 ```
 
-A site on Postgres only does not need it.
+A project from `create-krantho` with pnpm already has the setting. A site on Postgres only does not need it.
 
 `@krantho/node` does not bundle a UI library on purpose — pick one yourself: `@krantho/ui-react`, `@krantho/ui-svelte`, `@krantho/ui-mui` or `@krantho/ui-tailwind`.
 

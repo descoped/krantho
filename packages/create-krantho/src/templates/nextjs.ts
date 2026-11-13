@@ -37,10 +37,10 @@ function packageJson(options: ProjectOptions): string {
     '@krantho/server-next': KRANTHO_RANGE,
     '@krantho/ui-react': KRANTHO_RANGE,
     '@krantho/schema': KRANTHO_RANGE,
-    next: '^16.2.1',
-    react: '^19.2.4',
-    'react-dom': '^19.2.4',
-    zod: '^4.4.3',
+    next: '^16.4.6',
+    react: '^19.3.1',
+    'react-dom': '^19.3.1',
+    zod: '^4.6.7',
   }
 
   if (options.ui === 'tailwind') {
@@ -56,7 +56,7 @@ function packageJson(options: ProjectOptions): string {
 
   const devDeps: Record<string, string> = {
     '@types/node': '^25.5.0',
-    '@types/react': '^19.2.14',
+    '@types/react': '^19.3.0',
     typescript: '^6.0.2',
   }
 

@@ -50,9 +50,11 @@ is no page builder: content is fields plus a markdown body, and layout stays in 
 krantho is released: `create-krantho` and every `@krantho/*` package are on npm, and the code
 is in the public `descoped/krantho` repository. All packages share one version.
 
-The default SQLite store runs on `better-sqlite3`, whose install step pnpm 10 and npm 12 skip
-until it is allowed: run `pnpm approve-builds` (or `npm approve-scripts --allow-scripts-pending`)
-and allow it. A site on Postgres only does not need it.
+The default SQLite store runs on `better-sqlite3`, whose install step pnpm and npm 12 skip
+until it is allowed. With pnpm, add to `pnpm-workspace.yaml` both `onlyBuiltDependencies:
+[better-sqlite3]` (pnpm 10) and `allowBuilds: { better-sqlite3: true }` (pnpm 11 and later),
+then `pnpm install`; with npm 12, `npm approve-scripts --allow-scripts-pending`. `create-krantho`
+writes the pnpm setting itself. A site on Postgres only does not need it.
 
 ## Workflow
 

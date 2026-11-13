@@ -116,6 +116,21 @@ describe.each<Framework>(['nextjs', 'sveltekit'])(
   },
 )
 
+describe('pnpm build approval', () => {
+  it('allows better-sqlite3 to build under pnpm 10 and pnpm 11 or later', () => {
+    const settings = file(generateFiles(options('nextjs', false)), 'pnpm-workspace.yaml')
+
+    expect(settings).toContain('onlyBuiltDependencies:\n  - better-sqlite3\n')
+    expect(settings).toContain('allowBuilds:\n  better-sqlite3: true\n')
+  })
+
+  it('writes no pnpm settings for another package manager', () => {
+    const files = generateFiles({ ...options('sveltekit', false), packageManager: 'npm' })
+
+    expect(files.has('pnpm-workspace.yaml')).toBe(false)
+  })
+})
+
 describe('nextjs template sitemap and robots.txt', () => {
   it('serves both at the site root from the krantho API', () => {
     const config = file(generateFiles(options('nextjs', false)), 'next.config.ts')
