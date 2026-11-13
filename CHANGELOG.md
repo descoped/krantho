@@ -3,6 +3,22 @@
 Every krantho release, newest first. Versions follow [semver.org](https://semver.org); a release's tag is
 `vMAJOR.MINOR.PATCH`.
 
+## 1.0.1 - 2026-11-13
+
+### Fixed
+
+- Next.js sites installed from npm start: `@krantho/server-next` imports `next/server`, `next/cache` and
+  `next/headers` with their file extension, which Node's resolver needs when Next loads the package as an external.
+  In 1.0.0 every page, the API and Studio answered 500.
+- Studio is found under every package manager: `@krantho/server` depends on `@krantho/studio` and resolves it from
+  its own dependencies, so `/studio` loads under pnpm's strict layout.
+
+### Changed
+
+- Every published package has a description, and packages are published through npm trusted publishing, with
+  provenance.
+- Dependencies are updated to their patched versions.
+
 ## 1.0.0 - 2026-11-12
 
 The first public release, and the first on npm. Krantho grew through 0.x releases in a private repository; this

@@ -1,6 +1,6 @@
 {
   "name": "@krantho/schema",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Typed krantho content collections defined with Zod schemas, with validation, type inference and runtime schema merging.",
   "license": "MIT",
   "homepage": "https://krantho.com",

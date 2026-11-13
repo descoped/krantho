@@ -1,6 +1,6 @@
 {
   "name": "@krantho/studio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Studio, the krantho dashboard for editors: a prebuilt React single-page app that every krantho server serves at /studio.",
   "license": "MIT",
   "homepage": "https://krantho.com",

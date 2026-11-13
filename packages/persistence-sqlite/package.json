@@ -1,6 +1,6 @@
 {
   "name": "@krantho/persistence-sqlite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "krantho's default persistence adapter, on SQLite through better-sqlite3.",
   "license": "MIT",
   "homepage": "https://krantho.com",

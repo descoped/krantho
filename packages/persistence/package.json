@@ -1,6 +1,6 @@
 {
   "name": "@krantho/persistence",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The krantho persistence contract: the interfaces for content, versions, media, auth, SEO configuration and the shared page cache.",
   "license": "MIT",
   "homepage": "https://krantho.com",
