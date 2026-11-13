@@ -1,6 +1,6 @@
 {
   "name": "@krantho/sveltekit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "One-install krantho bundle for SvelteKit — server adapter, Svelte UI, Studio, media, and SEO.",
   "license": "MIT",
   "homepage": "https://krantho.com",
