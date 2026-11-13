@@ -61,7 +61,7 @@ export function initServerLoader(
   options: ServerLoaderOptions = {},
 ): void {
   serverLoader = loader
-  renderOptions = options
+  renderOptions = { ...options }
 }
 
 function generateExcerpt(

@@ -37,6 +37,7 @@ describe('createLinkResolver', () => {
   it('serves a file beside the markdown from the site root', () => {
     expect(resolveUrl('images/library.png', inDocs)).toBe('/images/library.png')
     expect(resolveUrl('images/my%20chart.png', inDocs)).toBe('/images/my%20chart.png')
+    expect(resolveUrl('..assets/x.png', inDocs)).toBe('/..assets/x.png')
   })
 
   it('leaves addresses, and files with no page or outside the collection, as written', () => {

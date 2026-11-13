@@ -36,7 +36,7 @@ function decoded(path: string): string {
 /** The path of `target` inside `directory`, with forward slashes, or null when it is outside */
 function inside(directory: string, target: string): string | null {
   const path = relative(directory, target)
-  if (path === '' || path.startsWith('..') || isAbsolute(path)) return null
+  if (path === '' || path === '..' || path.startsWith(`..${sep}`) || isAbsolute(path)) return null
   return path.split(sep).join('/')
 }
 
