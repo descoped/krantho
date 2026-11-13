@@ -1,6 +1,6 @@
 {
   "name": "@krantho/api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The krantho REST API: framework-neutral handlers for content, versions, media, SEO, auth, plugins and webhooks, with an OpenAPI 3.1 specification.",
   "license": "MIT",
   "homepage": "https://krantho.com",

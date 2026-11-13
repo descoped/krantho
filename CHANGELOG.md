@@ -3,6 +3,25 @@
 Every krantho release, newest first. Versions follow [semver.org](https://semver.org); a release's tag is
 `vMAJOR.MINOR.PATCH`.
 
+## 1.1.1 - 2026-11-14
+
+### Added
+
+- A collection's `indexFile` names the file read as its `index` document, such as `README.md`, the file GitHub
+  shows for a folder. `index.md` is then not read.
+- `createStaticSite()` returns `site.rendering` (`basePath`, `resolveUrl`, `atNotation`) for `initServerLoader()`.
+  Relative links between markdown files (`setup.md#install`) go to their pages, and files beside them
+  (`images/flow.png`) are served from the site's root. `createLinkResolver()` builds the same resolver.
+- `renderContent()` and `MarkdownProcessor` take `resolveUrl`, and `initServerLoader()` takes `resolveUrl` and
+  `atNotation`.
+
+### Changed
+
+- The `src` and `href` of raw `<img>` and `<a>` tags in markdown are rewritten as markdown links are, for the
+  base path and the resolver.
+- A static site's pages follow `content.atNotation`.
+- The static starter writes no `.env`, and wide tables scroll on their own.
+
 ## 1.1.0 - 2026-11-13
 
 ### Added

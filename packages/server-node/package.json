@@ -1,6 +1,6 @@
 {
   "name": "@krantho/server-node",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The krantho adapter for Node.js, Express and Vite: a request handler, a Vite plugin and a standalone server.",
   "license": "MIT",
   "homepage": "https://krantho.com",
