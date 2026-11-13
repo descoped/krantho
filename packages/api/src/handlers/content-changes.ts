@@ -1,4 +1,5 @@
 import { posix, relative, sep } from 'node:path'
+import { fileNameOf, slugOfFile } from '@krantho/core'
 import {
   type ContentDocument,
   type ContentManifestRecord,
@@ -54,7 +55,7 @@ function directoryKey(contentDir: string, collection: Collection): string {
 
 /** The path of a collection's file for a slug, as the content migration keys it */
 function fileKey(contentDir: string, collection: Collection, slug: string): string {
-  return posix.join(directoryKey(contentDir, collection), `${slug}.md`)
+  return posix.join(directoryKey(contentDir, collection), fileNameOf(collection, slug))
 }
 
 /**
@@ -96,9 +97,9 @@ async function collectionWork(
   const prefix = `${directoryKey(ctx.config.paths.contentDir, collection)}/`
   for (const key of Object.keys(manifest.fileChecksums)) {
     const name = key.startsWith(prefix) ? key.slice(prefix.length) : ''
-    if (!name.endsWith('.md') || name.includes('/')) continue
-    const slug = name.slice(0, -3)
-    if (!liveSlugs.has(slug)) work.push({ kind: 'missing', slug })
+    if (name.includes('/')) continue
+    const slug = slugOfFile(collection, name)
+    if (slug !== null && !liveSlugs.has(slug)) work.push({ kind: 'missing', slug })
   }
   return work
 }

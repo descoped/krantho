@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import { basename } from 'node:path'
 import type { ApiHandlers } from '@krantho/api'
+import { slugOfFile } from '@krantho/core'
 import {
   type Collection,
   type ContentConfig,
@@ -24,6 +25,8 @@ async function importFile(
   const raw = await readFile(filePath, 'utf-8')
   const parsed = matter(raw)
   const fields = parsed.data as Record<string, unknown>
+  const slug = slugOfFile(collection, basename(filePath))
+  if (slug === null) return
 
   // Validate against collection schema (parity with auto-import)
   const contract = resolveCollectionContract(
@@ -32,16 +35,14 @@ async function importFile(
   )
   const result = parseRepositoryContent(
     collection,
-    basename(filePath, '.md'),
+    slug,
     fields,
     parsed.content,
     collection.schema,
     contract,
   )
   if (!result.success) {
-    console.warn(
-      `[watch] Skipping ${collection.name}/${basename(filePath, '.md')}: schema validation failed`,
-    )
+    console.warn(`[watch] Skipping ${collection.name}/${slug}: schema validation failed`)
     for (const issue of result.error.issues) {
       console.warn(`  - ${issue.path.join('.') || '(root)'}: ${issue.message}`)
     }
@@ -49,7 +50,6 @@ async function importFile(
   }
 
   const body = parsed.content
-  const slug = basename(filePath, '.md')
 
   const read = await adapter.getContent?.(collection.name, slug, result.data.locale)
   const current =

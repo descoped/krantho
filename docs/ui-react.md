@@ -333,7 +333,7 @@ import { CMSContentProvider } from '@krantho/ui-react'
 
 Initialize the server-side content loader. Must be called before any server component renders. Typically called in a module the pages import, such as `lib/krantho.ts`.
 
-`options.basePath` is the path the site is served under (Next's `basePath`, `/docs-site`). Markdown links and images that start at the site's root get it in front when the components render a body (`renderContent`'s `basePath` in `@krantho/core`).
+`options.basePath` is the path the site is served under (Next's `basePath`, `/docs-site`). Markdown links and images that start at the site's root get it in front when the components render a body (`renderContent`'s `basePath` in `@krantho/core`). `options.resolveUrl(url, { collection, slug })` rewrites each link and image URL of a document's body first (`@krantho/static`'s `site.rendering` maps relative links between markdown files), and `options.atNotation` switches `@field` substitution (default `true`); `initServerLoader(site.loader, site.rendering)` passes all three.
 
 ```typescript
 import { createContentLoader } from '@krantho/server-next'

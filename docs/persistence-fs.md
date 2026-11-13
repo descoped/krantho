@@ -40,6 +40,7 @@ const adapter = new FileSystemAdapter({
 interface FileSystemAdapterOptions {
   defaultLocale: string   // required: the locale of a file whose frontmatter declares none
   directories?: ReadonlyMap<string, string>  // each collection's directory, by collection name
+  indexFiles?: ReadonlyMap<string, string>   // the file each collection reads as `index` (README.md), by collection name
   contentPath?: string    // a collection without a directory; defaults to 'content/pages'
   seoPath?: string        // defaults to 'content/seo'
   defaultStatus?: string  // defaults to 'published'

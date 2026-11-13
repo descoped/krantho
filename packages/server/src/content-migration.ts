@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { renderContent } from '@krantho/core'
+import { renderContent, slugOfFile } from '@krantho/core'
 import {
   type ContentDocument,
   type ContentManifest,
@@ -420,13 +420,15 @@ async function readRepositoryFiles(
       collection,
       (await adapter.getRuntimeSchema?.(collection.name)) ?? null,
     )
-    for (const name of entries.filter((e) => e.endsWith('.md'))) {
+    for (const name of entries) {
+      const slug = slugOfFile(collection, name)
+      if (slug === null) continue
       const filePath = join(collection.directory, name)
       const raw = await readFile(filePath, 'utf-8')
       const parsed = matter(raw)
       const result = parseRepositoryContent(
         collection,
-        name.slice(0, -3),
+        slug,
         parsed.data,
         parsed.content,
         collection.schema,
@@ -435,7 +437,7 @@ async function readRepositoryFiles(
       files.push({
         key: contentDateKey(contentDir, filePath),
         collection: collection.name,
-        slug: name.slice(0, -3),
+        slug,
         filePath,
         fileChecksum: result.success
           ? documentChecksum(result.data)

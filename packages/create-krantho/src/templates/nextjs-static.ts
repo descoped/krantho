@@ -170,11 +170,12 @@ import { initServerLoader } from '@krantho/ui-react/server'
 import config from '../krantho.config'
 import { collections } from '../krantho.collections'
 
-// Pages read the markdown in content/docs through the site's loader. Links and
-// images in the markdown that start at the site's root (/setup/) get the path
-// the site is served under, as next/link does for the site's own links.
+// Pages read the markdown in content/docs through the site's loader. A link to
+// another file (setup.md) goes to its page, and every link and image that starts
+// at the site's root gets the path the site is served under, as next/link does
+// for the site's own links.
 export const site = createStaticSite({ config, collections })
-initServerLoader(site.loader, { basePath: site.basePath })
+initServerLoader(site.loader, site.rendering)
 
 /** A docs page as the sidebar and the pager list it */
 export interface DocLink {

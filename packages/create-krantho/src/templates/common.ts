@@ -4,7 +4,8 @@ export function generateCommonFiles(options: ProjectOptions): Map<string, string
   const files = new Map<string, string>()
 
   files.set('.gitignore', gitignore())
-  files.set('.env', envFile(options))
+  // A static site reads no environment of its own: the dev script names its port
+  if (options.framework !== 'nextjs-static') files.set('.env', envFile(options))
   files.set('README.md', readme(options))
   files.set('.claude/settings.json', claudeSettings())
   if (options.packageManager === 'pnpm') files.set('pnpm-workspace.yaml', pnpmSettings())

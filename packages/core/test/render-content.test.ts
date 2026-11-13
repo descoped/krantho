@@ -59,6 +59,16 @@ describe('renderContent', () => {
       expect(html).toContain('href="/repo/repository/"')
     })
 
+    it('resolves each URL before the base path is added', async () => {
+      const resolveUrl = (url: string): string => (url === 'guide/' ? '/docs/guide/' : url)
+      const { html } = await renderContent({}, links, { basePath: '/repo', resolveUrl })
+      const { html: unbased } = await renderContent({}, links, { resolveUrl })
+
+      expect(html).toContain('href="/repo/docs/guide/"')
+      expect(html).toContain('href="#top"')
+      expect(unbased).toContain('href="/docs/guide/"')
+    })
+
     it('leaves URLs as written without a base path, also after a render with one', async () => {
       await renderContent({}, links, { basePath: '/repo' })
       const { html } = await renderContent({}, links)

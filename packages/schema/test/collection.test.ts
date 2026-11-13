@@ -51,6 +51,21 @@ describe('defineCollection', () => {
     ).toThrow('Collection name is required')
   })
 
+  it('reads a named index file, which must be a markdown file in the directory', () => {
+    const docs = (indexFile: string) =>
+      defineCollection({
+        name: 'docs',
+        source: 'filesystem',
+        directory: 'docs',
+        indexFile,
+        schema: pageSchema,
+      })
+
+    expect(docs('README.md').indexFile).toBe('README.md')
+    expect(() => docs('README.txt')).toThrow('must be a .md file name in its directory')
+    expect(() => docs('sub/README.md')).toThrow('must be a .md file name in its directory')
+  })
+
   it('throws when filesystem source has no directory', () => {
     expect(() =>
       defineCollection({

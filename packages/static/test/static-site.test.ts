@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { KranthoConfigInput } from '@krantho/config'
 import { envNameFor, KranthoConfigError, LEAVES } from '@krantho/config'
+import { renderContent } from '@krantho/core'
 import { defineCollection, defineDocumentArchetype } from '@krantho/schema'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
@@ -187,6 +188,57 @@ describe('createStaticSite', () => {
 
     expect(types).toContain('WebSite')
     expect(types).toContain('TechArticle')
+  })
+
+  it('reads the collection’s index file as its home page', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    write('docs/README.md', '---\ntitle: Home\ndescription: Welcome\n---\nHello.')
+    write('docs/index.md', '---\ntitle: Shadowed\ndescription: Not read\n---\nNo.')
+    const docs = defineCollection({
+      name: 'docs',
+      source: 'filesystem',
+      path: '/:slug/',
+      directory: join(root, 'content', 'docs'),
+      indexFile: 'README.md',
+      archetype: defineDocumentArchetype({
+        id: 'test/docs',
+        label: 'Docs',
+        fields: z.object({ title: z.string(), description: z.string() }),
+      }),
+    })
+    const site = createStaticSite({
+      config: siteConfig('https://example.github.io/site'),
+      collections: { docs },
+    })
+
+    const params = await site.params('docs')
+    const home = await site.loader.getPublished({ collection: 'docs', slug: 'index' })
+
+    expect(params.map((page) => page.slug).sort()).toEqual(['index', 'intro', 'setup'])
+    expect(home?.fields.title).toBe('Home')
+  })
+
+  it('renders relative links as the site’s addresses, under its path', async () => {
+    const docs = docsIn(join(root, 'content', 'docs'))
+    const site = createStaticSite({
+      config: { ...siteConfig('https://example.github.io/site'), content: { atNotation: false } },
+      collections: { docs },
+    })
+    const { basePath, resolveUrl, atNotation } = site.rendering
+
+    const { html } = await renderContent(
+      { title: 'Intro' },
+      'See [setup](setup.md#run), ![flow](images/flow.png) and @title.',
+      {
+        basePath,
+        atNotation,
+        resolveUrl: (url) => resolveUrl(url, { collection: 'docs', slug: 'intro' }),
+      },
+    )
+
+    expect(html).toContain('href="/site/docs/setup/#run"')
+    expect(html).toContain('src="/site/images/flow.png"')
+    expect(html).toContain('@title')
   })
 
   it('warns that pages are dated by modification time without git history', async () => {

@@ -37,7 +37,7 @@ export async function createAdapter(
   config: PersistenceSection,
   site: Pick<SiteSection, 'defaultLocale'>,
   content: Pick<ContentSection, 'defaultStatus'>,
-  collections: ReadonlyMap<string, { directory?: string | undefined }>,
+  collections: ReadonlyMap<string, StoredCollection>,
 ): Promise<AdapterResult> {
   const defaultStatus = content.defaultStatus
   const defaultLocale = site.defaultLocale
@@ -49,6 +49,7 @@ export async function createAdapter(
         adapter: new FileSystemAdapter({
           contentPath: config.filesystem.contentPath,
           directories,
+          indexFiles: collectionIndexFiles(collections),
           defaultLocale,
           defaultStatus: defaultStatus.filesystem,
           // A page publishes on the date its file was last committed, not the checkout's
@@ -153,9 +154,26 @@ export function postgresClientOptions(config: PostgresPersistenceSection): {
   return options
 }
 
+/** What persistence reads of a collection: where its files are, and which is its index */
+interface StoredCollection {
+  directory?: string | undefined
+  indexFile?: string | undefined
+}
+
+/** The file each collection reads as its index, for the collections that name one */
+function collectionIndexFiles(
+  collections: ReadonlyMap<string, StoredCollection>,
+): Map<string, string> {
+  const files = new Map<string, string>()
+  for (const [name, { indexFile }] of collections) {
+    if (indexFile) files.set(name, indexFile)
+  }
+  return files
+}
+
 /** Each collection's directory, for the collections that name one */
 function collectionDirectories(
-  collections: ReadonlyMap<string, { directory?: string | undefined }>,
+  collections: ReadonlyMap<string, StoredCollection>,
 ): Map<string, string> {
   const directories = new Map<string, string>()
   for (const [name, { directory }] of collections) {

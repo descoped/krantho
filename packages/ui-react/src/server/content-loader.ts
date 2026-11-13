@@ -15,7 +15,13 @@ import type { CMSContent, CMSSummary, ContentLoaderOptions } from '../types'
 export type ServerContentLoader = IPublishedContentLoader & Partial<IPublishedSeoLoader>
 
 let serverLoader: ServerContentLoader | null = null
-let renderBasePath = ''
+let renderOptions: ServerLoaderOptions = {}
+
+/** The document whose markdown a URL was written in */
+export interface DocumentRef {
+  collection: string
+  slug: string
+}
 
 /** How server components render what they read */
 export interface ServerLoaderOptions {
@@ -25,6 +31,14 @@ export interface ServerLoaderOptions {
    * front, as the site's own links do
    */
   basePath?: string | undefined
+  /**
+   * Rewrites each link and image URL as written in a document's markdown,
+   * before the base path is added — `createStaticSite()`'s `rendering.resolveUrl`
+   * maps relative links between markdown files to the pages they become
+   */
+  resolveUrl?: ((url: string, document: DocumentRef) => string) | undefined
+  /** Substitute `@field` references in the body with field values (default true) */
+  atNotation?: boolean | undefined
 }
 
 /** The loader server components read through */
@@ -47,7 +61,7 @@ export function initServerLoader(
   options: ServerLoaderOptions = {},
 ): void {
   serverLoader = loader
-  renderBasePath = options.basePath ?? ''
+  renderOptions = options
 }
 
 function generateExcerpt(
@@ -87,7 +101,13 @@ async function toCMSContent(
     excerptLength = 160,
   } = options
 
-  const rendered = await renderContent(doc.fields, doc.body, { basePath: renderBasePath })
+  const { basePath, resolveUrl, atNotation } = renderOptions
+  const document = { collection: doc.collection, slug: doc.slug }
+  const rendered = await renderContent(doc.fields, doc.body, {
+    basePath,
+    atNotation,
+    resolveUrl: resolveUrl && ((url) => resolveUrl(url, document)),
+  })
   const sections = extractSections ? rendered.sections : {}
 
   return {

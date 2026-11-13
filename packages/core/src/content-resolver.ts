@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import matter from 'gray-matter'
 import { marked } from 'marked'
 import { type AuthoredMetadata, authoredMetadata } from './content-contract.js'
+import { fileNameOf, slugOfFile } from './content-files.js'
 import { splitFrontmatter } from './frontmatter-utils.js'
 
 /**
@@ -48,6 +49,8 @@ interface ResolverCollection {
       })
     | undefined
   directory?: string | undefined
+  /** The file read as the `index` document (`README.md`); unset, `index.md` */
+  indexFile?: string | undefined
   schema?:
     | {
         safeParse: (data: unknown) => {
@@ -194,7 +197,7 @@ export function createContentResolver(
       const col = config.collections.get(collection)
       if (!col?.directory) return null
 
-      const filePath = join(col.directory, `${slug}.md`)
+      const filePath = join(col.directory, fileNameOf(col, slug))
       return loadDocument(filePath, collection, slug, options.defaultLocale, col)
     },
 
@@ -209,11 +212,11 @@ export function createContentResolver(
         return []
       }
 
-      const mdFiles = entries.filter((e) => e.endsWith('.md'))
       const results: ResolvedDocument[] = []
 
-      for (const file of mdFiles) {
-        const slug = file.slice(0, -3)
+      for (const file of entries) {
+        const slug = slugOfFile(col, file)
+        if (slug === null) continue
         const filePath = join(col.directory, file)
         const doc = await loadDocument(filePath, collection, slug, options.defaultLocale, col)
         if (!doc) continue

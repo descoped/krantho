@@ -184,7 +184,7 @@ Every mark names its document as `<collection>/<slug>`, because a page also show
 
 ## @ notation
 
-When krantho renders a body (the content engine, `renderContent()`), an `@field` reference is replaced with the value of that field of the same document. A reference to a field the document lacks stays as written. `content.atNotation` switches it for the API's content engine (default `true`); `renderContent()` takes an `atNotation` option (default `true`).
+When krantho renders a body (the content engine, `renderContent()`), an `@field` reference is replaced with the value of that field of the same document. A reference to a field the document lacks stays as written. `content.atNotation` switches it for the API's content engine (default `true`); `renderContent()` takes an `atNotation` option (default `true`). A static site passes `content.atNotation` to its pages through `site.rendering` ([@krantho/static](/docs/package-static)), so `false` keeps a body's `@name` as written.
 
 `processAtNotation()` is a separate helper for link shorthand: it expands `@changelog` to a page link and `@content-graph.png` to an image. The content engine does not call it; use it on markdown you process yourself.
 

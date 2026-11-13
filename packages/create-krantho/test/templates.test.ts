@@ -198,6 +198,12 @@ describe('nextjs-static template', () => {
     const deps = JSON.parse(file(files, 'package.json')).dependencies as Record<string, string>
     expect(Object.keys(deps)).toContain('@krantho/static')
     expect(Object.keys(deps)).not.toContain('@krantho/next')
+    expect(files.has('.env')).toBe(false)
+  })
+
+  it('renders markdown links between files as the site’s addresses', () => {
+    expect(file(files, 'lib/krantho.ts')).toContain('initServerLoader(site.loader, site.rendering)')
+    expect(file(files, 'app/globals.css')).toContain('.prose table')
   })
 
   it('publishes to GitHub Pages from the whole history, with the address Pages gives', () => {

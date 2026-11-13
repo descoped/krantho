@@ -18,6 +18,7 @@ import {
   memorySeoConfig,
 } from '@krantho/server'
 import { basePathOf } from './base-path.js'
+import { createLinkResolver, type LinkResolver } from './link-resolver.js'
 
 /** The site a static build renders: its configuration and collections */
 export type StaticSiteOptions = Pick<KranthoHandlerOptions, 'config' | 'collections'>
@@ -25,6 +26,16 @@ export type StaticSiteOptions = Pick<KranthoHandlerOptions, 'config' | 'collecti
 /** One page of a collection, as a static build lists it (Next's `generateStaticParams`) */
 export interface StaticPageParams {
   slug: string
+}
+
+/** How pages render their markdown — pass it to `initServerLoader()` */
+export interface StaticRendering {
+  /** The path the site is served under, added to root-relative links and images */
+  readonly basePath: string
+  /** Relative links between the markdown files, and to images beside them, as the site's addresses */
+  readonly resolveUrl: LinkResolver
+  /** Substitute `@field` references in the body (`content.atNotation`) */
+  readonly atNotation: boolean
 }
 
 /** What a static build reads: the pages' content and SEO, the pages to write and the site's SEO files */
@@ -35,6 +46,8 @@ export interface StaticSite {
   readonly config: KranthoConfig
   /** The path the site is served under (`/docs-site`), or `''` at its host's root */
   readonly basePath: string
+  /** How pages render their markdown: `initServerLoader(site.loader, site.rendering)` */
+  readonly rendering: StaticRendering
   /** Every published document of a collection, one page each */
   params(collection: string, locale?: string): Promise<StaticPageParams[]>
   /** sitemap.xml: every published, indexable page */
@@ -129,10 +142,17 @@ export function createStaticSite(options: StaticSiteOptions): StaticSite {
     return source
   }
 
+  const basePath = basePathOf(config.site.baseUrl)
+
   return {
     loader,
     config,
-    basePath: basePathOf(config.site.baseUrl),
+    basePath,
+    rendering: {
+      basePath,
+      resolveUrl: createLinkResolver(Object.values(options.collections)),
+      atNotation: config.content.atNotation,
+    },
     params: async (collection, locale) => {
       if (!Object.hasOwn(options.collections, collection)) {
         throw new Error(`No collection named ${collection}`)

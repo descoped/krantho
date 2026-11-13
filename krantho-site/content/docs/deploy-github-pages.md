@@ -114,7 +114,7 @@ import config from '../krantho.config'
 import { collections } from '../krantho.collections'
 
 export const site = createStaticSite({ config, collections })
-initServerLoader(site.loader, { basePath: site.basePath })
+initServerLoader(site.loader, site.rendering)
 ```
 
 The configuration reads the markdown files and caches nothing:
@@ -169,7 +169,29 @@ export default nextConfig
 
 ## Links and images
 
-A project site is served under `/<repository>`. `next/link` adds that path to the site's own links, and krantho adds it to links and images in your markdown that start at the site's root: `[Setup](/setup/)` and `![Diagram](/diagram.png)` work at `/<repository>/` and at a domain of your own alike. Put images in `public/`. Relative links, absolute URLs and raw HTML are left as written.
+A project site is served under `/<repository>`. `next/link` adds that path to the site's own links, and krantho adds it to links and images in your markdown that start at the site's root: `[Setup](/setup/)` and `![Diagram](/diagram.png)` work at `/<repository>/` and at a domain of your own alike. Put images in `public/`. Absolute URLs and raw HTML are left as written.
+
+Links between your markdown files work too, so the same folder reads well on GitHub: `[Setup](setup.md#install)` goes to the setup page, and `![Diagram](images/diagram.png)` to `/images/diagram.png`, which the site serves from `public/images/diagram.png`. See [Links between files](/docs/package-static#links-between-files).
+
+## Publish a repository's existing docs
+
+The site can live in a folder of a project's repository, such as `site/`, and read the project's `docs/`. Point the collection at that folder, and read `README.md` as its home page:
+
+```ts title="site/krantho.collections.ts"
+const docs = defineCollection({
+  name: 'docs',
+  source: 'filesystem',
+  directory: join(process.cwd(), '..', 'docs'),
+  indexFile: 'README.md',
+  path: '/:slug/',
+  // ...
+})
+```
+
+- Set `paths.contentDir: '../docs'` in `krantho.config.ts`, so the pages are dated by the folder's git history.
+- If the docs write `@name` as text, set `content: { atNotation: false }`: otherwise `@title` in a body is replaced with the page's title.
+- Quote a frontmatter `description` that holds `: `, as in `description: "Setup: what you need"`. Unquoted, it is not valid YAML.
+- In the workflow, run the steps in the site's folder with `defaults.run.working-directory: site`, and point the actions at it: `package_json_file: site/package.json` for `pnpm/action-setup`, `cache-dependency-path: site/pnpm-lock.yaml` for `setup-node`, and `path: site/out` for `upload-pages-artifact`.
 
 ## A domain of your own
 

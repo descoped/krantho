@@ -14,6 +14,13 @@ export interface CollectionConfig<T extends ZodObject<ZodRawShape>> {
   source: 'filesystem' | 'database'
   /** Directory path for filesystem-mastered collections (relative to project root) */
   directory?: string | undefined
+  /**
+   * The file in `directory` read as the `index` document, in place of
+   * `index.md`: `'README.md'` makes the file GitHub shows for a folder the
+   * collection's home page, so one folder of docs reads well on GitHub and
+   * on the site. A file name in the directory itself, ending in `.md`.
+   */
+  indexFile?: string | undefined
   /** Zod schema for fields validation and type inference */
   schema?: T | undefined
   /** Explicit reusable contract; use schema for an inline collection contract. */
@@ -45,6 +52,8 @@ export interface Collection<T extends ZodObject<ZodRawShape> = ZodObject<ZodRawS
   readonly name: string
   readonly source: 'filesystem' | 'database'
   readonly directory: string | undefined
+  /** The file read as the `index` document; `undefined` reads `index.md` */
+  readonly indexFile: string | undefined
   readonly schema: T
   readonly archetype: DocumentArchetype<T>
   readonly parseDocument: (
@@ -105,6 +114,15 @@ export function defineCollection<T extends ZodObject<ZodRawShape>>(
     throw new Error(`Collection "${config.name}" path "${config.path}" must start with "/"`)
   }
 
+  if (
+    config.indexFile !== undefined &&
+    (!config.indexFile.endsWith('.md') || /[\\/]/.test(config.indexFile))
+  ) {
+    throw new Error(
+      `Collection "${config.name}" indexFile "${config.indexFile}" must be a .md file name in its directory`,
+    )
+  }
+
   if (Boolean(config.schema) === Boolean(config.archetype)) {
     throw new Error('A collection requires either schema or archetype')
   }
@@ -120,6 +138,7 @@ export function defineCollection<T extends ZodObject<ZodRawShape>>(
     name: config.name,
     source: config.source,
     directory: config.directory,
+    indexFile: config.indexFile,
     schema: archetype.fields,
     archetype,
     parseDocument: (slug, frontmatter, body) =>

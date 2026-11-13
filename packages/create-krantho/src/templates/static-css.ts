@@ -128,6 +128,25 @@ main {
   max-width: 100%;
 }
 
+/* A wide table scrolls on its own, not the page */
+.prose table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--code-bg);
+}
+
 .pager {
   border-top: 1px solid var(--line);
   display: flex;

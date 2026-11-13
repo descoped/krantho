@@ -43,6 +43,7 @@ export const pages = defineCollection({
 - `source: 'filesystem'`: the markdown files are the source of truth
 - `source: 'database'`: the database is the source of truth
 - `directory` is required for filesystem collections
+- `indexFile` (optional) names the file in `directory` read as the document `index`, such as `'README.md'`, the file GitHub shows for a folder. `index.md` is then not read
 - `path` (optional) is where the documents render as pages, read by the sitemap, the draft preview, the re-render after a publish and the page's JSON-LD: a pattern such as `'/deploy/:slug'` (the document `index` renders at `/deploy`), a fixed path such as `'/'` for a landing page, or `false` for documents with no page of their own. Without it, `pages` render at the site root (`home` at `/`), `globals` have no pages, and other collections render at `/<name>/<slug>` — see [Content model](/docs/content-model#edit-details-alongside-the-page)
 
 ## Pass collections to the server
