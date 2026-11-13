@@ -74,7 +74,7 @@ else
   pnpm exec vite dev --port "$port" > "$work/server.log" 2>&1 &
 fi
 server=$!
-trap 'kill $server 2>/dev/null || true; rm -rf "$work"' EXIT
+trap 'kill $server 2>/dev/null; wait $server 2>/dev/null; rm -rf "$work" 2>/dev/null || true' EXIT
 
 base="http://localhost:$port"
 i=0
