@@ -5,9 +5,14 @@ import type {
   ContentConflict,
   ContentDocument,
   ContentManifestRecord,
+  ContentQuery,
   IContentMigrationAdapter,
   ISiteSettingsAdapter,
+  QueryItem,
+  QueryPage,
+  QueryProjection,
 } from '@krantho/persistence'
+import { SQLiteAdapter, SqliteContentMigrationAdapter } from '@krantho/persistence-sqlite'
 import {
   compileContentContract,
   defineCollection,
@@ -84,8 +89,10 @@ function database(
 ): {
   adapter: MigratableAdapter
   imported: string[]
+  deleted: string[]
 } {
   const imported: string[] = []
+  const deleted: string[] = []
   const current = new Map<string, ContentDocument>()
   for (const [slug, doc] of Object.entries(docs)) {
     current.set(slug, {
@@ -132,8 +139,17 @@ function database(
     upsertFromFile: async (_collection, slug) => {
       imported.push(slug)
     },
+    query: async <P extends QueryProjection>(spec: ContentQuery<P>): Promise<QueryPage<P>> => ({
+      items: [...current.values()]
+        .filter((doc) => !spec.collections || spec.collections.includes(doc.meta.collection))
+        .map((doc) => doc.meta as QueryItem<P>),
+      hasMore: false,
+    }),
+    deleteContent: async (_collection, slug) => {
+      deleted.push(slug)
+    },
   }
-  return { adapter, imported }
+  return { adapter, imported, deleted }
 }
 
 /** A migration record store holding `version` and the files it saw then */
@@ -394,6 +410,46 @@ describe('runContentMigration', () => {
     expect(imported).toEqual([])
   })
 
+  it('deletes the pages whose files left the repository, and keeps those an editor changed', async () => {
+    writePage('about', 'About', 'About us\n')
+    await generateManifest(contentDir, 200)
+    const { adapter, deleted } = database({
+      about: { title: 'About', body: 'About us\n' },
+      admin: { title: 'Admin', body: 'The old admin\n' },
+      notes: { title: 'Notes', body: 'Written in Studio\n', edited: true },
+    })
+
+    const result = await runContentMigration(
+      adapter,
+      contentConfig(),
+      migrations(100, { 'pages/about.md': sha('about') }),
+      undefined,
+      contentDir,
+    )
+    expect(deleted).toEqual(['admin'])
+    expect(result.removed).toBe(1)
+    expect(result.details).toContainEqual({
+      collection: 'pages',
+      slug: 'admin',
+      outcome: 'removed',
+    })
+  })
+
+  it('deletes nothing from a collection whose directory holds no files', async () => {
+    await generateManifest(contentDir, 200)
+    const { adapter, deleted } = database({ about: { title: 'About', body: 'About us\n' } })
+
+    const result = await runContentMigration(
+      adapter,
+      contentConfig(),
+      migrations(100),
+      undefined,
+      contentDir,
+    )
+    expect(deleted).toEqual([])
+    expect(result.removed).toBe(0)
+  })
+
   it('does nothing when the database already has the manifest version', async () => {
     writePage('about', 'About', 'About us, rewritten\n')
     await generateManifest(contentDir, 100)
@@ -420,6 +476,34 @@ describe('runContentMigration', () => {
     expect(result.rejected).toBe(1)
     expect(imported).toEqual([])
     expect(store.saved.at(-1)?.fileChecksums).toEqual({})
+  })
+})
+
+describe('runContentMigration on SQLite', () => {
+  it('deletes the page of a removed file, and imports the file again when it comes back', async () => {
+    const adapter = new SQLiteAdapter(join(contentDir, 'content.db'), { defaultLocale: 'en' })
+    const store = new SqliteContentMigrationAdapter(adapter.database)
+    const deploy = async (version: number): Promise<void> => {
+      await generateManifest(contentDir, version)
+      await runContentMigration(adapter, contentConfig(), store, undefined, contentDir)
+    }
+    try {
+      writePage('about', 'About', 'About us\n')
+      writePage('admin', 'Admin', 'The old admin\n')
+      await deploy(100)
+      expect(await adapter.getContent('pages', 'admin')).not.toBeNull()
+
+      rmSync(join(contentDir, 'pages', 'admin.md'))
+      await deploy(200)
+      expect(await adapter.getContent('pages', 'admin')).toBeNull()
+      expect(await adapter.getContent('pages', 'about')).not.toBeNull()
+
+      writePage('admin', 'Admin', 'The admin is back\n')
+      await deploy(300)
+      expect((await adapter.getContent('pages', 'admin'))?.body).toBe('The admin is back\n')
+    } finally {
+      adapter.database.close()
+    }
   })
 })
 

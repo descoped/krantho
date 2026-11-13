@@ -246,9 +246,10 @@ When the manifest's version is higher than the one the database last imported, s
 
 - a new file is imported, and an unchanged one skipped;
 - a changed file is imported, unless an editor changed the document in Studio — then the editor's version stands, and the change is recorded as a conflict (`GET /api/migrations/conflicts`);
-- a document deleted in Studio stays deleted, and a file removed from the repository leaves its document in place.
+- a document deleted in Studio stays deleted;
+- a file removed from the repository deletes its document, unless an editor changed the document in Studio. A collection whose directory holds no files at all loses nothing.
 
-The server takes a checkpoint before it imports into a database that already holds content. The API handler then announces the new content once, so cached pages refresh. [Deploy to Vercel](/docs/deploy-vercel) covers content from the repository in practice.
+The server takes a checkpoint before it imports into, or deletes from, a database that already holds content. The API handler then announces the new content once, so cached pages refresh. [Deploy to Vercel](/docs/deploy-vercel) covers content from the repository in practice.
 
 ## Direct handler usage
 
