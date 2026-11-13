@@ -18,6 +18,7 @@ import {
   defineConfig,
   documentChecksum,
 } from '@krantho/schema'
+import { SQLiteAdapter, SqliteContentMigrationAdapter } from '@krantho/persistence-sqlite'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import {
@@ -475,6 +476,34 @@ describe('runContentMigration', () => {
     expect(result.rejected).toBe(1)
     expect(imported).toEqual([])
     expect(store.saved.at(-1)?.fileChecksums).toEqual({})
+  })
+})
+
+describe('runContentMigration on SQLite', () => {
+  it('deletes the page of a removed file, and imports the file again when it comes back', async () => {
+    const adapter = new SQLiteAdapter(join(contentDir, 'content.db'), { defaultLocale: 'en' })
+    const store = new SqliteContentMigrationAdapter(adapter.database)
+    const deploy = async (version: number): Promise<void> => {
+      await generateManifest(contentDir, version)
+      await runContentMigration(adapter, contentConfig(), store, undefined, contentDir)
+    }
+    try {
+      writePage('about', 'About', 'About us\n')
+      writePage('admin', 'Admin', 'The old admin\n')
+      await deploy(100)
+      expect(await adapter.getContent('pages', 'admin')).not.toBeNull()
+
+      rmSync(join(contentDir, 'pages', 'admin.md'))
+      await deploy(200)
+      expect(await adapter.getContent('pages', 'admin')).toBeNull()
+      expect(await adapter.getContent('pages', 'about')).not.toBeNull()
+
+      writePage('admin', 'Admin', 'The admin is back\n')
+      await deploy(300)
+      expect((await adapter.getContent('pages', 'admin'))?.body).toBe('The admin is back\n')
+    } finally {
+      adapter.database.close()
+    }
   })
 })
 
