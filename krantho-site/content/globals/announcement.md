@@ -1,7 +1,5 @@
 ---
 title: Announcement
-message: 'Krantho 1.0 is out, and on npm. See what is in it.'
-message-href: /changelog
 status: published
 ---
 

@@ -4,7 +4,7 @@ The krantho website, built with krantho. Dogfooding the full content framework p
 
 ## Setup
 
-This project lives inside the krantho monorepo during development. It will be extracted to `descoped/krantho-site` when packages are published to npm.
+The site lives in the krantho repository and runs on the workspace's own packages, so it always shows the code as it is.
 
 ```bash
 # From monorepo root
