@@ -1,8 +1,8 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
 import type { ContentChange, PageCollection } from '@krantho/core'
 import { documentPath, invalidationsFor, pageCollection } from '@krantho/core'
-import { revalidateTag } from 'next/cache'
-import { after } from 'next/server'
+import { revalidateTag } from 'next/cache.js'
+import { after } from 'next/server.js'
 
 /** The API request a change was made in */
 interface RequestScope {

@@ -1,7 +1,7 @@
 import type { ContentChange } from '@krantho/core'
 import type { KranthoHandlerOptions } from '@krantho/server'
 import { createLazyHandler, createStudioServer } from '@krantho/server'
-import { after } from 'next/server'
+import { after } from 'next/server.js'
 import { pageCacheSwitch } from './page-cache.js'
 import { invalidatePages, withPageRefresh } from './page-refresh.js'
 import { handleSitePreview } from './site-preview.js'

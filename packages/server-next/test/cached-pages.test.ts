@@ -23,7 +23,7 @@ interface CachedRead {
 const cachedReads: CachedRead[] = []
 const afterCallbacks: (() => Promise<unknown> | unknown)[] = []
 
-vi.mock('next/cache', () => ({
+vi.mock('next/cache.js', () => ({
   unstable_cache:
     <T>(read: () => Promise<T>, keyParts: string[], options: { tags: string[] }) =>
     async (): Promise<T> => {
@@ -33,7 +33,7 @@ vi.mock('next/cache', () => ({
   revalidateTag: vi.fn(),
 }))
 
-vi.mock('next/server', () => ({
+vi.mock('next/server.js', () => ({
   after: (callback: () => Promise<unknown> | unknown) => {
     afterCallbacks.push(callback)
   },

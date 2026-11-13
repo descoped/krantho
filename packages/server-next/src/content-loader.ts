@@ -7,7 +7,7 @@ import type {
 } from '@krantho/core'
 import { documentReadTags, jsonLdTags, listReadTags, seoReadTags } from '@krantho/core'
 import { createContentLoader as createStoreLoader } from '@krantho/server'
-import { unstable_cache } from 'next/cache'
+import { unstable_cache } from 'next/cache.js'
 import { pageCacheSwitch } from './page-cache.js'
 import { isPreview } from './site-preview.js'
 

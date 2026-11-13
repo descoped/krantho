@@ -1,5 +1,5 @@
 import { resolveSitePath } from '@krantho/core'
-import { draftMode, headers } from 'next/headers'
+import { draftMode, headers } from 'next/headers.js'
 
 /** Where Studio sends an editor to preview a document on the site */
 export const PREVIEW_PATH = '/api/preview'

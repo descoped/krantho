@@ -25,18 +25,18 @@ const draft = {
 
 const requestHeaders = new Headers()
 
-vi.mock('next/headers', () => ({
+vi.mock('next/headers.js', () => ({
   draftMode: async () => draft,
   headers: async () => requestHeaders,
 }))
-vi.mock('next/cache', () => ({
+vi.mock('next/cache.js', () => ({
   unstable_cache:
     <T>(read: () => Promise<T>) =>
     () =>
       read(),
   revalidateTag: vi.fn(),
 }))
-vi.mock('next/server', () => ({ after: vi.fn() }))
+vi.mock('next/server.js', () => ({ after: vi.fn() }))
 
 const { createApiRouteHandlers, createContentLoader, showPreviewBanner } = await import(
   '../src/index.js'
