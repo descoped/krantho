@@ -13,6 +13,7 @@
 import matter from 'gray-matter'
 import { marked } from 'marked'
 import { splitFrontmatter } from './frontmatter-utils.js'
+import { rewriteHtmlUrls } from './html-urls.js'
 import { splitSections } from './sections.js'
 import { TypeGuards } from './type-guards.js'
 import type {
@@ -57,14 +58,14 @@ export interface MarkdownProcessorOptions {
    * The path a site is served under (`/docs-site`): a link or image whose
    * URL starts at the site's root (`/guide`, `/images/a.png`) gets it in
    * front, as the site's own links do. Empty or unset leaves URLs as written.
-   * URLs in raw HTML inside the markdown are left as written.
+   * The `src` and `href` of raw `<img>` and `<a>` tags in the markdown get it too.
    */
   basePath?: string | undefined
   /**
    * Rewrites the URL of each link and image as written in the markdown,
    * before the base path is added: a static site maps a relative link to
    * another document's file (`setup.md#install`) to that page's address.
-   * URLs in raw HTML are left as written.
+   * The quoted `src` and `href` of raw `<img>` and `<a>` tags are rewritten too.
    */
   resolveUrl?: ((url: string) => string) | undefined
 }
@@ -113,6 +114,8 @@ export class MarkdownProcessor implements IMarkdownProcessor {
               walkTokens: (token) => {
                 if (token.type === 'link' || token.type === 'image') {
                   token.href = rewrite(token.href)
+                } else if (token.type === 'html') {
+                  token.text = rewriteHtmlUrls(token.text, rewrite)
                 }
               },
             }

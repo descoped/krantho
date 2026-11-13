@@ -117,7 +117,7 @@ if (doc) {
 }
 ```
 
-A site served under a path (`https://example.github.io/docs-site`) passes `basePath: '/docs-site'`: links and images in the markdown that start at the site's root, such as `/guide` or `/images/logo.svg`, get the path in front. Absolute and relative URLs and raw HTML are left as written.
+A site served under a path (`https://example.github.io/docs-site`) passes `basePath: '/docs-site'`: links and images in the markdown that start at the site's root, such as `/guide` or `/images/logo.svg`, get the path in front, as do the `src` and `href` of raw `<img>` and `<a>` tags. Absolute and relative URLs are left as written.
 
 `getPublished` returns `null` when the document has nothing published. Its result is a `PublishedContent` (`collection`, `slug`, `locale`, `fields`, `body`, `publishedAt`); the loader implements `IPublishedContentLoader` (`getPublished(ref)`, `listPublished(collection, locale?)`, `listPublishedSummaries(collection, locale?)`, `isPreview()`). `listPublishedSummaries` returns each document without its `body`: a page that only lists documents (a navigation, a card list) reads it. An omitted `locale` is the site's default locale. `isPreview()` is `true` only while an editor previews the page, and `false` for visitors and for any render a cache keeps.
 

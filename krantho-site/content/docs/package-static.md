@@ -79,7 +79,7 @@ Pages are dated by their files' last git commit. Without the repository's full h
 | `[Home](README.md)`, with `indexFile: 'README.md'` | `/docs-site/` |
 | `![Flow](images/flow.png)` | `/docs-site/images/flow.png` |
 
-A link to a markdown file goes to that document's page, in whichever collection reads the file. Any other file inside the collection's directory is served from the site's root, so copy it into `public/` at the same path (`public/images/flow.png`). Absolute URLs, URLs that start with `/` or `#`, and files outside the collection's directory are left as written. `createLinkResolver(collections)` builds the same resolver for a site of your own.
+The same holds for the `src` and `href` of raw `<img>` and `<a>` tags, such as `<img src="images/flow.png" width="340">`. A link to a markdown file goes to that document's page, in whichever collection reads the file. Any other file inside the collection's directory is served from the site's root, so copy it into `public/` at the same path (`public/images/flow.png`). Absolute URLs, URLs that start with `/` or `#`, and files outside the collection's directory are left as written. `createLinkResolver(collections)` builds the same resolver for a site of your own.
 
 ## basePathOf
 

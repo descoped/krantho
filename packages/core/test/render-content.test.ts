@@ -69,6 +69,40 @@ describe('renderContent', () => {
       expect(unbased).toContain('href="/docs/guide/"')
     })
 
+    it('rewrites the src and href of raw img and a tags as markdown links are', async () => {
+      const resolveUrl = (url: string): string => (url.startsWith('images/') ? `/${url}` : url)
+      const body = [
+        '<p align="center"><img src="images/menu.png" width="340"></p>',
+        '',
+        'Inline <a href=\'/setup/\'>setup</a> and <img alt=x src="images/b.png">, <span title="images/c">no</span>.',
+      ].join('\n')
+
+      const { html } = await renderContent({}, body, { basePath: '/repo', resolveUrl })
+
+      expect(html).toContain('<img src="/repo/images/menu.png" width="340">')
+      expect(html).toContain("<a href='/repo/setup/'>")
+      expect(html).toContain('src="/repo/images/b.png"')
+      expect(html).toContain('<span title="images/c">')
+    })
+
+    it('reads raw tags attribute by attribute, and leaves unquoted and based URLs as written', async () => {
+      const resolveUrl = (url: string): string => (url.startsWith('images/') ? `/${url}` : url)
+      const body = [
+        '<img alt="a > b" src="images/gt.png">',
+        '<img alt=\'see src="images/no.png"\' src="images/yes.png">',
+        '<img src=images/bare.png> <a href="/repo/setup/">based</a>',
+      ].join('\n')
+
+      const { html } = await renderContent({}, body, { basePath: '/repo', resolveUrl })
+      const { html: plain } = await renderContent({}, body)
+
+      expect(html).toContain('src="/repo/images/gt.png"')
+      expect(html).toContain('alt=\'see src="images/no.png"\' src="/repo/images/yes.png"')
+      expect(html).toContain('src=images/bare.png')
+      expect(html).toContain('href="/repo/setup/"')
+      expect(plain).toContain('src="images/gt.png"')
+    })
+
     it('leaves URLs as written without a base path, also after a render with one', async () => {
       await renderContent({}, links, { basePath: '/repo' })
       const { html } = await renderContent({}, links)
