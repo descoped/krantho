@@ -289,8 +289,9 @@ Writes `<contentDir>/manifest.json`: the content's `version` and every markdown 
 | Repository and database both differ from their agreed basis | conflict, recorded with document locale for `GET /api/migrations/conflicts`, once while it stays open |
 | No document, file imported before | deleted (it was deleted in Studio) |
 | File fails its collection's schema | rejected, and logged |
+| Document written by an import (`source: 'filesystem'`, no `changedBy`) whose file is gone, in a collection whose directory still holds files | removed: the document is deleted |
 
-Fields and body are compared by `contentChecksum(fields, body)`, which sorts object keys and writes dates as ISO strings, so a file and its database copy compare equal regardless of how the database stores JSON. Importing a document resolves its open conflicts as `use_repo`. A checkpoint is taken before the first import into a database that holds content. The database then records the manifest's version and each file's checksum. A file removed from the repository leaves its document in place.
+Fields and body are compared by `contentChecksum(fields, body)`, which sorts object keys and writes dates as ISO strings, so a file and its database copy compare equal regardless of how the database stores JSON. Importing a document resolves its open conflicts as `use_repo`. A checkpoint is taken before an import writes to or deletes from a database that holds content. The database then records the manifest's version and each file's checksum. A file removed from the repository deletes its document, unless an editor changed the document in Studio; a collection directory without any files deletes nothing, so a deployment that misses its content keeps it.
 
 ### Route Matching
 

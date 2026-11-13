@@ -5,8 +5,12 @@ import type {
   ContentConflict,
   ContentDocument,
   ContentManifestRecord,
+  ContentQuery,
   IContentMigrationAdapter,
   ISiteSettingsAdapter,
+  QueryItem,
+  QueryPage,
+  QueryProjection,
 } from '@krantho/persistence'
 import {
   compileContentContract,
@@ -84,8 +88,10 @@ function database(
 ): {
   adapter: MigratableAdapter
   imported: string[]
+  deleted: string[]
 } {
   const imported: string[] = []
+  const deleted: string[] = []
   const current = new Map<string, ContentDocument>()
   for (const [slug, doc] of Object.entries(docs)) {
     current.set(slug, {
@@ -132,8 +138,17 @@ function database(
     upsertFromFile: async (_collection, slug) => {
       imported.push(slug)
     },
+    query: async <P extends QueryProjection>(spec: ContentQuery<P>): Promise<QueryPage<P>> => ({
+      items: [...current.values()]
+        .filter((doc) => !spec.collections || spec.collections.includes(doc.meta.collection))
+        .map((doc) => doc.meta as QueryItem<P>),
+      hasMore: false,
+    }),
+    deleteContent: async (_collection, slug) => {
+      deleted.push(slug)
+    },
   }
-  return { adapter, imported }
+  return { adapter, imported, deleted }
 }
 
 /** A migration record store holding `version` and the files it saw then */
@@ -392,6 +407,46 @@ describe('runContentMigration', () => {
     const result = await runContentMigration(adapter, contentConfig(), store, undefined, contentDir)
     expect(result.details[0]?.outcome).toBe('deleted')
     expect(imported).toEqual([])
+  })
+
+  it('deletes the pages whose files left the repository, and keeps those an editor changed', async () => {
+    writePage('about', 'About', 'About us\n')
+    await generateManifest(contentDir, 200)
+    const { adapter, deleted } = database({
+      about: { title: 'About', body: 'About us\n' },
+      admin: { title: 'Admin', body: 'The old admin\n' },
+      notes: { title: 'Notes', body: 'Written in Studio\n', edited: true },
+    })
+
+    const result = await runContentMigration(
+      adapter,
+      contentConfig(),
+      migrations(100, { 'pages/about.md': sha('about') }),
+      undefined,
+      contentDir,
+    )
+    expect(deleted).toEqual(['admin'])
+    expect(result.removed).toBe(1)
+    expect(result.details).toContainEqual({
+      collection: 'pages',
+      slug: 'admin',
+      outcome: 'removed',
+    })
+  })
+
+  it('deletes nothing from a collection whose directory holds no files', async () => {
+    await generateManifest(contentDir, 200)
+    const { adapter, deleted } = database({ about: { title: 'About', body: 'About us\n' } })
+
+    const result = await runContentMigration(
+      adapter,
+      contentConfig(),
+      migrations(100),
+      undefined,
+      contentDir,
+    )
+    expect(deleted).toEqual([])
+    expect(result.removed).toBe(0)
   })
 
   it('does nothing when the database already has the manifest version', async () => {

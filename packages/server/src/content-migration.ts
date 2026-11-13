@@ -6,6 +6,7 @@ import {
   type ContentDocument,
   type ContentManifest,
   canGetContent,
+  type DocumentMeta,
   type ICheckpointAdapter,
   type IContentMigrationAdapter,
   type IPersistenceAdapter,
@@ -26,8 +27,14 @@ import type { ImportableAdapter } from './import.js'
 import { autoImport } from './import.js'
 import { CONTENT_MANIFEST_FILE } from './manifest.js'
 
-/** An adapter the migration can import into and read each document's current version from */
-export interface MigratableAdapter extends ImportableAdapter {
+/**
+ * An adapter the migration can import into and read each document's current
+ * version from; with `query` and `deleteContent` it also removes the documents
+ * whose files left the repository
+ */
+export interface MigratableAdapter
+  extends ImportableAdapter,
+    Pick<IPersistenceAdapter, 'query' | 'deleteContent'> {
   getContent(
     collection: string,
     slug: string,
@@ -49,6 +56,8 @@ export type FileOutcome =
   | 'deleted'
   /** The file fails its collection's schema */
   | 'rejected'
+  /** The file left the repository, and its document, never edited in Studio, was deleted */
+  | 'removed'
 
 /** Per-file migration detail */
 export interface ImportDetail {
@@ -63,6 +72,8 @@ export interface ContentMigrationResult {
   imported: number
   conflicts: number
   rejected: number
+  /** Documents deleted because their files left the repository */
+  removed: number
   checkpointVersion: number | null
   reason?: string | undefined
   details: ImportDetail[]
@@ -93,7 +104,10 @@ interface RepositoryFile {
  * manifest is newer than the database's compares each file with its document:
  * a new or changed file is imported, unless an editor changed the document in
  * Studio since — then the editor's version stands and a changed file is
- * recorded as a conflict. A document deleted in Studio stays deleted.
+ * recorded as a conflict. A document deleted in Studio stays deleted. A
+ * document whose file left the repository is deleted, unless an editor changed
+ * it in Studio or its collection's directory holds no files at all (a deployment
+ * without the content is not a request to delete it).
  */
 export async function runContentMigration(
   adapter: MigratableAdapter,
@@ -113,6 +127,7 @@ export async function runContentMigration(
       imported,
       conflicts: 0,
       rejected: 0,
+      removed: 0,
       checkpointVersion: null,
       reason: !manifest ? `No ${CONTENT_MANIFEST_FILE} found` : 'Migration adapter not configured',
       details: [],
@@ -126,6 +141,7 @@ export async function runContentMigration(
       imported: 0,
       conflicts: 0,
       rejected: 0,
+      removed: 0,
       checkpointVersion: null,
       reason: `DB version ${dbVersion} >= repo version ${manifest.version}`,
       details: [],
@@ -135,13 +151,15 @@ export async function runContentMigration(
   const previous = (await migrationAdapter.getContentManifest())?.fileChecksums ?? {}
   const files = await readRepositoryFiles(adapter, contentConfig, contentDir)
   const planned = await planFiles(adapter, files, previous)
+  const removals = await findRemovedDocuments(adapter, contentConfig, files)
   const checkpointVersion = await checkpointBeforeImport(
     adapter,
     checkpointAdapter,
-    planned,
+    planned.some((p) => p.outcome === 'imported') || removals.length > 0,
     manifest.version,
   )
   await applyPlan(adapter, migrationAdapter, planned, dateOf, defaultStatus)
+  const removed = await removeDocuments(adapter, removals)
 
   await migrationAdapter.saveContentManifest({
     id: 0,
@@ -158,12 +176,20 @@ export async function runContentMigration(
     imported: count('imported'),
     conflicts: count('conflict'),
     rejected: count('rejected'),
+    removed: removed.length,
     checkpointVersion,
-    details: planned.map(({ file, outcome }) => ({
-      collection: file.collection,
-      slug: file.slug,
-      outcome,
-    })),
+    details: [
+      ...planned.map(({ file, outcome }) => ({
+        collection: file.collection,
+        slug: file.slug,
+        outcome,
+      })),
+      ...removed.map((meta) => ({
+        collection: meta.collection,
+        slug: meta.slug,
+        outcome: 'removed' as const,
+      })),
+    ],
   }
 }
 
@@ -226,15 +252,15 @@ export function decideFile(
   return repositoryChanged ? 'imported' : 'kept'
 }
 
-/** A checkpoint before the first import into a database that already holds content */
+/** A checkpoint before an import writes to, or deletes from, a database that already holds content */
 async function checkpointBeforeImport(
   adapter: MigratableAdapter,
   checkpointAdapter: ICheckpointAdapter | undefined,
-  planned: readonly PlannedFile[],
+  writes: boolean,
   version: number,
 ): Promise<number | null> {
   if (!checkpointAdapter) return null
-  if (!planned.some((p) => p.outcome === 'imported')) return null
+  if (!writes) return null
   if ((await adapter.listSlugs()).length === 0) return null
   const checkpoint = await checkpointAdapter.createCheckpoint(
     `pre-content-migration-v${version}`,
@@ -257,14 +283,7 @@ async function applyPlan(
     const { file, current } = plan
     if (plan.outcome === 'imported' && file.fields) {
       try {
-        await importFile(
-          adapter,
-          file,
-          file.fields,
-          dateOf,
-          defaultStatus,
-          current?.meta.version ?? 0,
-        )
+        await importFile(adapter, file, file.fields, dateOf, defaultStatus, current?.meta.version)
       } catch (err: unknown) {
         console.warn(`[content-migration] Failed to import ${file.key}:`, err)
         plan.outcome = 'rejected'
@@ -297,7 +316,8 @@ async function importFile(
   fields: Record<string, unknown>,
   dateOf: ContentDateOf,
   defaultStatus: string,
-  expectedVersion: number,
+  /** The current version it replaces; none for a new document or one deleted before */
+  expectedVersion: number | undefined,
 ): Promise<void> {
   const { html, sections } = await renderContent(fields, file.body, { atNotation: false })
   await adapter.upsertFromFile(
@@ -316,6 +336,55 @@ async function importFile(
       expectedVersion,
     },
   )
+}
+
+/**
+ * The documents an import wrote and nobody changed since whose files are gone:
+ * in a collection whose directory still holds files, no file with the
+ * document's slug (in its locale, or without one) is left
+ */
+async function findRemovedDocuments(
+  adapter: MigratableAdapter,
+  contentConfig: ContentConfig,
+  files: readonly RepositoryFile[],
+): Promise<DocumentMeta[]> {
+  if (!adapter.query || !adapter.deleteContent) return []
+  const collections = [...contentConfig.collections.values()]
+    .filter((c) => c.directory && files.some((f) => f.collection === c.name))
+    .map((c) => c.name)
+  if (collections.length === 0) return []
+  const { items } = await adapter.query({ state: 'current', collections, projection: 'meta' })
+  const hasFile = (meta: DocumentMeta): boolean =>
+    files.some(
+      (f) =>
+        f.collection === meta.collection &&
+        f.slug === meta.slug &&
+        (f.document?.locale === undefined || f.document.locale === meta.locale),
+    )
+  return items.filter(
+    (meta) =>
+      meta.source === 'filesystem' &&
+      meta.changedBy === null &&
+      meta.status !== 'deleted' &&
+      !hasFile(meta),
+  )
+}
+
+/** Delete each document whose file left the repository; returns the ones deleted */
+async function removeDocuments(
+  adapter: MigratableAdapter,
+  removals: readonly DocumentMeta[],
+): Promise<DocumentMeta[]> {
+  const removed: DocumentMeta[] = []
+  for (const meta of removals) {
+    try {
+      await adapter.deleteContent?.(meta.collection, meta.slug, meta.locale)
+      removed.push(meta)
+    } catch (err: unknown) {
+      console.warn(`[content-migration] Failed to remove ${meta.collection}/${meta.slug}:`, err)
+    }
+  }
+  return removed
 }
 
 /** The files the database now knows, by key: every file it holds or chose not to */
@@ -433,9 +502,10 @@ export async function importRepositoryContent(
     contentDir,
     defaultStatus,
   )
-  if (result.imported > 0 || result.conflicts > 0 || result.rejected > 0) {
+  if (result.imported > 0 || result.conflicts > 0 || result.rejected > 0 || result.removed > 0) {
     const parts = [`[krantho] Content migration: ${result.action}`]
     parts.push(`${result.imported} imported`)
+    if (result.removed > 0) parts.push(`${result.removed} removed`)
     if (result.conflicts > 0) parts.push(`${result.conflicts} conflicts`)
     if (result.rejected > 0) parts.push(`${result.rejected} rejected`)
     console.log(parts.join(', '))
