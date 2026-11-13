@@ -1,6 +1,6 @@
 {
   "name": "@krantho/persistence-postgres",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "The krantho persistence adapter for Postgres, the production store for serverless hosts and several instances.",
   "license": "MIT",
   "homepage": "https://krantho.com",
