@@ -319,9 +319,9 @@ describe('createApiHandlers', () => {
       const body = res.body as { name: string; source: string; schema: Record<string, unknown> }
       expect(body.name).toBe('pages')
       expect(body.source).toBe('filesystem')
-      expect(body.schema['type']).toBe('object')
-      const props = body.schema['properties'] as Record<string, Record<string, unknown>>
-      expect(props['title']?.['type']).toBe('string')
+      expect(body.schema.type).toBe('object')
+      const props = body.schema.properties as Record<string, Record<string, unknown>>
+      expect(props.title?.type).toBe('string')
     })
 
     it('returns 404 for unknown collection', async () => {
@@ -352,7 +352,7 @@ describe('createApiHandlers', () => {
       expect(body).toHaveProperty('llmsTxt')
       expect(body).toHaveProperty('sitemap')
       expect(body).toHaveProperty('contentDates')
-      expect(typeof body['structuredData']!.exists).toBe('boolean')
+      expect(typeof body.structuredData!.exists).toBe('boolean')
     })
   })
 

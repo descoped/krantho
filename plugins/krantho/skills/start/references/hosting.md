@@ -119,7 +119,7 @@ export default nextConfig
 
 ## Vercel with SvelteKit
 
-- `@sveltejs/adapter-vercel` (the example's `svelte.config.js` picks it when `VERCEL` is set).
+- `@sveltejs/adapter-vercel` (the example's `vite.config.ts` picks it when `VERCEL` is set).
 - `KRANTHO_CACHE_PAGES=cdn`, `KRANTHO_CACHE_CDN_PROVIDER=vercel`, and `@vercel/functions` in
   the app; pass its `waitUntil` to `createApiHandlers` so purges finish.
 

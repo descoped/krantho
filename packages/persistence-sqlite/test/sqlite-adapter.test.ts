@@ -261,7 +261,7 @@ describe('SQLiteAdapter', () => {
       await adapter.deleteContent('blog', 'nordic', 'nb')
 
       expect(await adapter.getContent('blog', 'nordic', 'nb')).toBeNull()
-      expect((await adapter.getContent('blog', 'nordic', 'en'))?.fields['title']).toBe('Hello')
+      expect((await adapter.getContent('blog', 'nordic', 'en'))?.fields.title).toBe('Hello')
     })
   })
 
@@ -345,11 +345,11 @@ describe('SQLiteAdapter', () => {
       })
 
       const v1 = await adapter.getVersion('blog', 'specific', 1)
-      expect(v1?.fields['title']).toBe('Original')
+      expect(v1?.fields.title).toBe('Original')
       expect(v1?.body).toBe('original body')
 
       const v2 = await adapter.getVersion('blog', 'specific', 2)
-      expect(v2?.fields['title']).toBe('Updated')
+      expect(v2?.fields.title).toBe('Updated')
     })
 
     it('restores a previous version', async () => {
@@ -372,7 +372,7 @@ describe('SQLiteAdapter', () => {
 
       const results = await listCurrent('blog', {})
       const item = results.find((r) => r.meta.slug === 'restore-me')
-      expect(item?.fields['title']).toBe('Original')
+      expect(item?.fields.title).toBe('Original')
 
       const versions = await adapter.listVersions('blog', 'restore-me')
       expect(versions).toHaveLength(3)
@@ -411,7 +411,7 @@ describe('SQLiteAdapter', () => {
       expect(await adapter.exists('about')).toBe(true)
       const results = await listCurrent('pages')
       expect(results).toHaveLength(1)
-      expect(results[0]?.fields['title']).toBe('About Us')
+      expect(results[0]?.fields.title).toBe('About Us')
     })
 
     it('dates the imported version by when the file last changed', async () => {

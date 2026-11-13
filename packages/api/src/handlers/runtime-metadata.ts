@@ -19,7 +19,7 @@ const definition = z
 export const saveRuntimeMetadata: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
-  const checked = validateCollectionParam(req.params['collection'], ctx)
+  const checked = validateCollectionParam(req.params.collection, ctx)
   if (!checked.isValid) return checked.response
   if (!hasRuntimeSchema(ctx.adapter))
     return { status: 501, body: { error: 'Adapter does not support runtime definitions' } }
@@ -58,11 +58,11 @@ export const saveRuntimeMetadata: ApiHandler = async (req, ctx) => {
 export const deleteRuntimeMetadata: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
-  const checked = validateCollectionParam(req.params['collection'], ctx)
+  const checked = validateCollectionParam(req.params.collection, ctx)
   if (!checked.isValid) return checked.response
   if (!hasRuntimeSchema(ctx.adapter))
     return { status: 501, body: { error: 'Adapter does not support runtime definitions' } }
-  const slot = req.params['slot']
+  const slot = req.params.slot
   if (!slot) return { status: 400, body: { error: 'Missing metadata slot' } }
   if (Object.hasOwn(checked.collectionDef.archetype.metadata, slot))
     return { status: 409, body: { error: 'This metadata group is defined in code' } }

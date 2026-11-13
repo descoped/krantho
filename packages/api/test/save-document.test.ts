@@ -25,7 +25,7 @@ describe('saveDocument', () => {
     expect(result).toEqual({ ok: true, slug: 'about', version: 1, liveVersion: null })
     const doc = await stores.adapter.getContent('pages', 'about', 'en')
     expect(doc?.meta.status).toBe('draft')
-    expect(doc?.fields['status']).toBeUndefined()
+    expect(doc?.fields.status).toBeUndefined()
     expect(doc?.meta.changedBy).toBe(base.changedBy)
     expect(await stores.adapter.getPublished('pages', 'about', 'en')).toBeNull()
   })
@@ -45,9 +45,9 @@ describe('saveDocument', () => {
     expect(write.mock.calls[0]?.[0].publication).toBeUndefined()
     const current = await stores.adapter.getContent('pages', 'about', 'en')
     expect(current?.meta).toMatchObject({ status: 'published', version: 2, liveVersion: 1 })
-    expect(current?.fields['status']).toBeUndefined()
+    expect(current?.fields.status).toBeUndefined()
     const live = await stores.adapter.getPublished('pages', 'about', 'en')
-    expect(live?.fields['title']).toBe('About')
+    expect(live?.fields.title).toBe('About')
   })
 
   it('merges a fields-only save into the current fields and keeps the body', async () => {
@@ -90,7 +90,7 @@ describe('saveDocument', () => {
     expect((await changePublication(ctx, target, 'archive', 'x')).status).toBe(200)
     const archived = await stores.adapter.getContent('blog', 'old', 'en')
     expect(archived?.meta.status).toBe('archived')
-    expect(archived?.fields['status']).toBeUndefined()
+    expect(archived?.fields.status).toBeUndefined()
 
     const saved = await saveDocument(ctx, {
       ...base,

@@ -78,7 +78,7 @@ async function writeExportedContent(outputDir: string, bundle: ExportBundle): Pr
       // The locale is always written: the file then lands in its own locale on
       // any site, whatever default locale that site has.
       const frontmatter: Record<string, unknown> = { ...item.fields, locale: item.locale }
-      if (item.status !== 'published') frontmatter['status'] = item.status
+      if (item.status !== 'published') frontmatter.status = item.status
 
       const yaml = toYaml(frontmatter)
       const content = `---\n${yaml}---\n${item.body}`

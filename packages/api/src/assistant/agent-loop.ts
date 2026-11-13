@@ -168,7 +168,7 @@ function toolMessage(call: ToolCall, result: Record<string, unknown>, limit: num
     role: 'tool',
     toolCallId: call.id,
     content: resultContent(result, limit),
-    isError: result['ok'] === false,
+    isError: result.ok === false,
   }
 }
 

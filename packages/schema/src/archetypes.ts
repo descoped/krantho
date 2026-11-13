@@ -80,7 +80,7 @@ function identity(id: string, label: string): void {
 
 function portableSchema(schema: ZodObject<ZodRawShape>): Record<string, unknown> {
   const result = portableJsonSchema(schema)
-  result['additionalProperties'] = false
+  result.additionalProperties = false
   strictObjects(result)
   return result
 }
@@ -94,12 +94,12 @@ function strictObjects(value: unknown): void {
   }
   const record = value as Record<string, unknown>
   if (
-    record['type'] === 'object' &&
-    record['properties'] &&
-    Object.keys(record['properties'] as object).length > 0
+    record.type === 'object' &&
+    record.properties &&
+    Object.keys(record.properties as object).length > 0
   )
-    record['additionalProperties'] = false
-  if (Array.isArray(record['required'])) record['required'].sort()
+    record.additionalProperties = false
+  if (Array.isArray(record.required)) record.required.sort()
   Object.values(record).forEach(strictObjects)
 }
 

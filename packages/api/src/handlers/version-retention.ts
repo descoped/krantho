@@ -26,8 +26,8 @@ export const versionPurge: ApiHandler = async (req, ctx) => {
 
   const payload = bodyCheck.body as Record<string, unknown>
   const keepVersions =
-    typeof payload['keepVersions'] === 'number'
-      ? payload['keepVersions']
+    typeof payload.keepVersions === 'number'
+      ? payload.keepVersions
       : ctx.config.content.versions.keep
 
   if (keepVersions < 1) {

@@ -11,7 +11,7 @@ export const authLogout: ApiHandler = async (req, ctx) => {
 
   // Delete refresh token from database if possible
   if (ctx.authAdapter) {
-    const refreshToken = parseCookie(req.headers?.['cookie'], refreshCookieName(auth.session))
+    const refreshToken = parseCookie(req.headers?.cookie, refreshCookieName(auth.session))
     if (refreshToken) {
       const tokenHash = hashRefreshToken(refreshToken, auth.jwtSecret ?? '')
       const record = await ctx.authAdapter.getRefreshTokenByHash(tokenHash)

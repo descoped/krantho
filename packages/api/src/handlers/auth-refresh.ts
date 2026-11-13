@@ -26,7 +26,7 @@ async function rotateSession(req: ApiRequest, ctx: ApiContext): Promise<Rotation
     return { ok: false, status: 501, error: 'Session management not configured' }
   }
 
-  const refreshToken = parseCookie(req.headers?.['cookie'], refreshCookieName(auth.session))
+  const refreshToken = parseCookie(req.headers?.cookie, refreshCookieName(auth.session))
   if (!refreshToken) return { ok: false, status: 401, error: 'No refresh token' }
 
   const tokenHash = hashRefreshToken(refreshToken, auth.jwtSecret)
@@ -39,7 +39,7 @@ async function rotateSession(req: ApiRequest, ctx: ApiContext): Promise<Rotation
   }
 
   const user = await ctx.authAdapter.getUser(tokenRecord.userId)
-  if (!user || !user.isActive) {
+  if (!user?.isActive) {
     await ctx.authAdapter.deleteRefreshToken(tokenRecord.id)
     return { ok: false, status: 401, error: 'User not found or deactivated' }
   }
@@ -77,7 +77,7 @@ export const authRefresh: ApiHandler = async (req, ctx) => {
  * session. A completed sign-in replaces the cookies anyway.
  */
 export const authRefreshRedirect: ApiHandler = async (req, ctx) => {
-  const returnTo = safeReturnTo(req.query['returnTo'])
+  const returnTo = safeReturnTo(req.query.returnTo)
   const rotation = await rotateSession(req, ctx)
   if (rotation.ok) return redirect(returnTo, rotation.cookies)
 

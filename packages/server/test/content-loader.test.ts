@@ -98,7 +98,7 @@ describe('createContentLoader', () => {
     try {
       const loader = createContentLoader({ config, collections })
       const home = await loader.getPublished({ collection: 'pages', slug: 'home' })
-      expect(home?.fields['title']).toBe('Home')
+      expect(home?.fields.title).toBe('Home')
       expect(home?.locale).toBe('en')
       expect((await loader.listPublished('pages')).map((doc) => doc.slug).sort()).toEqual([
         'about',
@@ -138,9 +138,8 @@ describe('createContentLoader', () => {
     try {
       const loader = createContentLoader({ config, collections })
       const title = async () =>
-        (await loader.listPublishedSummaries('pages')).find((doc) => doc.slug === 'home')?.fields[
-          'title'
-        ]
+        (await loader.listPublishedSummaries('pages')).find((doc) => doc.slug === 'home')?.fields
+          .title
       expect(await title()).toBe('Home')
       expect((await loader.listPublished('pages')).length).toBe(2)
 
@@ -159,9 +158,8 @@ describe('createContentLoader', () => {
       expect(await title()).toBe('Home')
       const fresh = createContentLoader({ config, collections })
       expect(
-        (await fresh.listPublishedSummaries('pages')).find((doc) => doc.slug === 'home')?.fields[
-          'title'
-        ],
+        (await fresh.listPublishedSummaries('pages')).find((doc) => doc.slug === 'home')?.fields
+          .title,
       ).toBe('Renamed')
     } finally {
       handler.close()
@@ -205,7 +203,7 @@ describe('createContentLoader', () => {
     try {
       const loader = createContentLoader({ config, collections })
       const title = async () =>
-        (await loader.getPublished({ collection: 'pages', slug: 'home' }))?.fields['title']
+        (await loader.getPublished({ collection: 'pages', slug: 'home' }))?.fields.title
       expect(await title()).toBe('Home')
 
       await handler.handle(put('Changed'))
@@ -273,7 +271,7 @@ describe('createContentLoader', () => {
         (await loader.listPublishedSummaries('pages', 'en')).map((doc) => doc.slug).sort(),
       ).toEqual(['about', 'home'])
       const english = await loader.getPublished({ collection: 'pages', slug: 'home', locale: 'en' })
-      expect(english?.fields['title']).toBe('Home')
+      expect(english?.fields.title).toBe('Home')
       const saved = await handler.handle(
         new Request('http://localhost/api/seo/config?id=doc:pages/home', {
           method: 'PUT',
@@ -375,7 +373,7 @@ describe('createContentLoader', () => {
 
     const home = await loader.getPublished({ collection: 'pages', slug: 'home' })
 
-    expect(home?.fields['title']).toBe('Home')
+    expect(home?.fields.title).toBe('Home')
   })
 
   it('seeds the SEO configuration itself when a page is served before the API', async () => {
@@ -409,7 +407,7 @@ describe('createContentLoader', () => {
       '@graph': Array<Record<string, unknown>>
     }
     const list = graph['@graph'].find((node) => node['@type'] === 'BreadcrumbList')
-    expect(list?.['itemListElement']).toHaveLength(2)
+    expect(list?.itemListElement).toHaveLength(2)
     expect(graph['@graph'].find((node) => node['@type'] === 'AboutPage')).toMatchObject({
       breadcrumb: { '@id': list?.['@id'] },
     })
@@ -512,8 +510,8 @@ describe('createContentLoader preview', () => {
 
       const loader = createContentLoader({ config, collections })
       const ref = { collection: 'pages', slug: 'home' }
-      expect((await loader.getPublished(ref))?.fields['title']).toBe('Home')
-      expect((await loader.preview.getPublished(ref))?.fields['title']).toBe('Draft home')
+      expect((await loader.getPublished(ref))?.fields.title).toBe('Home')
+      expect((await loader.preview.getPublished(ref))?.fields.title).toBe('Draft home')
       expect(JSON.stringify(await loader.preview.jsonLd(ref))).toContain('Draft home')
       expect(await loader.preview.getPublished({ collection: 'pages', slug: 'missing' })).toBeNull()
     } finally {
@@ -571,7 +569,7 @@ describe('site preview route', () => {
 
       const capabilities = await handler.handle(new Request('http://localhost/api/capabilities'))
       const { features } = (await capabilities.json()) as { features: Record<string, string> }
-      expect(features['sitePreview']).toBe('draft-mode')
+      expect(features.sitePreview).toBe('draft-mode')
     } finally {
       handler.close()
     }

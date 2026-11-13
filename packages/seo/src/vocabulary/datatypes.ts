@@ -45,6 +45,6 @@ const CHECKS: Readonly<Record<string, (value: unknown) => boolean>> = {
 
 /** Whether a JSON value is a valid literal of the Schema.org data type */
 export function matchesDatatype(datatype: string, value: unknown): boolean {
-  const check = CHECKS[datatype] ?? CHECKS['Text']
+  const check = CHECKS[datatype] ?? CHECKS.Text
   return check?.(value) ?? false
 }

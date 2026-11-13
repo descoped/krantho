@@ -57,14 +57,12 @@ describe('server content', () => {
   it('renders the published document of the named collection', async () => {
     const home = await loadContent({ collection: 'pages', slug: 'home' })
 
-    expect(home.fields['title']).toBe('Home')
+    expect(home.fields.title).toBe('Home')
     expect(home.html).toContain('<h1>Home</h1>')
     expect(Object.keys(home.sections)).toEqual(['Details'])
-    expect((await loadContent({ collection: 'blog', slug: 'home' })).fields['title']).toBe(
-      'Blog home',
-    )
+    expect((await loadContent({ collection: 'blog', slug: 'home' })).fields.title).toBe('Blog home')
     expect(
-      (await loadContent({ collection: 'pages', slug: 'home', locale: 'no' })).fields['title'],
+      (await loadContent({ collection: 'pages', slug: 'home', locale: 'no' })).fields.title,
     ).toBe('Hjem')
   })
 
@@ -77,7 +75,7 @@ describe('server content', () => {
 
   it('lists the published documents of a collection', async () => {
     expect(await getCMSSlugs('pages')).toEqual(['home', 'about'])
-    expect((await getAllCMSContent('pages')).map((doc) => doc.fields['title'])).toEqual([
+    expect((await getAllCMSContent('pages')).map((doc) => doc.fields.title)).toEqual([
       'Home',
       'About',
     ])
@@ -144,7 +142,7 @@ describe('server content', () => {
 describe('Live marks', () => {
   type Element = { props: Record<string, unknown> }
   const html = (element: Element): string =>
-    (element.props['dangerouslySetInnerHTML'] as { __html: string }).__html
+    (element.props.dangerouslySetInnerHTML as { __html: string }).__html
 
   it('marks the field and sections a server component renders, in a preview only', async () => {
     initServerLoader(loaderOf([published('pages', 'home', 'Home')], true))

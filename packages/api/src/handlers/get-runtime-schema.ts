@@ -4,7 +4,7 @@ import { validateCollectionParam } from '../validators.js'
 
 /** GET /api/schema/:collection/runtime — runtime field extensions */
 export const getRuntimeSchema: ApiHandler = async (req, ctx) => {
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   if (!hasRuntimeSchema(ctx.adapter)) {

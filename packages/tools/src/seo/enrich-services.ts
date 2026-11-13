@@ -71,8 +71,7 @@ async function main(): Promise<void> {
   const rawYaml = readFileSync(businessYamlPath, 'utf-8')
   const business = parseYAML(rawYaml) as Record<string, unknown>
 
-  const existingServices: ServiceCatalogEntry[] =
-    (business['services'] as ServiceCatalogEntry[]) || []
+  const existingServices: ServiceCatalogEntry[] = (business.services as ServiceCatalogEntry[]) || []
   const existingMap = new Map(existingServices.map((s) => [s.id, s]))
 
   const { servicesSlug, serviceIds } = loadSiteConfig()
@@ -157,7 +156,7 @@ async function main(): Promise<void> {
   console.log('')
 
   if (apply) {
-    business['services'] = updatedServices
+    business.services = updatedServices
 
     writeYAMLWithHeader(businessYamlPath, business)
 

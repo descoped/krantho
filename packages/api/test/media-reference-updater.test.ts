@@ -61,7 +61,7 @@ describe('updateMediaReferences', () => {
       await updateMediaReferences('/media/old.png', '/media/new.png', adapter, contentConfig),
     ).toEqual({ updated: 1, failed: [] })
     const after = await adapter.getContent('pages', 'about')
-    expect(after?.fields['hero']).toBe('/media/new.png')
+    expect(after?.fields.hero).toBe('/media/new.png')
     expect(after?.body).toBe('![Team](/media/new.png)')
     expect(after?.metadata).toEqual({ sharing: { image: '/media/new.png', title: 'Share' } })
     expect(after?.contract).toEqual(before?.contract)
@@ -98,8 +98,8 @@ describe('updateMediaReferences', () => {
       await updateMediaReferences('/media/old.png', '/media/new.png', adapter, contentConfig),
     ).toEqual({ updated: 1, failed: [] })
     const after = await adapter.getContent('pages', 'about')
-    expect(after?.fields['title']).toBe('Edited')
-    expect(after?.fields['hero']).toBe('/media/new.png')
+    expect(after?.fields.title).toBe('Edited')
+    expect(after?.fields.hero).toBe('/media/new.png')
     expect(after?.meta.version).toBe(3)
   })
 
@@ -126,7 +126,7 @@ describe('updateMediaReferences', () => {
       updated: 1,
       failed: [{ collection: 'pages', slug: 'about', locale: 'en', reason: 'disk full' }],
     })
-    expect((await adapter.getContent('pages', 'team'))?.fields['hero']).toBe('/media/new.png')
+    expect((await adapter.getContent('pages', 'team'))?.fields.hero).toBe('/media/new.png')
   })
 
   it('reports a document still changing after one retry', async () => {

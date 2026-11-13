@@ -236,7 +236,7 @@ SvelteKit renders on the server by default. Use `export const prerender = true` 
 To cache pages at a CDN, serve them through the page cache hook, keeping it the outermost handle:
 
 ```ts title="src/hooks.server.ts"
-import type { Handle } from '@sveltejs/kit'
+import type { Handle } from '@sveltejs/kit/hooks'
 import { createPageCacheHandle } from '@krantho/server-sveltekit'
 import config from '../krantho.config'
 

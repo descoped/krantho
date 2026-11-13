@@ -36,7 +36,7 @@ export const authOidcLogin: ApiHandler = async (req, ctx) => {
       state: generateState(),
       codeVerifier: generateCodeVerifier(),
       nonce: generateNonce(),
-      returnTo: safeReturnTo(req.query['returnTo']),
+      returnTo: safeReturnTo(req.query.returnTo),
     }
 
     const params = new URLSearchParams({

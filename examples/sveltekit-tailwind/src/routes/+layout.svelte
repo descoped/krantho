@@ -1,9 +1,9 @@
 <script lang="ts">
   import '../app.css'
   import { JsonLd } from '@krantho/ui-svelte'
-  import ThemeToggle from '$lib/components/ThemeToggle.svelte'
-  import Footer from '$lib/components/Footer.svelte'
-  import { textFields } from '$lib/text'
+  import ThemeToggle from '#lib/components/ThemeToggle.svelte'
+  import Footer from '#lib/components/Footer.svelte'
+  import { textFields } from '#lib/text.ts'
   import type { Snippet } from 'svelte'
   import type { LayoutData } from './$types'
 

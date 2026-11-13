@@ -93,8 +93,8 @@ function withClosedObjects(node: Record<string, unknown>): Record<string, unknow
       out[key] = value
     }
   }
-  if (out['type'] === 'object' && out['additionalProperties'] === undefined) {
-    out['additionalProperties'] = false
+  if (out.type === 'object' && out.additionalProperties === undefined) {
+    out.additionalProperties = false
   }
   return out
 }

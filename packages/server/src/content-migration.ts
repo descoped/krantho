@@ -372,7 +372,7 @@ async function readRepositoryFiles(
           ? documentChecksum(result.data)
           : createHash('sha256').update(raw).digest('hex'),
         document: result.success ? result.data : undefined,
-        status: typeof parsed.data['status'] === 'string' ? parsed.data['status'] : undefined,
+        status: typeof parsed.data.status === 'string' ? parsed.data.status : undefined,
         fields: result.success ? result.data.fields : null,
         issues: result.success
           ? []
@@ -392,8 +392,8 @@ export async function loadManifest(contentDir: string): Promise<ContentManifest 
     if (
       typeof parsed !== 'object' ||
       parsed === null ||
-      typeof (parsed as Record<string, unknown>)['version'] !== 'number' ||
-      typeof (parsed as Record<string, unknown>)['files'] !== 'object'
+      typeof (parsed as Record<string, unknown>).version !== 'number' ||
+      typeof (parsed as Record<string, unknown>).files !== 'object'
     ) {
       return null
     }

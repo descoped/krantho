@@ -51,10 +51,10 @@ describe('FileSystemAdapter collection directories', () => {
 
   it('reads a document from its collection directory', async () => {
     const doc = await adapter.getContent('docs', 'install')
-    expect(doc?.fields['title']).toBe('Install')
+    expect(doc?.fields.title).toBe('Install')
     expect(doc?.meta.collection).toBe('docs')
     expect(await adapter.getContent('landing', 'install')).toBeNull()
-    expect((await adapter.getPublished('landing', 'home'))?.fields['title']).toBe('Home')
+    expect((await adapter.getPublished('landing', 'home'))?.fields.title).toBe('Home')
   })
 
   it('lists only the files of the collection directory', async () => {
@@ -77,7 +77,7 @@ describe('FileSystemAdapter collection directories', () => {
 
   it('keeps a collection without a directory in the content path', async () => {
     expect(await slugsOf('current', 'pages')).toEqual(['loose'])
-    expect((await adapter.getContent('pages', 'loose'))?.fields['title']).toBe('Loose')
+    expect((await adapter.getContent('pages', 'loose'))?.fields.title).toBe('Loose')
   })
 
   it('lists one locale when asked, every locale otherwise', async () => {
@@ -105,7 +105,7 @@ describe('FileSystemAdapter collection directories', () => {
     })
     expect(await readFile(join(root, 'guides', 'first.md'), 'utf-8')).toContain('title: "First"')
     await expect(access(join(root, 'first.md'))).rejects.toThrow()
-    expect((await guides.getContent('guides', 'first'))?.fields['title']).toBe('First')
+    expect((await guides.getContent('guides', 'first'))?.fields.title).toBe('First')
   })
 
   it('deletes the file in the collection directory', async () => {

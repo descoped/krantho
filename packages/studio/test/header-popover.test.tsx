@@ -32,6 +32,7 @@ describe('header popover', () => {
     await userEvent.setup().click(screen.getByRole('button', { name: 'Live' }))
     const panel = screen.getByText('Detail').parentElement as HTMLElement
     expect(panel).toBeVisible()
-    expect(panel.style.translate).toBe('56px 0')
+    // 56px to the right; the vertical 0 may be left out when the style is read back
+    expect(panel.style.translate).toMatch(/^56px( 0(px)?)?$/)
   })
 })

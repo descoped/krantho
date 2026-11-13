@@ -23,7 +23,7 @@ export async function listPage(
   ctx: ApiContext,
   collections: readonly string[],
 ): Promise<ApiResponse> {
-  const projection = projectionOf(query['view'])
+  const projection = projectionOf(query.view)
   if (!projection) {
     return { status: 400, body: { error: "view must be 'summary' or 'meta' when given" } }
   }
@@ -36,11 +36,11 @@ export async function listPage(
     state: 'current',
     collections,
     projection,
-    status: parseStatusParam(query['status']),
-    sort: query['sort'],
-    limit: applyListLimit(parsePositiveInt(query['limit']), ctx.config.content.list.maxLimit),
-    offset: parsePositiveInt(query['offset']),
-    locale: parseLocaleParam(query['locale']),
+    status: parseStatusParam(query.status),
+    sort: query.sort,
+    limit: applyListLimit(parsePositiveInt(query.limit), ctx.config.content.list.maxLimit),
+    offset: parsePositiveInt(query.offset),
+    locale: parseLocaleParam(query.locale),
   })
   return { status: 200, body: { items: page.items, hasMore: page.hasMore } }
 }

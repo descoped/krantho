@@ -26,7 +26,7 @@ describe('SQLiteAdapter default locale', () => {
     await save('Hjem')
 
     expect((await adapter.getContent('pages', 'home'))?.meta.locale).toBe('nb')
-    expect((await adapter.getContent('pages', 'home', 'nb'))?.fields['title']).toBe('Hjem')
+    expect((await adapter.getContent('pages', 'home', 'nb'))?.fields.title).toBe('Hjem')
     expect(await adapter.getContent('pages', 'home', 'en')).toBeNull()
   })
 
@@ -46,11 +46,11 @@ describe('SQLiteAdapter default locale', () => {
       [2, 'nb'],
       [1, 'nb'],
     ])
-    expect((await adapter.getVersion('pages', 'home', 1))?.fields['title']).toBe('Første')
+    expect((await adapter.getVersion('pages', 'home', 1))?.fields.title).toBe('Første')
 
     expect(await adapter.restoreVersion('pages', 'home', 1)).toBe(true)
     const current = await adapter.getContent('pages', 'home')
-    expect(current?.fields['title']).toBe('Første')
+    expect(current?.fields.title).toBe('Første')
     expect(current?.meta.version).toBe(3)
     expect(current?.meta.locale).toBe('nb')
   })
@@ -68,7 +68,7 @@ describe('SQLiteAdapter default locale', () => {
     await adapter.deleteContent('pages', 'home')
 
     expect(await adapter.getContent('pages', 'home')).toBeNull()
-    expect((await adapter.getContent('pages', 'home', 'en'))?.fields['title']).toBe('Home')
+    expect((await adapter.getContent('pages', 'home', 'en'))?.fields.title).toBe('Home')
   })
 
   it('imports a file that names no locale in the default locale', async () => {

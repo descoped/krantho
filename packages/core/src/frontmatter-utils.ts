@@ -49,9 +49,9 @@ export function splitFrontmatter(
     }
   }
 
-  const identity = data['identity']
+  const identity = data.identity
   if (identity && typeof identity === 'object' && !Array.isArray(identity)) {
-    const value = (identity as Record<string, unknown>)['locale']
+    const value = (identity as Record<string, unknown>).locale
     if (typeof value === 'string') locale = value
   }
   return { fields, status, locale }

@@ -65,10 +65,10 @@ describe('composeGraph', () => {
     ) as Record<string, unknown> | undefined
 
     expect(article).toBeDefined()
-    expect(article?.['headline']).toBe('My Post')
-    expect(article?.['datePublished']).toBe('2026-03-15')
+    expect(article?.headline).toBe('My Post')
+    expect(article?.datePublished).toBe('2026-03-15')
     // The content names the author, so it wins over the site's Person
-    expect(article?.['author']).toEqual({ '@type': 'Person', name: 'John Doe' })
+    expect(article?.author).toEqual({ '@type': 'Person', name: 'John Doe' })
   })
 
   it('generates BreadcrumbList from the trail the page renders', () => {
@@ -90,10 +90,10 @@ describe('composeGraph', () => {
     ) as Record<string, unknown> | undefined
 
     expect(breadcrumb).toBeDefined()
-    const items = breadcrumb?.['itemListElement'] as Array<Record<string, unknown>>
+    const items = breadcrumb?.itemListElement as Array<Record<string, unknown>>
     expect(items).toHaveLength(2)
-    expect(items[0]?.['position']).toBe(1)
-    expect(items[1]?.['position']).toBe(2)
+    expect(items[0]?.position).toBe(1)
+    expect(items[1]?.position).toBe(2)
   })
 
   it('generates FAQPage from provided FAQ data', () => {
@@ -113,9 +113,9 @@ describe('composeGraph', () => {
     ) as Record<string, unknown> | undefined
 
     expect(faqPage).toBeDefined()
-    const mainEntity = faqPage?.['mainEntity'] as Array<Record<string, unknown>>
+    const mainEntity = faqPage?.mainEntity as Array<Record<string, unknown>>
     expect(mainEntity).toHaveLength(2)
-    expect(mainEntity[0]?.['name']).toBe('What do you offer?')
+    expect(mainEntity[0]?.name).toBe('What do you offer?')
   })
 
   it('uses @id conventions for cross-references', () => {
@@ -136,7 +136,7 @@ describe('composeGraph', () => {
 
     expect(business?.['@id']).toBe('https://acme.example.com/#business')
     expect(website?.['@id']).toBe('https://acme.example.com/#website')
-    expect((website?.['publisher'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((website?.publisher as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#business',
     )
   })
@@ -176,7 +176,7 @@ describe('composeFromConfig — generic site-level @id', () => {
     // The Service entity's provider reference should point to the same @id
     const service = findEntity(graph, 'Service')
     expect(service).toBeDefined()
-    expect((service?.['provider'] as Record<string, unknown>)?.['@id']).toBe(
+    expect((service?.provider as Record<string, unknown>)?.['@id']).toBe(
       'https://acme.example.com/#business',
     )
   })
@@ -197,7 +197,7 @@ describe('composeFromConfig — generic site-level @id', () => {
     const restaurant = findEntity(graph, 'Restaurant')
     expect(restaurant).toBeDefined()
     expect(restaurant?.['@id']).toBe('https://acme.example.com/#business')
-    expect(restaurant?.['name']).toBe('Chez Acme')
+    expect(restaurant?.name).toBe('Chez Acme')
   })
 })
 
@@ -221,8 +221,8 @@ describe('resolveEffectiveConfig — entity ordering', () => {
     // Collection introduced [Article, Person] first — that order is preserved.
     // Document scope overrides properties but does not reorder.
     expect(effective.entities.map((e) => e['@type'])).toEqual(['Article', 'Person'])
-    expect(effective.entities[0]?.properties['headline']).toBe('Document')
-    expect(effective.entities[1]?.properties['name']).toBe('Override')
+    expect(effective.entities[0]?.properties.headline).toBe('Document')
+    expect(effective.entities[1]?.properties.name).toBe('Override')
   })
 
   it('includes entities unique to more-specific scopes at the end', () => {
@@ -239,7 +239,7 @@ describe('resolveEffectiveConfig — entity ordering', () => {
     })
 
     expect(effective.entities.map((e) => e['@type'])).toEqual(['Article', 'BreadcrumbList'])
-    expect(effective.entities[0]?.properties['headline']).toBe('Override')
+    expect(effective.entities[0]?.properties.headline).toBe('Override')
   })
 })
 
@@ -275,9 +275,9 @@ describe('composeFromConfig — privacy of version history', () => {
 
     expect(JSON.stringify(graph)).not.toContain('jane.editor@example.com')
     const byType = types(graph)
-    expect(byType['BlogPosting']?.['author']).toBeUndefined()
-    expect(byType['MedicalEntity']?.['author']).toBeUndefined()
-    expect(byType['Person']?.['name']).toBe('Acme Consulting')
+    expect(byType.BlogPosting?.author).toBeUndefined()
+    expect(byType.MedicalEntity?.author).toBeUndefined()
+    expect(byType.Person?.name).toBe('Acme Consulting')
   })
 
   it('takes an author from the content fields', () => {
@@ -289,7 +289,7 @@ describe('composeFromConfig — privacy of version history', () => {
       documentMeta: versionMeta,
     })
 
-    expect(types(graph)['BlogPosting']?.['author']).toBe('Jane Writer')
+    expect(types(graph).BlogPosting?.author).toBe('Jane Writer')
   })
 })
 
@@ -346,11 +346,11 @@ describe('composeFromConfig — entities without a dedicated builder', () => {
     })
 
     const restaurant = entity(graph, 'Restaurant')
-    expect(restaurant['name']).toBe('Chez Acme')
-    expect(restaurant['servesCuisine']).toBe('French')
-    expect(restaurant['priceRange']).toBe('$$')
-    expect(restaurant['order']).toBeUndefined()
-    expect(restaurant['title']).toBeUndefined()
+    expect(restaurant.name).toBe('Chez Acme')
+    expect(restaurant.servesCuisine).toBe('French')
+    expect(restaurant.priceRange).toBe('$$')
+    expect(restaurant.order).toBeUndefined()
+    expect(restaurant.title).toBeUndefined()
   })
 
   it('keeps configured properties and mappings even when the catalog does not list them', () => {
@@ -365,11 +365,11 @@ describe('composeFromConfig — entities without a dedicated builder', () => {
     })
 
     const page = entity(graph, 'WebPage')
-    expect(page['keywords']).toBe('pricing, plans')
-    expect(page['about']).toBe('Plans')
-    expect(page['audience']).toBe('Teams')
-    expect(page['topic']).toBeUndefined()
-    expect(page['segment']).toBeUndefined()
+    expect(page.keywords).toBe('pricing, plans')
+    expect(page.about).toBe('Plans')
+    expect(page.audience).toBe('Teams')
+    expect(page.topic).toBeUndefined()
+    expect(page.segment).toBeUndefined()
   })
 
   it('keeps only properties the vocabulary defines for a type the catalog does not list', () => {

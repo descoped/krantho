@@ -7,12 +7,17 @@ import (
 	"testing"
 )
 
-// frameworkDir creates a temp project dir carrying the given marker files.
+// frameworkDir creates a temp project dir carrying the given marker files;
+// a package.json lists SvelteKit.
 func frameworkDir(t *testing.T, files ...string) string {
 	t.Helper()
 	dir := t.TempDir()
 	for _, name := range files {
-		if err := os.WriteFile(filepath.Join(dir, name), []byte("// marker\n"), 0o644); err != nil {
+		content := []byte("// marker\n")
+		if name == "package.json" {
+			content = []byte(`{"devDependencies":{"@sveltejs/kit":"^3.2.0"}}`)
+		}
+		if err := os.WriteFile(filepath.Join(dir, name), content, 0o644); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -43,7 +48,7 @@ func TestDevDryRun(t *testing.T) {
 		},
 		{
 			name:  "sveltekit dev beats its vite config",
-			files: []string{"svelte.config.js", "vite.config.ts", "pnpm-lock.yaml"},
+			files: []string{"package.json", "vite.config.ts", "pnpm-lock.yaml"},
 			args:  []string{"dev", "--dry-run"},
 			want:  "pnpm exec vite dev\n",
 		},

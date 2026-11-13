@@ -15,8 +15,8 @@
     "@krantho/persistence": "workspace:*",
     "@krantho/persistence-sqlite": "workspace:*",
     "@playwright/test": "^1.65.0",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^25.9.9",
-    "typescript": "^6.0.3"
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
   }
 }

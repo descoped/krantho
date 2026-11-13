@@ -80,14 +80,14 @@ function isJob(value: unknown): value is EnrichJob {
   if (typeof value !== 'object' || value === null) return false
   const job = value as Record<string, unknown>
   return (
-    typeof job['id'] === 'string' &&
-    typeof job['type'] === 'string' &&
-    JOB_STATUSES.includes(job['status']) &&
-    typeof job['startedAt'] === 'number' &&
-    typeof job['updatedAt'] === 'number' &&
-    Array.isArray(job['items']) &&
-    typeof job['usage'] === 'object' &&
-    job['usage'] !== null
+    typeof job.id === 'string' &&
+    typeof job.type === 'string' &&
+    JOB_STATUSES.includes(job.status) &&
+    typeof job.startedAt === 'number' &&
+    typeof job.updatedAt === 'number' &&
+    Array.isArray(job.items) &&
+    typeof job.usage === 'object' &&
+    job.usage !== null
   )
 }
 

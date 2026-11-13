@@ -248,8 +248,8 @@ describe('edit keys (_ek)', () => {
       ],
     })
     // Both are addressable independently
-    expect(model.byEk.get('0')?.['name']).toBe('S1')
-    expect(model.byEk.get('1')?.['name']).toBe('S2')
+    expect(model.byEk.get('0')?.name).toBe('S1')
+    expect(model.byEk.get('1')?.name).toBe('S2')
   })
 })
 

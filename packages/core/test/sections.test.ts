@@ -103,7 +103,7 @@ describe('rendered sections', () => {
       'Lead.\n\n## A\n\n```\n## code\n```\n\n## A\n\nsecond\n\n## __proto__\n\nsafe',
     )
     expect(Object.keys(rendered.sections)).toEqual(['A', '__proto__'])
-    expect(rendered.sections['A']).toContain('<code>## code')
+    expect(rendered.sections.A).toContain('<code>## code')
     expect(Object.getPrototypeOf(rendered.sections)).toBe(Object.prototype)
   })
 })

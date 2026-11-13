@@ -6,13 +6,13 @@ import { parseLocaleParam, requireParam, validateCollectionParam } from '../vali
 
 /** GET /api/content/:collection/:slug — single content item */
 export const getContent: ApiHandler = async (req, ctx) => {
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const slugResult = requireParam(req.params, 'slug')
   if (!slugResult.isValid) return slugResult.response
   const slug = slugResult.value
-  const locale = parseLocaleParam(req.query['locale'])
+  const locale = parseLocaleParam(req.query.locale)
 
   // Prefer adapter.getContent (returns ContentDocument) over engine.loadContent
   if (canGetContent(ctx.adapter)) {
@@ -34,7 +34,7 @@ export const getContent: ApiHandler = async (req, ctx) => {
     }
 
     // Resolve references if requested
-    if (req.query['resolve'] === 'true') {
+    if (req.query.resolve === 'true') {
       const resolved = await resolveReferences(doc, ctx.adapter)
       return { status: 200, body: resolved }
     }
@@ -53,7 +53,7 @@ export const getContent: ApiHandler = async (req, ctx) => {
     }
   }
 
-  const statusValue = result.fields['status']
+  const statusValue = result.fields.status
 
   return {
     status: 200,

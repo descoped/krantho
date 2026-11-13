@@ -15,12 +15,12 @@ export const publishImpact: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'editor')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
   const slugResult = requireParam(req.params, 'slug')
   if (!slugResult.isValid) return slugResult.response
   const slug = slugResult.value
-  const locale = parseLocaleParam(req.query['locale']) ?? ctx.config.site.defaultLocale
+  const locale = parseLocaleParam(req.query.locale) ?? ctx.config.site.defaultLocale
 
   const collection = validated.collection
   const path = documentPath(validated.collectionDef, slug)

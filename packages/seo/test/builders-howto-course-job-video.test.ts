@@ -40,8 +40,8 @@ describe('buildHowTo', () => {
 
     const howto = findEntity(graph, 'HowTo')
     expect(howto).toBeDefined()
-    expect(howto?.['name']).toBe('How to bake bread')
-    expect(howto?.['step']).toHaveLength(3)
+    expect(howto?.name).toBe('How to bake bread')
+    expect(howto?.step).toHaveLength(3)
   })
 
   it('wraps each step as a HowToStep entity', () => {
@@ -53,9 +53,9 @@ describe('buildHowTo', () => {
     })
 
     const howto = findEntity(graph, 'HowTo')
-    const steps = howto?.['step'] as Array<Record<string, unknown>>
+    const steps = howto?.step as Array<Record<string, unknown>>
     expect(steps[0]?.['@type']).toBe('HowToStep')
-    expect(steps[0]?.['text']).toBe('Step 1')
+    expect(steps[0]?.text).toBe('Step 1')
   })
 
   it('uses howto @id convention', () => {
@@ -79,7 +79,7 @@ describe('buildHowTo', () => {
     })
 
     const howto = findEntity(graph, 'HowTo')
-    expect((howto?.['author'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((howto?.author as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#person',
     )
   })
@@ -98,13 +98,13 @@ describe('buildHowTo', () => {
     })
 
     const howto = findEntity(graph, 'HowTo')
-    const supply = howto?.['supply'] as Array<Record<string, unknown>>
+    const supply = howto?.supply as Array<Record<string, unknown>>
     expect(supply[0]?.['@type']).toBe('HowToSupply')
-    expect(supply[0]?.['name']).toBe('2x4 boards')
+    expect(supply[0]?.name).toBe('2x4 boards')
 
-    const tool = howto?.['tool'] as Array<Record<string, unknown>>
+    const tool = howto?.tool as Array<Record<string, unknown>>
     expect(tool[0]?.['@type']).toBe('HowToTool')
-    expect(tool[1]?.['name']).toBe('screwdriver')
+    expect(tool[1]?.name).toBe('screwdriver')
   })
 
   it('omits empty optional fields', () => {
@@ -116,10 +116,10 @@ describe('buildHowTo', () => {
     })
 
     const howto = findEntity(graph, 'HowTo')
-    expect(howto?.['totalTime']).toBeUndefined()
-    expect(howto?.['estimatedCost']).toBeUndefined()
-    expect(howto?.['supply']).toBeUndefined()
-    expect(howto?.['tool']).toBeUndefined()
+    expect(howto?.totalTime).toBeUndefined()
+    expect(howto?.estimatedCost).toBeUndefined()
+    expect(howto?.supply).toBeUndefined()
+    expect(howto?.tool).toBeUndefined()
   })
 
   it('reads alternate `steps` plural field name', () => {
@@ -131,10 +131,10 @@ describe('buildHowTo', () => {
     })
 
     const howto = findEntity(graph, 'HowTo')
-    const steps = howto?.['step'] as Array<Record<string, unknown>>
+    const steps = howto?.step as Array<Record<string, unknown>>
     expect(steps).toHaveLength(2)
-    expect(steps[0]?.['text']).toBe('Mix')
-    expect(steps[1]?.['text']).toBe('Bake')
+    expect(steps[0]?.text).toBe('Mix')
+    expect(steps[1]?.text).toBe('Bake')
   })
 
   it('parses comma-separated strings for step, supply, and tool (legacy CMS compat)', () => {
@@ -151,16 +151,16 @@ describe('buildHowTo', () => {
     })
 
     const howto = findEntity(graph, 'HowTo')
-    const steps = howto?.['step'] as Array<Record<string, unknown>>
+    const steps = howto?.step as Array<Record<string, unknown>>
     expect(steps).toHaveLength(3)
-    expect(steps[0]?.['text']).toBe('Cut wood')
-    expect(steps[2]?.['text']).toBe('Assemble')
+    expect(steps[0]?.text).toBe('Cut wood')
+    expect(steps[2]?.text).toBe('Assemble')
 
-    const supply = howto?.['supply'] as Array<Record<string, unknown>>
+    const supply = howto?.supply as Array<Record<string, unknown>>
     expect(supply).toHaveLength(3)
-    expect(supply[1]?.['name']).toBe('screws')
+    expect(supply[1]?.name).toBe('screws')
 
-    const tool = howto?.['tool'] as Array<Record<string, unknown>>
+    const tool = howto?.tool as Array<Record<string, unknown>>
     expect(tool).toHaveLength(2)
   })
 })
@@ -179,8 +179,8 @@ describe('buildCourse', () => {
 
     const course = findEntity(graph, 'Course')
     expect(course).toBeDefined()
-    expect(course?.['name']).toBe('Intro to TypeScript')
-    expect(course?.['description']).toBe('Learn TypeScript fundamentals')
+    expect(course?.name).toBe('Intro to TypeScript')
+    expect(course?.description).toBe('Learn TypeScript fundamentals')
   })
 
   it('cross-links provider to site Organization via @id', () => {
@@ -193,7 +193,7 @@ describe('buildCourse', () => {
     })
 
     const course = findEntity(graph, 'Course')
-    expect((course?.['provider'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((course?.provider as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#business',
     )
   })
@@ -219,7 +219,7 @@ describe('buildCourse', () => {
       path: '/c',
     })
 
-    expect(findEntity(graph, 'Course')?.['courseCode']).toBe('CS101')
+    expect(findEntity(graph, 'Course')?.courseCode).toBe('CS101')
   })
 
   it('auto-populates hasCourseInstance with default courseMode', () => {
@@ -231,10 +231,10 @@ describe('buildCourse', () => {
     })
 
     const course = findEntity(graph, 'Course')
-    const instance = course?.['hasCourseInstance'] as Record<string, unknown>
+    const instance = course?.hasCourseInstance as Record<string, unknown>
     expect(instance).toBeDefined()
     expect(instance['@type']).toBe('CourseInstance')
-    expect(instance['courseMode']).toBe('Online')
+    expect(instance.courseMode).toBe('Online')
   })
 
   it('uses courseMode field when provided for hasCourseInstance default', () => {
@@ -245,8 +245,8 @@ describe('buildCourse', () => {
       path: '/c',
     })
 
-    const instance = findEntity(graph, 'Course')?.['hasCourseInstance'] as Record<string, unknown>
-    expect(instance['courseMode']).toBe('Hybrid')
+    const instance = findEntity(graph, 'Course')?.hasCourseInstance as Record<string, unknown>
+    expect(instance.courseMode).toBe('Hybrid')
   })
 
   it('passes through full hasCourseInstance object form unchanged', () => {
@@ -274,9 +274,9 @@ describe('buildCourse', () => {
       path: '/c',
     })
 
-    const instance = findEntity(graph, 'Course')?.['hasCourseInstance'] as Record<string, unknown>
-    expect(instance['courseMode']).toBe('Onsite')
-    expect((instance['courseSchedule'] as Record<string, unknown>)['startDate']).toBe('2026-09-01')
+    const instance = findEntity(graph, 'Course')?.hasCourseInstance as Record<string, unknown>
+    expect(instance.courseMode).toBe('Onsite')
+    expect((instance.courseSchedule as Record<string, unknown>).startDate).toBe('2026-09-01')
   })
 })
 
@@ -296,9 +296,9 @@ describe('buildJobPosting', () => {
 
     const job = findEntity(graph, 'JobPosting')
     expect(job).toBeDefined()
-    expect(job?.['title']).toBe('Senior TypeScript Engineer')
-    expect(job?.['description']).toBe('Build production systems')
-    expect(job?.['datePosted']).toBe('2026-04-01')
+    expect(job?.title).toBe('Senior TypeScript Engineer')
+    expect(job?.description).toBe('Build production systems')
+    expect(job?.datePosted).toBe('2026-04-01')
   })
 
   it('wraps jobLocation string as a Place sub-entity', () => {
@@ -315,9 +315,9 @@ describe('buildJobPosting', () => {
     })
 
     const job = findEntity(graph, 'JobPosting')
-    const loc = job?.['jobLocation'] as Record<string, unknown>
+    const loc = job?.jobLocation as Record<string, unknown>
     expect(loc['@type']).toBe('Place')
-    expect(loc['name']).toBe('Remote, US')
+    expect(loc.name).toBe('Remote, US')
   })
 
   it('passes through jobLocation object form unchanged', () => {
@@ -348,8 +348,8 @@ describe('buildJobPosting', () => {
     })
 
     const job = findEntity(graph, 'JobPosting')
-    const loc = job?.['jobLocation'] as Record<string, unknown>
-    expect((loc['address'] as Record<string, unknown>)['streetAddress']).toBe('1 Main St')
+    const loc = job?.jobLocation as Record<string, unknown>
+    expect((loc.address as Record<string, unknown>).streetAddress).toBe('1 Main St')
   })
 
   it('cross-links hiringOrganization to site Organization via @id', () => {
@@ -362,7 +362,7 @@ describe('buildJobPosting', () => {
     })
 
     const job = findEntity(graph, 'JobPosting')
-    expect((job?.['hiringOrganization'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((job?.hiringOrganization as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#business',
     )
   })
@@ -383,13 +383,13 @@ describe('buildJobPosting', () => {
     })
 
     const job = findEntity(graph, 'JobPosting')
-    expect(job?.['datePosted']).toBe('2026-02-15')
-    expect(job?.['employmentType']).toBe('FULL_TIME')
-    expect((job?.['jobLocation'] as Record<string, unknown> | undefined)?.['name']).toBe('LA')
+    expect(job?.datePosted).toBe('2026-02-15')
+    expect(job?.employmentType).toBe('FULL_TIME')
+    expect((job?.jobLocation as Record<string, unknown> | undefined)?.name).toBe('LA')
     // baseSalary string is wrapped as a MonetaryAmount sub-entity
-    const salary = job?.['baseSalary'] as Record<string, unknown>
+    const salary = job?.baseSalary as Record<string, unknown>
     expect(salary['@type']).toBe('MonetaryAmount')
-    expect(salary['value']).toBe('$120k-$160k')
+    expect(salary.value).toBe('$120k-$160k')
   })
 
   it('wraps baseSalary string as a MonetaryAmount sub-entity', () => {
@@ -406,9 +406,9 @@ describe('buildJobPosting', () => {
       path: '/j/s',
     })
 
-    const salary = findEntity(graph, 'JobPosting')?.['baseSalary'] as Record<string, unknown>
+    const salary = findEntity(graph, 'JobPosting')?.baseSalary as Record<string, unknown>
     expect(salary['@type']).toBe('MonetaryAmount')
-    expect(salary['value']).toBe('120000')
+    expect(salary.value).toBe('120000')
   })
 
   it('passes through baseSalary object form unchanged', () => {
@@ -437,12 +437,12 @@ describe('buildJobPosting', () => {
       path: '/j/o',
     })
 
-    const salary = findEntity(graph, 'JobPosting')?.['baseSalary'] as Record<string, unknown>
+    const salary = findEntity(graph, 'JobPosting')?.baseSalary as Record<string, unknown>
     expect(salary['@type']).toBe('MonetaryAmount')
-    expect(salary['currency']).toBe('USD')
-    const value = salary['value'] as Record<string, unknown>
-    expect(value['minValue']).toBe(120000)
-    expect(value['maxValue']).toBe(160000)
+    expect(salary.currency).toBe('USD')
+    const value = salary.value as Record<string, unknown>
+    expect(value.minValue).toBe(120000)
+    expect(value.maxValue).toBe(160000)
   })
 })
 
@@ -463,10 +463,10 @@ describe('buildVideoObject', () => {
 
     const video = findEntity(graph, 'VideoObject')
     expect(video).toBeDefined()
-    expect(video?.['name']).toBe('Product demo')
-    expect(video?.['contentUrl']).toBe('https://example.com/video.mp4')
-    expect(video?.['thumbnailUrl']).toBe('https://example.com/thumb.jpg')
-    expect(video?.['uploadDate']).toBe('2026-03-15')
+    expect(video?.name).toBe('Product demo')
+    expect(video?.contentUrl).toBe('https://example.com/video.mp4')
+    expect(video?.thumbnailUrl).toBe('https://example.com/thumb.jpg')
+    expect(video?.uploadDate).toBe('2026-03-15')
   })
 
   it('cross-links publisher to site Organization and author to site Person', () => {
@@ -485,10 +485,10 @@ describe('buildVideoObject', () => {
     })
 
     const video = findEntity(graph, 'VideoObject')
-    expect((video?.['publisher'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((video?.publisher as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#business',
     )
-    expect((video?.['author'] as Record<string, unknown> | undefined)?.['@id']).toBe(
+    expect((video?.author as Record<string, unknown> | undefined)?.['@id']).toBe(
       'https://acme.example.com/#person',
     )
   })
@@ -528,10 +528,10 @@ describe('buildVideoObject', () => {
     })
 
     const video = findEntity(graph, 'VideoObject')
-    expect(video?.['contentUrl']).toBe('u.mp4')
-    expect(video?.['thumbnailUrl']).toBe('t.jpg')
-    expect(video?.['uploadDate']).toBe('2026-04-01')
-    expect(video?.['embedUrl']).toBe('e.html')
+    expect(video?.contentUrl).toBe('u.mp4')
+    expect(video?.thumbnailUrl).toBe('t.jpg')
+    expect(video?.uploadDate).toBe('2026-04-01')
+    expect(video?.embedUrl).toBe('e.html')
   })
 
   it('falls back uploadDate to datePublished when neither uploadDate nor upload-date is set', () => {
@@ -548,7 +548,7 @@ describe('buildVideoObject', () => {
       path: '/v/dp',
     })
 
-    expect(findEntity(graph, 'VideoObject')?.['uploadDate']).toBe('2026-05-15')
+    expect(findEntity(graph, 'VideoObject')?.uploadDate).toBe('2026-05-15')
   })
 
   it('falls back uploadDate to generic date as a last resort', () => {
@@ -565,7 +565,7 @@ describe('buildVideoObject', () => {
       path: '/v/d',
     })
 
-    expect(findEntity(graph, 'VideoObject')?.['uploadDate']).toBe('2026-06-01')
+    expect(findEntity(graph, 'VideoObject')?.uploadDate).toBe('2026-06-01')
   })
 
   it('omits empty optional fields', () => {
@@ -583,7 +583,7 @@ describe('buildVideoObject', () => {
     })
 
     const video = findEntity(graph, 'VideoObject')
-    expect(video?.['duration']).toBeUndefined()
-    expect(video?.['embedUrl']).toBeUndefined()
+    expect(video?.duration).toBeUndefined()
+    expect(video?.embedUrl).toBeUndefined()
   })
 })

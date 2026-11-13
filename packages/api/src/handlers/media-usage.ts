@@ -29,7 +29,7 @@ export const mediaUsage: ApiHandler = async (req, ctx) => {
 export const mediaUsageBatch: ApiHandler = async (req, ctx) => {
   if (!hasMediaStorage(ctx)) return MEDIA_NOT_CONFIGURED
 
-  const ids = [...new Set((req.query['ids'] ?? '').split(',').filter(Boolean))]
+  const ids = [...new Set((req.query.ids ?? '').split(',').filter(Boolean))]
   if (ids.length === 0) return { status: 400, body: { error: '"ids" names the media files' } }
   if (ids.length > MAX_USAGE_IDS) {
     return { status: 400, body: { error: `Ask about ${MAX_USAGE_IDS} files or fewer at once` } }

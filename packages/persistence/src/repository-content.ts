@@ -89,10 +89,10 @@ export function repositoryFile(input: RepositoryFileInput): string {
   const data: Record<string, unknown> = Object.fromEntries(
     names.map((name) => [name, input.fields[name]]),
   )
-  data['status'] = input.status
-  if (input.locale !== undefined) data['locale'] = input.locale
-  if (Object.keys(input.metadata).length > 0) data['metadata'] = input.metadata
-  if (input.defaults.length > 0) data['defaults'] = input.defaults
+  data.status = input.status
+  if (input.locale !== undefined) data.locale = input.locale
+  if (Object.keys(input.metadata).length > 0) data.metadata = input.metadata
+  if (input.defaults.length > 0) data.defaults = input.defaults
   // YAML 1.1 rules: gray-matter reads files with them, so a date or `yes` is quoted to stay a string
   const frontmatter = frontmatterYaml(
     data,
@@ -123,11 +123,11 @@ export function repositoryFrontmatter(data: Record<string, unknown>): {
 } {
   return {
     fields: Object.fromEntries(Object.entries(data).filter(([key]) => !ENVELOPE_KEYS.has(key))),
-    metadata: data['metadata'] === undefined ? {} : data['metadata'],
-    contract: data['contract'],
-    defaults: data['defaults'] ?? [],
-    identity: data['identity'],
-    basis: data['basis'],
+    metadata: data.metadata === undefined ? {} : data.metadata,
+    contract: data.contract,
+    defaults: data.defaults ?? [],
+    identity: data.identity,
+    basis: data.basis,
   }
 }
 
@@ -135,5 +135,5 @@ export function contractReferenceMatches(reference: unknown, contract: ContentCo
   if (reference === undefined || reference === null) return true
   if (typeof reference !== 'object' || Array.isArray(reference)) return false
   const ref = reference as Record<string, unknown>
-  return ref['id'] === contract.id && ref['revision'] === contract.revision
+  return ref.id === contract.id && ref.revision === contract.revision
 }

@@ -258,8 +258,7 @@ export class SQLiteAdapter implements IPersistenceAdapter {
       | undefined,
   ): Promise<void> {
     const loc = locale ?? this.defaultLocale
-    const status =
-      typeof fields['status'] === 'string' ? fields['status'] : this.defaultStatus.filesystem
+    const status = typeof fields.status === 'string' ? fields.status : this.defaultStatus.filesystem
     const fieldsJson = JSON.stringify(fields)
     const sectionsJson = JSON.stringify(sections)
 

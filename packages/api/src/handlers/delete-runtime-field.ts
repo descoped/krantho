@@ -8,14 +8,14 @@ export const deleteRuntimeField: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   if (!hasRuntimeSchema(ctx.adapter)) {
     return { status: 501, body: { error: 'Adapter does not support runtime schemas' } }
   }
 
-  const fieldName = req.params['field']
+  const fieldName = req.params.field
   if (!fieldName) {
     return { status: 400, body: { error: 'Missing field name' } }
   }

@@ -18,8 +18,7 @@ Grounded in `examples/sveltekit-shadcn` of the krantho repository. SvelteKit 2, 
 ```
 krantho.config.ts
 krantho.collections.ts
-vite.config.ts                         # keep server packages external
-svelte.config.js                       # adapter-node, or adapter-vercel on Vercel
+vite.config.ts                         # SvelteKit and its adapter; server packages external
 src/hooks.server.ts                    # page cache rules and signed preview
 src/lib/cms.ts                         # the content loader and render helpers
 src/routes/api/[...path]/+server.ts    # the krantho API
@@ -87,7 +86,7 @@ published page on another, so set one value everywhere.
 
 ```ts
 // src/hooks.server.ts
-import type { Handle } from '@sveltejs/kit'
+import type { Handle } from '@sveltejs/kit/hooks'
 import { createPageCacheHandle } from '@krantho/server-sveltekit'
 import config from '../krantho.config'
 
@@ -161,7 +160,7 @@ the Live marks.
 ```ts
 // src/routes/about/+page.server.ts
 import { error } from '@sveltejs/kit'
-import { loadContent, loadJsonLd } from '$lib/cms'
+import { loadContent, loadJsonLd } from '#lib/cms.ts'
 
 export async function load() {
   const page = await loadContent('pages', 'about')
@@ -221,14 +220,23 @@ export const GET: RequestHandler = async ({ fetch }) => {
 
 ## Adapter
 
-```js
-// svelte.config.js — a Node server anywhere; Vercel's adapter when Vercel builds it
+SvelteKit 3 takes its configuration in the Vite plugin; there is no `svelte.config.js`.
+
+```ts
+// vite.config.ts — a Node server anywhere; Vercel's adapter when Vercel builds it
+import { sveltekit } from '@sveltejs/kit/vite'
+import { defineConfig } from 'vite'
+
 const { default: adapter } = await import(
   process.env.VERCEL ? '@sveltejs/adapter-vercel' : '@sveltejs/adapter-node'
 )
 
-export default { kit: { adapter: adapter() } }
+export default defineConfig({ plugins: [sveltekit({ adapter: adapter() })] })
 ```
+
+The project's own modules are imported as `#lib/…` with their file extension, declared in
+`package.json`: `"imports": { "#lib": "./src/lib", "#lib/*": "./src/lib/*" }`, and
+`tsconfig.json` extends `$app/tsconfig`.
 
 `adapter-node` builds `node build`, which runs in any container or VM. Pages embed media as
 `/api/media/<id>/image?preset=…`, which the API serves from the store; the example sets

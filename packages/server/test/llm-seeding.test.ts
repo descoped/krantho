@@ -109,7 +109,7 @@ function dataDirContents(): string {
 
 describe('LLM settings seeding', () => {
   it('does not seed from KRANTHO_LLM_MODEL alone', async () => {
-    process.env['KRANTHO_LLM_MODEL'] = 'claude-haiku-4-5'
+    process.env.KRANTHO_LLM_MODEL = 'claude-haiku-4-5'
     const settings = await storedLlmSettings()
     expect(settings.provider).toBeNull()
     expect(settings.configured).toBe(false)
@@ -117,7 +117,7 @@ describe('LLM settings seeding', () => {
   })
 
   it('turns on a provider from a lone key, without seeding anything', async () => {
-    process.env['KRANTHO_LLM_ANTHROPIC_API_KEY'] = 'sk-seed-test'
+    process.env.KRANTHO_LLM_ANTHROPIC_API_KEY = 'sk-seed-test'
     const settings = await storedLlmSettings()
     expect(settings.provider).toBe('anthropic')
     expect(providerIn(settings, 'anthropic')).toMatchObject({
@@ -128,16 +128,16 @@ describe('LLM settings seeding', () => {
   })
 
   it('keeps the provider the environment chose when only another provider has a key', async () => {
-    process.env['KRANTHO_LLM_PROVIDER'] = 'openai'
-    process.env['KRANTHO_LLM_ANTHROPIC_API_KEY'] = 'sk-seed-test'
+    process.env.KRANTHO_LLM_PROVIDER = 'openai'
+    process.env.KRANTHO_LLM_ANTHROPIC_API_KEY = 'sk-seed-test'
     const settings = await storedLlmSettings()
     expect(providerIn(settings, 'openai').ready).toBe(false)
     expect(settings.provider).toBe('anthropic')
   })
 
   it('seeds the chosen provider, and uses its key from the environment without storing it', async () => {
-    process.env['KRANTHO_LLM_PROVIDER'] = 'openai'
-    process.env['KRANTHO_LLM_OPENAI_API_KEY'] = 'sk-env-marker-never-stored'
+    process.env.KRANTHO_LLM_PROVIDER = 'openai'
+    process.env.KRANTHO_LLM_OPENAI_API_KEY = 'sk-env-marker-never-stored'
     const settings = await storedLlmSettings()
     expect(settings.provider).toBe('openai')
     expect(providerIn(settings, 'openai')).toMatchObject({ ready: true, keySource: 'environment' })
@@ -145,7 +145,7 @@ describe('LLM settings seeding', () => {
   })
 
   it('does not pick the subscription provider for the site from its token alone', async () => {
-    process.env['KRANTHO_LLM_CLAUDE_CODE_OAUTH_TOKEN'] = 'oat-seed-test-token-marker'
+    process.env.KRANTHO_LLM_CLAUDE_CODE_OAUTH_TOKEN = 'oat-seed-test-token-marker'
     const settings = await storedLlmSettings()
     expect(settings.provider).toBeNull()
     expect(settings.configured).toBe(false)
@@ -154,7 +154,7 @@ describe('LLM settings seeding', () => {
 
   it('runs claude-code on the token when the code names the provider, and never stores it', async () => {
     const token = 'oat-seed-test-token-marker'
-    process.env['KRANTHO_LLM_CLAUDE_CODE_OAUTH_TOKEN'] = token
+    process.env.KRANTHO_LLM_CLAUDE_CODE_OAUTH_TOKEN = token
     const body = await rawLlmSettings({ llm: { provider: 'claude-code' } })
     const settings = JSON.parse(body) as LlmSettingsBody
 
@@ -168,12 +168,12 @@ describe('LLM settings seeding', () => {
   })
 
   it('reads the credential per boot, not from the first seed', async () => {
-    process.env['KRANTHO_LLM_PROVIDER'] = 'openai'
-    process.env['KRANTHO_LLM_OPENAI_API_KEY'] = 'sk-seed-test'
+    process.env.KRANTHO_LLM_PROVIDER = 'openai'
+    process.env.KRANTHO_LLM_OPENAI_API_KEY = 'sk-seed-test'
     const keyOnly = await storedLlmSettings()
     expect(providerIn(keyOnly, 'openai')).toMatchObject({ ready: true, keySource: 'environment' })
 
-    delete process.env['KRANTHO_LLM_OPENAI_API_KEY']
+    delete process.env.KRANTHO_LLM_OPENAI_API_KEY
     const removed = await storedLlmSettings()
     expect(providerIn(removed, 'openai').ready).toBe(false)
     expect(removed.configured).toBe(false)
@@ -199,8 +199,8 @@ describe('LLM settings seeding', () => {
   })
 
   it('does not read the old variables: the key, or the harness token', async () => {
-    process.env['KRANTHO_LLM_API_KEY'] = 'sk-old-marker'
-    process.env['CLAUDE_CODE_OAUTH_TOKEN'] = 'oat-harness-marker'
+    process.env.KRANTHO_LLM_API_KEY = 'sk-old-marker'
+    process.env.CLAUDE_CODE_OAUTH_TOKEN = 'oat-harness-marker'
 
     const key = await rawLlmSettings({ llm: { provider: 'anthropic' } })
     expect(providerIn(JSON.parse(key) as LlmSettingsBody, 'anthropic').ready).toBe(false)

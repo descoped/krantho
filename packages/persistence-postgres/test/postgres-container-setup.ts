@@ -36,7 +36,7 @@ export async function setup(): Promise<void> {
     .withReuse()
     .start()
 
-  process.env['KRANTHO_TEST_POSTGRES_URL'] = container.getConnectionUri()
+  process.env.KRANTHO_TEST_POSTGRES_URL = container.getConnectionUri()
 }
 
 export async function teardown(): Promise<void> {
@@ -48,9 +48,20 @@ export async function teardown(): Promise<void> {
   // cleanly. Without this explicit stop, cleanup would fall through to the
   // testcontainers Ryuk reaper, which SIGKILLs the container after the
   // parent exits and leaves a stopped container behind in `docker ps -a`.
-  const reuseEnabled = process.env['TESTCONTAINERS_REUSE_ENABLE']?.toLowerCase() === 'true'
-  if (!reuseEnabled) {
-    await container?.stop()
-  }
+  const reuseEnabled = process.env.TESTCONTAINERS_REUSE_ENABLE?.toLowerCase() === 'true'
+  if (!reuseEnabled) await stopUnlessGone(container)
   container = null
+}
+
+/**
+ * Stop the container. persistence-contract runs this setup too, and the two runs
+ * can share one container, so the other teardown may have removed it already.
+ */
+async function stopUnlessGone(started: StartedPostgreSqlContainer | null): Promise<void> {
+  try {
+    await started?.stop()
+  } catch (error) {
+    const status = (error as { statusCode?: unknown }).statusCode
+    if (status !== 404) throw error
+  }
 }

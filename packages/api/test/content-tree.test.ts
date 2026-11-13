@@ -38,7 +38,7 @@ describe('GET /api/content-tree', () => {
     }
     expect(collections.map((c) => c.name)).toEqual(['pages', 'articles', 'faq', 'notes'])
     const pages = collections[0]?.documents ?? []
-    expect(pages.map((d) => `${d['slug']}:${d['status']}`).sort()).toEqual([
+    expect(pages.map((d) => `${d.slug}:${d.status}`).sort()).toEqual([
       'about:published',
       'om-oss:published',
       'pricing:draft',

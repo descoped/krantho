@@ -50,7 +50,7 @@ Section content with @title reference.
         'test-section': 'Section content with Test Page reference.',
       }),
       processAtNotation: vi.fn().mockImplementation((content, frontmatter) => {
-        return content.replace(/@title/g, frontmatter['title'] || '@title')
+        return content.replace(/@title/g, frontmatter.title || '@title')
       }),
     }
 
@@ -71,7 +71,7 @@ Section content with @title reference.
 
       expect(result.error).toBe(null)
       expect(result.loading).toBe(false)
-      expect(result.fields['title']).toBe('Test Page')
+      expect(result.fields.title).toBe('Test Page')
       expect(result.content).toContain('Section content with Test Page reference')
       expect(result.html).toContain('<h1>Test Content</h1>')
       expect(result.sections['test-section']).toContain('Test Page reference')

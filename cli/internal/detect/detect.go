@@ -3,7 +3,10 @@
 package detect
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -20,12 +23,13 @@ type Framework struct {
 	PackageManager string   // "pnpm" (pnpm-lock.yaml present) or "npm"
 }
 
-// candidate pairs a framework with the config files that identify it.
-// Order matters: a SvelteKit project also carries a vite config, so Vite
-// is the fallback, tried last.
+// candidate pairs a framework with what identifies it: one of its config
+// files, or a dependency in package.json. Order matters: a SvelteKit project
+// also carries a vite config, so Vite is the fallback, tried last.
 type candidate struct {
-	framework Framework
-	configs   []string
+	framework  Framework
+	configs    []string
+	dependency string
 }
 
 var candidates = []candidate{
@@ -45,7 +49,8 @@ var candidates = []candidate{
 			BuildArgs: []string{"vite", "build"},
 			PortFlag:  "--port",
 		},
-		configs: []string{"svelte.config.js", "svelte.config.ts"},
+		// SvelteKit 3 keeps its configuration in the vite config
+		dependency: "@sveltejs/kit",
 	},
 	{
 		framework: Framework{
@@ -58,8 +63,8 @@ var candidates = []candidate{
 	},
 }
 
-// Detect inspects dir's config files and returns the framework to run:
-// Next.js (next.config.ts|js|mjs), SvelteKit (svelte.config.js|ts), or
+// Detect inspects dir and returns the framework to run: Next.js
+// (next.config.ts|js|mjs), SvelteKit (@sveltejs/kit in package.json), or
 // Vite (vite.config.ts|js) as the fallback. The package manager is pnpm
 // when pnpm-lock.yaml exists in dir, npm otherwise.
 func Detect(dir string) (Framework, error) {
@@ -67,17 +72,62 @@ func Detect(dir string) (Framework, error) {
 	if fileExists(filepath.Join(dir, "pnpm-lock.yaml")) {
 		packageManager = "pnpm"
 	}
+	dependencies, manifestErr := packageDependencies(dir)
 	for _, c := range candidates {
-		for _, config := range c.configs {
-			if fileExists(filepath.Join(dir, config)) {
-				framework := c.framework
-				framework.PackageManager = packageManager
-				return framework, nil
-			}
+		if c.matches(dir, dependencies) {
+			framework := c.framework
+			framework.PackageManager = packageManager
+			return framework, nil
 		}
 	}
+	if manifestErr != nil {
+		return Framework{}, fmt.Errorf("no framework detected in %s (looked for %s; package.json: %w)",
+			dir, strings.Join(knownMarkers(), ", "), manifestErr)
+	}
 	return Framework{}, fmt.Errorf("no framework detected in %s (looked for %s)",
-		dir, strings.Join(knownConfigs(), ", "))
+		dir, strings.Join(knownMarkers(), ", "))
+}
+
+// matches reports whether dir has one of the candidate's config files, or
+// package.json lists its dependency.
+func (c candidate) matches(dir string, dependencies map[string]bool) bool {
+	if c.dependency != "" && dependencies[c.dependency] {
+		return true
+	}
+	for _, config := range c.configs {
+		if fileExists(filepath.Join(dir, config)) {
+			return true
+		}
+	}
+	return false
+}
+
+// packageDependencies names every dependency and devDependency in dir's
+// package.json: none when there is no package.json, and an error when it
+// cannot be read or parsed.
+func packageDependencies(dir string) (map[string]bool, error) {
+	names := map[string]bool{}
+	data, err := os.ReadFile(filepath.Join(dir, "package.json"))
+	if errors.Is(err, fs.ErrNotExist) {
+		return names, nil
+	}
+	if err != nil {
+		return names, err
+	}
+	var manifest struct {
+		Dependencies    map[string]string `json:"dependencies"`
+		DevDependencies map[string]string `json:"devDependencies"`
+	}
+	if err := json.Unmarshal(data, &manifest); err != nil {
+		return names, err
+	}
+	for name := range manifest.Dependencies {
+		names[name] = true
+	}
+	for name := range manifest.DevDependencies {
+		names[name] = true
+	}
+	return names, nil
 }
 
 // DevCommand is the dev-server command line through the package manager's
@@ -105,12 +155,15 @@ func (f Framework) runner(args []string) []string {
 	return append([]string{"npx"}, args...)
 }
 
-// knownConfigs lists every config filename detection looks for, in
-// detection order — the "looked for" part of the no-framework error.
-func knownConfigs() []string {
+// knownMarkers lists every config file and dependency detection looks for,
+// in detection order — the "looked for" part of the no-framework error.
+func knownMarkers() []string {
 	var names []string
 	for _, c := range candidates {
 		names = append(names, c.configs...)
+		if c.dependency != "" {
+			names = append(names, c.dependency+" in package.json")
+		}
 	}
 	return names
 }

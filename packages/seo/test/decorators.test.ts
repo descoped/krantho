@@ -113,7 +113,7 @@ describe('breadcrumb decorator', () => {
       },
     })
     const list = nodeOf(graph, 'BreadcrumbList')
-    expect(list?.['itemListElement']).toEqual([
+    expect(list?.itemListElement).toEqual([
       { '@type': 'ListItem', position: 1, name: 'Docs', item: 'https://example.org/docs' },
       {
         '@type': 'ListItem',
@@ -123,12 +123,12 @@ describe('breadcrumb decorator', () => {
       },
       { '@type': 'ListItem', position: 3, name: 'Add SEO', item: PAGE },
     ])
-    expect(nodeOf(graph, 'WebPage')?.['breadcrumb']).toEqual({ '@id': list?.['@id'] })
+    expect(nodeOf(graph, 'WebPage')?.breadcrumb).toEqual({ '@id': list?.['@id'] })
   })
 
   it('adds the page to the trail a collection configures', () => {
     const graph = compose({ config: { structure: { trail: [{ name: 'Docs', url: '/docs' }] } } })
-    expect(nodeOf(graph, 'BreadcrumbList')?.['itemListElement']).toEqual([
+    expect(nodeOf(graph, 'BreadcrumbList')?.itemListElement).toEqual([
       { '@type': 'ListItem', position: 1, name: 'Docs', item: 'https://example.org/docs' },
       { '@type': 'ListItem', position: 2, name: 'Add SEO', item: PAGE },
     ])
@@ -138,11 +138,11 @@ describe('breadcrumb decorator', () => {
     const trail = [{ name: 'Docs', url: '/docs' }, { name: 'Add SEO' }]
     const withTrail = compose({ types: ['Article', 'BreadcrumbList'], structure: { trail } })
     expect(withTrail.filter((node) => node['@type'] === 'BreadcrumbList')).toHaveLength(1)
-    expect(nodeOf(withTrail, 'BreadcrumbList')?.['itemListElement']).toHaveLength(2)
+    expect(nodeOf(withTrail, 'BreadcrumbList')?.itemListElement).toHaveLength(2)
 
     const fallback = compose({ types: ['Article', 'BreadcrumbList'] })
-    const items = nodeOf(fallback, 'BreadcrumbList')?.['itemListElement'] as SchemaEntity[]
-    expect(items.map((item) => item['name'])).toEqual(['Home', 'Add SEO'])
+    const items = nodeOf(fallback, 'BreadcrumbList')?.itemListElement as SchemaEntity[]
+    expect(items.map((item) => item.name)).toEqual(['Home', 'Add SEO'])
   })
 
   it('adds no BreadcrumbList when the page states no trail and none is configured', () => {
@@ -158,11 +158,11 @@ describe('sequence decorator', () => {
       },
     })
     const page = nodeOf(graph, 'WebPage')
-    expect(page?.['isPartOf']).toEqual([
+    expect(page?.isPartOf).toEqual([
       { '@id': 'https://example.org/#website' },
       { '@id': 'https://example.org/docs#area-start' },
     ])
-    expect(page?.['position']).toBe(3)
+    expect(page?.position).toBe(3)
     expect(nodeOf(graph, 'CollectionPage')).toEqual({
       '@type': 'CollectionPage',
       '@id': 'https://example.org/docs#area-start',
@@ -181,7 +181,7 @@ describe('registerDecorator', () => {
       id: 'speakable',
       decorate(graph, page) {
         const node = graph.find((entity) => entity['@id'] === page.pageId)
-        if (node) node['speakable'] = { '@type': 'SpeakableSpecification', cssSelector: ['h1'] }
+        if (node) node.speakable = { '@type': 'SpeakableSpecification', cssSelector: ['h1'] }
         return graph
       },
     })
@@ -191,7 +191,7 @@ describe('registerDecorator', () => {
       'sequence',
       'speakable',
     ])
-    expect(nodeOf(compose(), 'WebPage')?.['speakable']).toBeDefined()
+    expect(nodeOf(compose(), 'WebPage')?.speakable).toBeDefined()
 
     restore()
     restore = undefined

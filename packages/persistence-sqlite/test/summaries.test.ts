@@ -62,7 +62,7 @@ describe('SQLiteAdapter projections', () => {
     const full = await current('full', { sort: 'slug' })
     expect(summaries).toEqual(withoutContent(full))
     // c's current version is the newer draft, though its live one is the first
-    expect(summaries.map((s) => [s.meta.slug, s.fields['title'], s.meta.status])).toEqual([
+    expect(summaries.map((s) => [s.meta.slug, s.fields.title, s.meta.status])).toEqual([
       ['a', 'A', 'published'],
       ['b', 'B', 'draft'],
       ['c', 'C2', 'published'],
@@ -82,7 +82,7 @@ describe('SQLiteAdapter projections', () => {
     const full = await live('full', { sort: 'slug' })
     expect(summaries).toEqual(withoutContent(full))
     // c's live version is the first one, though a newer draft exists; b has none
-    expect(summaries.map((s) => [s.meta.slug, s.fields['title']])).toEqual([
+    expect(summaries.map((s) => [s.meta.slug, s.fields.title])).toEqual([
       ['a', 'A'],
       ['c', 'C1'],
       ['om', 'Om'],

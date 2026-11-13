@@ -17,33 +17,33 @@ export const codeBlockWithMeta = codeBlockSchema.extendSchema((prev) => (ctx) =>
         tag: 'pre',
         preserveWhitespace: 'full',
         getAttrs: (dom) => ({
-          language: dom instanceof HTMLElement ? (dom.dataset['language'] ?? '') : '',
-          meta: dom instanceof HTMLElement ? (dom.dataset['meta'] ?? '') : '',
+          language: dom instanceof HTMLElement ? (dom.dataset.language ?? '') : '',
+          meta: dom instanceof HTMLElement ? (dom.dataset.meta ?? '') : '',
         }),
       },
     ],
     toDOM: (node) => {
       const attr = ctx.get(codeBlockAttr.key)(node)
-      const language: string = node.attrs['language']
-      const meta: string = node.attrs['meta']
+      const language: string = node.attrs.language
+      const meta: string = node.attrs.meta
       return [
         'pre',
         {
-          ...attr['pre'],
+          ...attr.pre,
           ...(language ? { 'data-language': language } : {}),
           ...(meta ? { 'data-meta': meta } : {}),
         },
-        ['code', attr['code'], 0],
+        ['code', attr.code, 0],
       ]
     },
     parseMarkdown: {
       match: ({ type }) => type === 'code',
       runner: (state, node, type) => {
         state.openNode(type, {
-          language: typeof node['lang'] === 'string' ? node['lang'] : '',
-          meta: typeof node['meta'] === 'string' ? node['meta'] : '',
+          language: typeof node.lang === 'string' ? node.lang : '',
+          meta: typeof node.meta === 'string' ? node.meta : '',
         })
-        if (typeof node['value'] === 'string' && node['value']) state.addText(node['value'])
+        if (typeof node.value === 'string' && node.value) state.addText(node.value)
         state.closeNode()
       },
     },
@@ -51,8 +51,8 @@ export const codeBlockWithMeta = codeBlockSchema.extendSchema((prev) => (ctx) =>
       match: (node) => node.type.name === 'code_block',
       runner: (state, node) => {
         state.addNode('code', undefined, node.content.firstChild?.text ?? '', {
-          lang: node.attrs['language'],
-          meta: node.attrs['meta'] || null,
+          lang: node.attrs.language,
+          meta: node.attrs.meta || null,
         })
       },
     },

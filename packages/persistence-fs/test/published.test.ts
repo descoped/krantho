@@ -21,7 +21,7 @@ describe('FileSystemAdapter published reads', () => {
   })
 
   it('treats a file without a status as published and a draft file as not live', async () => {
-    expect((await adapter.getPublished('pages', 'home'))?.fields['title']).toBe('Home')
+    expect((await adapter.getPublished('pages', 'home'))?.fields.title).toBe('Home')
     expect(await adapter.getPublished('pages', 'draft')).toBeNull()
     expect(await adapter.getPublished('pages', 'missing')).toBeNull()
   })
@@ -34,7 +34,7 @@ describe('FileSystemAdapter published reads', () => {
       sort: 'title:asc',
     })
 
-    expect(live.map((doc) => doc.fields['title'])).toEqual(['About', 'Home'])
+    expect(live.map((doc) => doc.fields.title)).toEqual(['About', 'Home'])
   })
 
   it('follows a configured default status for files without one', async () => {
@@ -45,7 +45,7 @@ describe('FileSystemAdapter published reads', () => {
     })
 
     expect(await drafts.getPublished('pages', 'home')).toBeNull()
-    expect((await drafts.getPublished('pages', 'about'))?.fields['title']).toBe('About')
+    expect((await drafts.getPublished('pages', 'about'))?.fields.title).toBe('About')
   })
 
   it('keeps a saved file at its status: a save to a published file is live at once', async () => {
@@ -58,7 +58,7 @@ describe('FileSystemAdapter published reads', () => {
 
     const about = await adapter.getContent('pages', 'about')
     expect(about?.meta).toMatchObject({ status: 'published', version: 1, liveVersion: 1 })
-    expect((await adapter.getPublished('pages', 'about'))?.fields['title']).toBe('About us')
+    expect((await adapter.getPublished('pages', 'about'))?.fields.title).toBe('About us')
   })
 
   it('writes the status a publication sets: publish, unpublish, archive', async () => {

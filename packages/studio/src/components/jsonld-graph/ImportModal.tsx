@@ -98,7 +98,7 @@ export function ImportModal({
       // Find the current graph node's @id for this entity type+role
       const currentNode = currentModel.nodes.find((n) => {
         const t = typeof n['@type'] === 'string' ? n['@type'] : undefined
-        return t === entity.type && (!entity.role || n['role'] === entity.role)
+        return t === entity.type && (!entity.role || n.role === entity.role)
       })
       const entityId = typeof currentNode?.['@id'] === 'string' ? currentNode['@id'] : undefined
       for (const change of entity.changes) {

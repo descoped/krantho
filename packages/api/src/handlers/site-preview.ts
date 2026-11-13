@@ -18,7 +18,7 @@ export const sitePreview: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'editor')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.query['collection'], ctx)
+  const validated = validateCollectionParam(req.query.collection, ctx)
   if (!validated.isValid) return validated.response
   const slugResult = requireParam(req.query, 'slug')
   if (!slugResult.isValid) return slugResult.response

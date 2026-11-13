@@ -101,7 +101,7 @@ export function parseAndDiff(
     const type = typeString(importedNode['@type'])
     if (!type) continue
 
-    const role = typeof importedNode['role'] === 'string' ? importedNode['role'] : undefined
+    const role = typeof importedNode.role === 'string' ? importedNode.role : undefined
     const currentNode = findMatchingNode(currentModel, type, role)
     const isNewEntity = !currentNode
     const disabled = !currentEntityTypes.has(type)
@@ -233,7 +233,7 @@ export function buildIdMap(
     const type = typeString(importedNode['@type'])
     if (!type) continue
 
-    const role = typeof importedNode['role'] === 'string' ? importedNode['role'] : undefined
+    const role = typeof importedNode.role === 'string' ? importedNode.role : undefined
     const currentNode = findMatchingNode(currentModel, type, role)
 
     if (currentNode && typeof currentNode['@id'] === 'string') {
@@ -287,7 +287,7 @@ function findMatchingNode(
   return model.nodes.find((n) => {
     const nodeType = typeString(n['@type'])
     if (nodeType !== type) return false
-    if (role) return n['role'] === role
+    if (role) return n.role === role
     return true
   })
 }

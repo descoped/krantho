@@ -131,18 +131,18 @@ describe('setNestedProperty', () => {
       '456 New',
       current,
     )
-    const addr = buf.overrides.get('ProfessionalService')?.['address'] as Record<string, unknown>
-    expect(addr['streetAddress']).toBe('456 New')
-    expect(addr['addressLocality']).toBe('Oslo')
+    const addr = buf.overrides.get('ProfessionalService')?.address as Record<string, unknown>
+    expect(addr.streetAddress).toBe('456 New')
+    expect(addr.addressLocality).toBe('Oslo')
     expect(addr['@type']).toBe('PostalAddress')
   })
 
   it('creates intermediate objects when path does not exist', () => {
     let buf = createBuffer()
     buf = setNestedProperty(buf, 'Event', ['location', 'address', 'city'], 'Oslo', {})
-    const loc = buf.overrides.get('Event')?.['location'] as Record<string, unknown>
-    const addr = loc['address'] as Record<string, unknown>
-    expect(addr['city']).toBe('Oslo')
+    const loc = buf.overrides.get('Event')?.location as Record<string, unknown>
+    const addr = loc.address as Record<string, unknown>
+    expect(addr.city).toBe('Oslo')
   })
 
   it('returns unchanged buffer for empty path', () => {
@@ -281,7 +281,7 @@ describe('applyBuffer', () => {
     let buf = createBuffer()
     buf = setProperty(buf, '0', 'headline', 'New') // _ek = "0"
     const result = applyBuffer(model, buf)
-    expect(result.nodes[0]?.['headline']).toBe('New')
+    expect(result.nodes[0]?.headline).toBe('New')
   })
 
   it('removes deleted nodes via _ek', () => {
@@ -300,7 +300,7 @@ describe('applyBuffer', () => {
     const result = applyBuffer(model, buf)
     expect(result.nodes.length).toBe(2)
     expect(result.nodes[1]?.['@type']).toBe('Person')
-    expect(result.nodes[1]?.['name']).toBe('Jane')
+    expect(result.nodes[1]?.name).toBe('Jane')
   })
 
   it('strips removed properties via _ek', () => {
@@ -308,8 +308,8 @@ describe('applyBuffer', () => {
     let buf = createBuffer()
     buf = removeProperty(buf, '0', 'description') // _ek = "0"
     const result = applyBuffer(model, buf)
-    expect(result.nodes[0]?.['headline']).toBe('H')
-    expect(result.nodes[0]?.['description']).toBeUndefined()
+    expect(result.nodes[0]?.headline).toBe('H')
+    expect(result.nodes[0]?.description).toBeUndefined()
   })
 
   it('applies both overrides and removals on the same entity via _ek', () => {
@@ -320,9 +320,9 @@ describe('applyBuffer', () => {
     buf = setProperty(buf, '0', 'headline', 'Updated')
     buf = removeProperty(buf, '0', 'description')
     const result = applyBuffer(model, buf)
-    expect(result.nodes[0]?.['headline']).toBe('Updated')
-    expect(result.nodes[0]?.['description']).toBeUndefined()
-    expect(result.nodes[0]?.['image']).toBe('img.jpg')
+    expect(result.nodes[0]?.headline).toBe('Updated')
+    expect(result.nodes[0]?.description).toBeUndefined()
+    expect(result.nodes[0]?.image).toBe('img.jpg')
   })
 })
 
@@ -347,15 +347,15 @@ describe('bufferToConfigUpdate', () => {
   it('returns unchanged config for empty buffer', () => {
     const result = bufferToConfigUpdate(createBuffer(), existing, ekMap)
     expect(result.entities.length).toBe(2)
-    expect(result.entities[0]?.properties['headline']).toBe('Old')
+    expect(result.entities[0]?.properties.headline).toBe('Old')
   })
 
   it('applies property overrides via _ek', () => {
     let buf = createBuffer()
     buf = setProperty(buf, '0', 'headline', 'New')
     const result = bufferToConfigUpdate(buf, existing, ekMap)
-    expect(result.entities[0]?.properties['headline']).toBe('New')
-    expect(result.entities[0]?.properties['description']).toBe('Desc')
+    expect(result.entities[0]?.properties.headline).toBe('New')
+    expect(result.entities[0]?.properties.description).toBe('Desc')
   })
 
   it('removes deleted entities via _ek', () => {
@@ -370,8 +370,8 @@ describe('bufferToConfigUpdate', () => {
     let buf = createBuffer()
     buf = removeProperty(buf, '0', 'description')
     const result = bufferToConfigUpdate(buf, existing, ekMap)
-    expect(result.entities[0]?.properties['headline']).toBe('Old')
-    expect(result.entities[0]?.properties['description']).toBeUndefined()
+    expect(result.entities[0]?.properties.headline).toBe('Old')
+    expect(result.entities[0]?.properties.description).toBeUndefined()
   })
 
   it('appends added entities', () => {
@@ -388,7 +388,7 @@ describe('bufferToConfigUpdate', () => {
     buf = changeEntityType(buf, '0', 'BlogPosting')
     const result = bufferToConfigUpdate(buf, existing, ekMap)
     expect(result.entities[0]?.['@type']).toBe('BlogPosting')
-    expect(result.entities[0]?.properties['headline']).toBe('Old')
+    expect(result.entities[0]?.properties.headline).toBe('Old')
   })
 
   it('preserves fieldMappings', () => {
@@ -441,8 +441,8 @@ describe('bufferToConfigUpdate', () => {
     buf = setProperty(buf, '0', 'name', 'Updated S1')
     buf = setProperty(buf, '1', 'name', 'Updated S2')
     const result = bufferToConfigUpdate(buf, config, map)
-    expect(result.entities[0]?.properties['name']).toBe('Updated S1')
-    expect(result.entities[1]?.properties['name']).toBe('Updated S2')
+    expect(result.entities[0]?.properties.name).toBe('Updated S1')
+    expect(result.entities[1]?.properties.name).toBe('Updated S2')
   })
 
   it('strips @id from nested objects in properties on save', () => {
@@ -474,18 +474,18 @@ describe('bufferToConfigUpdate', () => {
     // Entity @id preserved
     expect(result.entities[0]?.['@id']).toBe('https://example.com/#business')
     // Nested @id stripped
-    const address = result.entities[0]?.properties['address'] as Record<string, unknown>
+    const address = result.entities[0]?.properties.address as Record<string, unknown>
     expect(address['@type']).toBe('PostalAddress')
     expect(address['@id']).toBeUndefined()
-    expect(address['streetAddress']).toBe('123 Main St')
+    expect(address.streetAddress).toBe('123 Main St')
     // Array item nested @id stripped
-    const hours = result.entities[0]?.properties['openingHoursSpecification'] as Record<
+    const hours = result.entities[0]?.properties.openingHoursSpecification as Record<
       string,
       unknown
     >[]
     expect(hours[0]?.['@type']).toBe('OpeningHoursSpecification')
     expect(hours[0]?.['@id']).toBeUndefined()
-    expect(hours[0]?.['dayOfWeek']).toEqual(['Monday'])
+    expect(hours[0]?.dayOfWeek).toEqual(['Monday'])
   })
 })
 

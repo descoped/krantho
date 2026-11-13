@@ -17,7 +17,7 @@ let db: Sql
 const database = `krantho_json_${randomUUID().replaceAll('-', '')}`
 
 beforeAll(async () => {
-  const connectionUri = process.env['KRANTHO_TEST_POSTGRES_URL']
+  const connectionUri = process.env.KRANTHO_TEST_POSTGRES_URL
   if (!connectionUri) {
     throw new Error('KRANTHO_TEST_POSTGRES_URL not set — globalSetup did not run.')
   }
@@ -52,7 +52,7 @@ describe('PostgresSeoConfigAdapter', () => {
     expect((await adapter.getConfig('collection:docs'))?.config).toEqual(config)
     expect((await adapter.listConfigs('collection'))[0]?.config).toEqual(config)
     const [row] = await db`SELECT jsonb_typeof(config) AS type FROM seo_config`
-    expect(row?.['type']).toBe('object')
+    expect(row?.type).toBe('object')
   })
 
   it('replaces a configuration on a second save', async () => {
@@ -81,6 +81,6 @@ describe('PostgresContentMigrationAdapter', () => {
     expect(saved?.fileChecksums).toEqual(fileChecksums)
     expect(await adapter.getContentManifestVersion()).toBe(1790879439)
     const [row] = await db`SELECT jsonb_typeof(file_checksums) AS type FROM content_manifest`
-    expect(row?.['type']).toBe('object')
+    expect(row?.type).toBe('object')
   })
 })

@@ -159,10 +159,10 @@ function previewInScope(live: ReadViewLoader, preview: ReadViewLoader): ReadView
  */
 function siteIdentity(site: KranthoConfig['site']): Record<string, unknown> {
   const identity: Record<string, unknown> = { name: site.name, url: site.baseUrl }
-  if (site.logo) identity['logo'] = site.logo
-  if (site.description) identity['description'] = site.description
-  if (site.alternateName) identity['alternateName'] = site.alternateName
-  if (site.sameAs.length > 0) identity['sameAs'] = site.sameAs
+  if (site.logo) identity.logo = site.logo
+  if (site.description) identity.description = site.description
+  if (site.alternateName) identity.alternateName = site.alternateName
+  if (site.sameAs.length > 0) identity.sameAs = site.sameAs
   return identity
 }
 

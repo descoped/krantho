@@ -41,7 +41,7 @@ describe('FileSystemAdapter summaries', () => {
 
     const live = await read('published', 'summary')
     expect(live).toEqual(withoutContent(await read('published', 'full')))
-    expect(live.map((s) => s.fields['title'])).toEqual(['Home'])
+    expect(live.map((s) => s.fields.title)).toEqual(['Home'])
     for (const summary of live) {
       expect(Object.keys(summary)).toEqual(['meta', 'fields', 'metadata'])
     }

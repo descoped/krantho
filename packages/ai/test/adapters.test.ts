@@ -498,7 +498,7 @@ describe('OpenAIFormatAdapter', () => {
 
       const [, init] = mockFetch.mock.calls[0] as [string, RequestInit]
       const body = JSON.parse(init.body as string) as Record<string, unknown>
-      expect(body['response_format']).toEqual({
+      expect(body.response_format).toEqual({
         type: 'json_schema',
         json_schema: { name: 'response', strict: true, schema: closed },
       })

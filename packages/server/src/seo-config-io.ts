@@ -200,8 +200,8 @@ function scopeIdToDir(id: string, baseDir: string): string {
 function stringifyEntityYaml(entity: SeoConfigEntity): string {
   const obj: Record<string, unknown> = { '@type': entity['@type'] }
   if (entity['@id']) obj['@id'] = entity['@id']
-  if (entity.role) obj['role'] = entity.role
-  obj['properties'] = entity.properties
+  if (entity.role) obj.role = entity.role
+  obj.properties = entity.properties
   return stringifyYaml(obj)
 }
 

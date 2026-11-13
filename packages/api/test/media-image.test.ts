@@ -84,7 +84,7 @@ async function uploadPng(): Promise<MediaItem> {
 
 /** The query of a redirect's Location */
 function locationOf(res: ApiResponse): URLSearchParams {
-  const location = res.headers?.['location'] ?? ''
+  const location = res.headers?.location ?? ''
   return new URL(location, 'https://site.test').searchParams
 }
 
@@ -92,7 +92,7 @@ async function follow(
   res: ApiResponse,
   headers: Record<string, string> = {},
 ): Promise<ApiResponse> {
-  const url = new URL(res.headers?.['location'] ?? '', 'https://site.test')
+  const url = new URL(res.headers?.location ?? '', 'https://site.test')
   return request('GET', url.pathname, Object.fromEntries(url.searchParams), { headers })
 }
 
@@ -103,12 +103,12 @@ describe('GET /api/media/:id/image — stable URL', () => {
 
     expect(res.status).toBe(302)
     expect(res.headers?.['cache-control']).toBe('no-cache')
-    expect(res.headers?.['vary']).toBe('Accept')
+    expect(res.headers?.vary).toBe('Accept')
     const query = locationOf(res)
     expect(query.get('preset')).toBe('lg')
     expect(query.get('fmt')).toBe('avif')
     expect(query.get('rev')).toMatch(/^[0-9a-f]{12}$/)
-    expect(res.headers?.['location']).toMatch(new RegExp(`^/api/media/${item.id}/image\\?`))
+    expect(res.headers?.location).toMatch(new RegExp(`^/api/media/${item.id}/image\\?`))
   })
 
   it('should negotiate the format from Accept and map w to a preset', async () => {
@@ -152,8 +152,8 @@ describe('GET /api/media/:id/image — versioned URL', () => {
     expect(res.headers?.['cache-control']).toBe(
       'public, max-age=31536000, s-maxage=31536000, immutable',
     )
-    expect(res.headers?.['etag']).toMatch(/^"[0-9a-f]+"$/)
-    expect(res.headers?.['vary']).toBeUndefined()
+    expect(res.headers?.etag).toMatch(/^"[0-9a-f]+"$/)
+    expect(res.headers?.vary).toBeUndefined()
     expect(res.body).toBeInstanceOf(Uint8Array)
   })
 
@@ -161,7 +161,7 @@ describe('GET /api/media/:id/image — versioned URL', () => {
     const item = await uploadPng()
     const redirect = await request('GET', `/api/media/${item.id}/image`, { fmt: 'webp' })
     const first = await follow(redirect)
-    const again = await follow(redirect, { 'if-none-match': first.headers?.['etag'] ?? '' })
+    const again = await follow(redirect, { 'if-none-match': first.headers?.etag ?? '' })
 
     expect(again.status).toBe(304)
     expect(again.body).toBeNull()
@@ -193,7 +193,7 @@ describe('GET /api/media/:id/image — versioned URL', () => {
   it('should answer HEAD with headers and no body', async () => {
     const item = await uploadPng()
     const redirect = await request('GET', `/api/media/${item.id}/image`, { fmt: 'jpeg' })
-    const url = new URL(redirect.headers?.['location'] ?? '', 'https://site.test')
+    const url = new URL(redirect.headers?.location ?? '', 'https://site.test')
     const res = await request('HEAD', url.pathname, Object.fromEntries(url.searchParams))
 
     expect(res.status).toBe(200)
@@ -310,7 +310,7 @@ describe('GET /api/media/:id/image/info', () => {
     expect(info.body).toMatchObject({
       preset: 'sm',
       format: 'webp',
-      etag: (served.headers?.['etag'] ?? '').replaceAll('"', ''),
+      etag: (served.headers?.etag ?? '').replaceAll('"', ''),
     })
   })
 

@@ -140,7 +140,7 @@ describe('createSeo', () => {
       path: '/events/talk',
       siteLevel: { entities: [{ '@type': 'Organization', properties: {} }] },
     })
-    expect(graph['@graph'][0]?.['logo']).toBe('https://example.org/logo.png')
+    expect(graph['@graph'][0]?.logo).toBe('https://example.org/logo.png')
     const findings = seo.validate(graph)
     expect(findings.some((f) => f.profile === 'google' && f.property === 'startDate')).toBe(true)
   })

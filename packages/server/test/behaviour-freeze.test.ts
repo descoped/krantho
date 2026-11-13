@@ -115,7 +115,7 @@ describe('a handler booted with no environment set', () => {
     expect(body.meta.slug).toBe('home')
     expect(body.meta.locale).toBe('en')
     expect(body.meta.status).toBe('published')
-    expect(body.fields['title']).toBe('Home')
+    expect(body.fields.title).toBe('Home')
     expect(body.html).toContain('<h2')
   })
 
@@ -217,7 +217,7 @@ describe('a handler booted with no environment set', () => {
     const res = await get('/api/settings/llm')
     expect(res.status).toBe(200)
     const body = (await res.json()) as Record<string, unknown>
-    expect(body['provider']).toBeNull()
-    expect(body['configured']).toBe(false)
+    expect(body.provider).toBeNull()
+    expect(body.configured).toBe(false)
   })
 })

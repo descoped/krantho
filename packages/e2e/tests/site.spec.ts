@@ -174,7 +174,7 @@ test.describe('site', () => {
     await expect(layout).toContainText('Read by every page')
     const live = main.getByRole('region', { name: label(COLLECTION) })
     const row = live.locator('tr', {
-      has: page.getByRole('link', { name: LIVE.fields['title'] as string }),
+      has: page.getByRole('link', { name: LIVE.fields.title as string }),
     })
     await expect(row).toContainText('Live')
     await expect(row.getByRole('link', { name: /\/e2e-site-live on the site/ })).toHaveAttribute(
@@ -285,11 +285,11 @@ test.describe('site', () => {
     const file = await download.path()
     const exported = JSON.parse(readFileSync(file, 'utf8')) as { items: RepositoryDocument[] }
     const original = exported.items.find((item) => item.identity.slug === ROUND_TRIP.slug)
-    expect(original?.fields['title']).toBe(ROUND_TRIP.fields['title'])
+    expect(original?.fields.title).toBe(ROUND_TRIP.fields.title)
 
     // Edit the exported content while keeping its basis for a conflict-safe import.
     if (!original) throw new Error('The export omitted the round-trip document')
-    original.fields['title'] = 'Edited in repository'
+    original.fields.title = 'Edited in repository'
 
     await main.getByRole('button', { name: 'Import' }).click()
     const dialog = page.getByRole('dialog', { name: 'Import documents' })
@@ -304,7 +304,7 @@ test.describe('site', () => {
     await dialog.getByRole('button', { name: 'Close' }).click()
 
     const restored = await findDocument(target, ROUND_TRIP.slug)
-    expect(restored?.fields['title']).toBe('Edited in repository')
+    expect(restored?.fields.title).toBe('Edited in repository')
     expect(original.identity).toEqual({
       collection: COLLECTION,
       slug: ROUND_TRIP.slug,

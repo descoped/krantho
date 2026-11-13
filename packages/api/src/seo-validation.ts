@@ -63,11 +63,9 @@ export async function validateDocumentSeo(
   const findings = metaFindings(ctx, {
     ...current.fields,
     ...properties,
-    title: properties['headline'] ?? properties['name'] ?? current.fields['title'],
+    title: properties.headline ?? properties.name ?? current.fields.title,
     'meta-description':
-      properties['description'] ??
-      current.fields['meta-description'] ??
-      current.fields['description'],
+      properties.description ?? current.fields['meta-description'] ?? current.fields.description,
   })
   let seo: Awaited<ReturnType<typeof loadSeo>>
   try {

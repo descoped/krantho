@@ -14,7 +14,7 @@ const WRITE_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH'])
 
 /** The token of an `Authorization: Bearer <token>` header, when the request carries one */
 export function bearerToken(req: ApiRequest): string | undefined {
-  const authHeader = req.headers?.['authorization'] ?? req.headers?.['Authorization']
+  const authHeader = req.headers?.authorization ?? req.headers?.Authorization
   if (!authHeader) return undefined
   const parts = authHeader.split(' ')
   return parts.length === 2 && parts[0] === 'Bearer' ? parts[1] : undefined
@@ -43,7 +43,7 @@ export function checkAuth(req: ApiRequest, config: AuthSection): AuthResult {
   }
 
   // Extract token: cookie first (browser sessions), then Bearer header (API clients)
-  let token = parseCookie(req.headers?.['cookie'], accessCookieName(config.session))
+  let token = parseCookie(req.headers?.cookie, accessCookieName(config.session))
 
   token ||= bearerToken(req)
 

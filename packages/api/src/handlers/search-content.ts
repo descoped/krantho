@@ -10,7 +10,7 @@ import { parseLocaleParam, parsePositiveInt } from '../validators.js'
  */
 export const searchContent: ApiHandler = async (req, ctx) => {
   const search = ctx.config.content.search
-  const text = req.query['q']?.trim()
+  const text = req.query.q?.trim()
   if (!text || text.length < search.minQueryLength) {
     return {
       status: 400,
@@ -18,7 +18,7 @@ export const searchContent: ApiHandler = async (req, ctx) => {
     }
   }
 
-  const requestedLimit = parsePositiveInt(req.query['limit']) ?? search.defaultLimit
+  const requestedLimit = parsePositiveInt(req.query.limit) ?? search.defaultLimit
   const limit = Math.min(requestedLimit, search.maxLimit)
 
   if (!canQuery(ctx.adapter)) {
@@ -30,9 +30,9 @@ export const searchContent: ApiHandler = async (req, ctx) => {
     collections: [...ctx.contentConfig.collections.keys()],
     projection: 'summary',
     match: { text, in: ['slug', 'fields', 'body'] },
-    locale: parseLocaleParam(req.query['locale']),
+    locale: parseLocaleParam(req.query.locale),
     limit,
-    offset: parsePositiveInt(req.query['offset']),
+    offset: parsePositiveInt(req.query.offset),
   })
   return {
     status: 200,

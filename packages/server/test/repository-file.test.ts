@@ -39,7 +39,7 @@ function readBack(file: string) {
     contract,
   )
   if (!result.success) throw new Error(result.error.message)
-  return { data: result.data, status: parsed.data['status'], locale: parsed.data['locale'] }
+  return { data: result.data, status: parsed.data.status, locale: parsed.data.locale }
 }
 
 const awkward = {

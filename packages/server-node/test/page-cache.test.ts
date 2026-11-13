@@ -77,7 +77,7 @@ function renderPage(url: string): () => Promise<RenderedPage> {
     const slug = path === '/' ? 'home' : path.slice(1)
     const doc = await loader.getPublished({ collection: 'pages', slug })
     if (!doc) return { status: 404, html: 'Not found' }
-    return { status: 200, html: `<h1>${String(doc.fields['title'])}</h1>` }
+    return { status: 200, html: `<h1>${String(doc.fields.title)}</h1>` }
   }
 }
 

@@ -33,7 +33,7 @@
     "@vercel/blob": "^2.9.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.9",
-    "typescript": "^6.0.3"
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
   }
 }

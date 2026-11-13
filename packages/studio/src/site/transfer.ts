@@ -13,16 +13,15 @@ function text(value: unknown): string | undefined {
 function toImportItem(raw: unknown): ImportItem | null {
   if (
     !isRecord(raw) ||
-    !isRecord(raw['identity']) ||
-    !isRecord(raw['fields']) ||
-    !isRecord(raw['metadata']) ||
-    !Array.isArray(raw['defaults']) ||
-    typeof raw['body'] !== 'string'
+    !isRecord(raw.identity) ||
+    !isRecord(raw.fields) ||
+    !isRecord(raw.metadata) ||
+    !Array.isArray(raw.defaults) ||
+    typeof raw.body !== 'string'
   )
     return null
-  const identity = raw['identity']
-  if (!text(identity['collection']) || !text(identity['slug']) || !text(identity['locale']))
-    return null
+  const identity = raw.identity
+  if (!text(identity.collection) || !text(identity.slug) || !text(identity.locale)) return null
   return raw as unknown as ImportItem
 }
 
@@ -34,7 +33,7 @@ export function parseImport(source: string): ParsedImport {
   } catch {
     return { ok: false, error: 'This is not valid JSON.' }
   }
-  const raw = isRecord(parsed) ? parsed['items'] : undefined
+  const raw = isRecord(parsed) ? parsed.items : undefined
   if (!Array.isArray(raw)) return { ok: false, error: 'The JSON needs an "items" array.' }
   if (raw.length === 0) return { ok: false, error: 'The "items" array is empty.' }
   const items: ImportItem[] = []

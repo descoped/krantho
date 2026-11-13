@@ -20,7 +20,7 @@ export function resolveCollectionContract(
     assertAuthorProperty(group.slot)
     if (Object.hasOwn(metadata, group.slot))
       throw new Error(`Metadata slot "${group.slot}" is already defined`)
-    if (group.schema['type'] !== 'object' || !group.schema['properties'])
+    if (group.schema.type !== 'object' || !group.schema.properties)
       throw new Error('Metadata groups require named properties')
     const schema = fromPortableJsonSchema(group.schema)
     metadata[group.slot] = {

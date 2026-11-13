@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit'
-import { loadContent, loadJsonLd } from '$lib/cms'
+import { loadContent, loadJsonLd } from '#lib/cms.ts'
 
 export async function load({ params }: { params: { slug: string } }) {
   const svc = await loadContent('services', params.slug)

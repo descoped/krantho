@@ -200,10 +200,10 @@ export const updateLLMSettings: ApiHandler = async (req, ctx) => {
     ...payload,
     apiKey: keyGiven ? apiKey : '',
   })
-  if (payload['use'] === true || readyBefore.length === 0) {
+  if (payload.use === true || readyBefore.length === 0) {
     // A provider with no key cannot be used; a local model has none and is on once chosen
     const hasKey = (await providerCredential(ctx, provider)).kind !== 'none'
-    if (payload['use'] === true && !hasKey && provider !== LOCAL_MODEL) {
+    if (payload.use === true && !hasKey && provider !== LOCAL_MODEL) {
       return { status: 400, body: { error: 'That AI has no key yet. Add its key first.' } }
     }
     await settings.adapter.setSetting('llm.provider', provider)
@@ -223,7 +223,7 @@ export const deleteLLMSettings: ApiHandler = async (req, ctx) => {
   const settings = requireSiteSettings(ctx)
   if (settings.error) return settings.error
 
-  const provider = req.query['provider']
+  const provider = req.query.provider
   if (!isKnownProvider(provider)) {
     return {
       status: 400,

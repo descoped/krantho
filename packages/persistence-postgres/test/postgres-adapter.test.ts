@@ -23,7 +23,7 @@ describe('PostgresAdapter (integration)', () => {
   let adapter: PostgresAdapter
 
   beforeAll(async () => {
-    const connectionUri = process.env['KRANTHO_TEST_POSTGRES_URL']
+    const connectionUri = process.env.KRANTHO_TEST_POSTGRES_URL
     if (!connectionUri) {
       throw new Error(
         'KRANTHO_TEST_POSTGRES_URL not set — globalSetup did not run. Check vitest.config.ts.',
@@ -222,10 +222,10 @@ describe('PostgresAdapter (integration)', () => {
         'nb',
         'nb',
       ])
-      expect((await nordic.getVersion('pages', 'home', 1))?.fields['title']).toBe('Første')
+      expect((await nordic.getVersion('pages', 'home', 1))?.fields.title).toBe('Første')
 
       expect(await nordic.restoreVersion('pages', 'home', 1)).toBe(true)
-      expect((await nordic.getContent('pages', 'home'))?.fields['title']).toBe('Første')
+      expect((await nordic.getContent('pages', 'home'))?.fields.title).toBe('Første')
 
       await nordic.upsertFromFile('pages', 'about', { title: 'Om' }, '', '', {}, 'content/a.md')
       expect((await nordic.getContent('pages', 'about'))?.meta.locale).toBe('nb')
@@ -269,7 +269,7 @@ describe('PostgresAdapter (integration)', () => {
       })
 
       const doc = await adapter.getContent('pages', 'business')
-      expect(doc?.fields['address']).toEqual({
+      expect(doc?.fields.address).toEqual({
         '@type': 'PostalAddress',
         streetAddress: '123 Example Road',
         addressLocality: 'Oslo',
@@ -387,7 +387,7 @@ describe('PostgresAdapter (integration)', () => {
 
       expect(enDoc).toBeNull()
       expect(noDoc).not.toBeNull()
-      expect(noDoc?.fields['title']).toBe('Hallo')
+      expect(noDoc?.fields.title).toBe('Hallo')
     })
 
     it('deletes only the locale it is given, leaving the others', async () => {
@@ -407,7 +407,7 @@ describe('PostgresAdapter (integration)', () => {
       await adapter.deleteContent('blog', 'nordic', 'nb')
 
       expect(await adapter.getContent('blog', 'nordic', 'nb')).toBeNull()
-      expect((await adapter.getContent('blog', 'nordic', 'en'))?.fields['title']).toBe('Hello')
+      expect((await adapter.getContent('blog', 'nordic', 'en'))?.fields.title).toBe('Hello')
     })
   })
 
@@ -490,11 +490,11 @@ describe('PostgresAdapter (integration)', () => {
       })
 
       const v1 = await adapter.getVersion('blog', 'specific', 1)
-      expect(v1?.fields['title']).toBe('Original')
+      expect(v1?.fields.title).toBe('Original')
       expect(v1?.body).toBe('original body')
 
       const v2 = await adapter.getVersion('blog', 'specific', 2)
-      expect(v2?.fields['title']).toBe('Updated')
+      expect(v2?.fields.title).toBe('Updated')
     })
 
     it('restores a previous version', async () => {
@@ -516,7 +516,7 @@ describe('PostgresAdapter (integration)', () => {
       expect(restored).toBe(true)
 
       const doc = await adapter.getContent('blog', 'restore-me')
-      expect(doc?.fields['title']).toBe('Original')
+      expect(doc?.fields.title).toBe('Original')
 
       const versions = await adapter.listVersions('blog', 'restore-me')
       expect(versions).toHaveLength(3)
@@ -555,7 +555,7 @@ describe('PostgresAdapter (integration)', () => {
       expect(await adapter.exists('about')).toBe(true)
       const results = await current('full', { collections: ['pages'] })
       expect(results).toHaveLength(1)
-      expect(results[0]?.fields['title']).toBe('About Us')
+      expect(results[0]?.fields.title).toBe('About Us')
     })
 
     it('skips unchanged content on re-import', async () => {
@@ -664,7 +664,7 @@ describe('PostgresAdapter (integration)', () => {
       locale?: string,
     ): Promise<unknown> {
       const doc = await adapter.getPublished(collection, slug, locale)
-      return doc?.fields['title'] ?? null
+      return doc?.fields.title ?? null
     }
 
     it('keeps the live version when a published document is saved', async () => {
@@ -698,7 +698,7 @@ describe('PostgresAdapter (integration)', () => {
       await adapter.restoreVersion('pages', 'home', 1)
 
       expect(await liveTitle('home')).toBe('V2')
-      expect((await adapter.getContent('pages', 'home'))?.fields['title']).toBe('V1')
+      expect((await adapter.getContent('pages', 'home'))?.fields.title).toBe('V1')
     })
 
     it('never shows a document that was never published', async () => {
@@ -741,7 +741,7 @@ describe('PostgresAdapter (integration)', () => {
       await save('contact', 'Contact', 'publish')
 
       const english = await live('full', { collections: ['pages'], locale: 'en', sort: 'slug' })
-      expect(english.map((doc) => doc.fields['title'])).toEqual(['Contact', 'Home'])
+      expect(english.map((doc) => doc.fields.title)).toEqual(['Contact', 'Home'])
     })
 
     it('never purges the live version', async () => {
@@ -831,7 +831,7 @@ describe('PostgresAdapter (integration)', () => {
       const full = await current('full', { sort: 'slug' })
       expect(summaries).toEqual(withoutContent(full))
       // c's current version is the newer draft, though its live one is the first
-      expect(summaries.map((s) => [s.meta.slug, s.fields['title'], s.meta.status])).toEqual([
+      expect(summaries.map((s) => [s.meta.slug, s.fields.title, s.meta.status])).toEqual([
         ['a', 'A', 'published'],
         ['b', 'B', 'draft'],
         ['c', 'C2', 'published'],
@@ -850,7 +850,7 @@ describe('PostgresAdapter (integration)', () => {
       const summaries = await live('summary', { sort: 'slug' })
       const full = await live('full', { sort: 'slug' })
       expect(summaries).toEqual(withoutContent(full))
-      expect(summaries.map((s) => [s.meta.slug, s.fields['title']])).toEqual([
+      expect(summaries.map((s) => [s.meta.slug, s.fields.title])).toEqual([
         ['a', 'A'],
         ['c', 'C1'],
         ['om', 'Om'],

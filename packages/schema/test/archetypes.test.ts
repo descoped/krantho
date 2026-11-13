@@ -154,9 +154,9 @@ describe('complete content contracts', () => {
     const before = compileContentContract(blog)
     const after = compileContentContract(renamed)
     expect(after.label).toBe('Article')
-    expect(after.metadata['editorial']?.label).toBe('Byline')
+    expect(after.metadata.editorial?.label).toBe('Byline')
     expect(after.revision).toBe(before.revision)
-    expect(after.metadata['editorial']?.revision).toBe(before.metadata['editorial']?.revision)
+    expect(after.metadata.editorial?.revision).toBe(before.metadata.editorial?.revision)
   })
 
   it('rejects editable publication state', () => {

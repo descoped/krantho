@@ -109,7 +109,7 @@ export function schemaFields(
 ): SchemaField[] {
   const required = new Set(schema.schema.required ?? [])
   const code = Object.entries(schema.schema.properties ?? {})
-    .filter(([, prop]) => !(isRecord(prop) && prop['_runtime']))
+    .filter(([, prop]) => !(isRecord(prop) && prop._runtime))
     .map(([name, prop]) => ({
       name,
       type: fieldTypeLabel(prop),

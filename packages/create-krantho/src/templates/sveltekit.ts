@@ -6,7 +6,6 @@ export function generateSveltekitFiles(options: ProjectOptions): Map<string, str
 
   files.set('package.json', packageJson(options))
   files.set('tsconfig.json', tsconfig())
-  files.set('svelte.config.js', svelteConfig())
   files.set('vite.config.ts', viteConfig(options))
   files.set('krantho.config.ts', kranthoConfig(options))
   files.set('krantho.collections.ts', kranthoCollections(options))
@@ -41,20 +40,21 @@ function packageJson(options: ProjectOptions): string {
     '@krantho/core': KRANTHO_RANGE,
     '@krantho/schema': KRANTHO_RANGE,
     '@krantho/persistence-sqlite': KRANTHO_RANGE,
-    '@sveltejs/adapter-auto': '^7.0.1',
-    '@sveltejs/kit': '^2.55.0',
+    '@sveltejs/adapter-auto': '^8.0.1',
+    '@sveltejs/kit': '^3.2.0',
     svelte: '^5.57.3',
     zod: '^4.6.7',
   }
 
   if (options.ui === 'tailwind') {
-    deps['tailwindcss'] = '^4.2.2'
-    deps['@tailwindcss/vite'] = '^4.2.2'
+    deps.tailwindcss = '^4.3.5'
+    deps['@tailwindcss/vite'] = '^4.3.5'
   }
 
   const devDeps: Record<string, string> = {
-    '@types/node': '^25.5.0',
-    typescript: '^6.0.2',
+    '@types/node': '^26.6.6',
+    // SvelteKit 3 supports TypeScript 6
+    typescript: '^6.0.3',
     vite: '^8.3.8',
   }
 
@@ -63,6 +63,8 @@ function packageJson(options: ProjectOptions): string {
     version: '0.1.0',
     private: true,
     type: 'module',
+    // SvelteKit's #lib: the project's own modules, by path under src/lib
+    imports: { '#lib': './src/lib', '#lib/*': './src/lib/*' },
     scripts: {
       // Vite does not load .env into process.env for server code; the
       // config resolver reads KRANTHO_* from process.env, so load it here.
@@ -81,7 +83,8 @@ function tsconfig(): string {
   return (
     JSON.stringify(
       {
-        extends: './.svelte-kit/tsconfig.json',
+        extends: '$app/tsconfig',
+        include: ['src', '*'],
         compilerOptions: {
           allowJs: true,
           checkJs: true,
@@ -91,7 +94,6 @@ function tsconfig(): string {
           skipLibCheck: true,
           sourceMap: true,
           strict: true,
-          moduleResolution: 'bundler',
         },
       },
       null,
@@ -100,31 +102,24 @@ function tsconfig(): string {
   )
 }
 
-function svelteConfig(): string {
-  return `import adapter from '@sveltejs/adapter-auto'
-
-export default {
-  kit: { adapter: adapter() }
-}
-`
-}
-
 function viteConfig(options: ProjectOptions): string {
   if (options.ui === 'tailwind') {
-    return `import { sveltekit } from '@sveltejs/kit/vite'
+    return `import adapter from '@sveltejs/adapter-auto'
+import { sveltekit } from '@sveltejs/kit/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  plugins: [tailwindcss(), sveltekit()]
+  plugins: [tailwindcss(), sveltekit({ adapter: adapter() })]
 })
 `
   }
-  return `import { sveltekit } from '@sveltejs/kit/vite'
+  return `import adapter from '@sveltejs/adapter-auto'
+import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  plugins: [sveltekit()]
+  plugins: [sveltekit({ adapter: adapter() })]
 })
 `
 }
@@ -366,7 +361,7 @@ export default defineKranthoConfig({
 }
 
 function layoutServer(): string {
-  return `import { loadContent } from '$lib/cms'
+  return `import { loadContent } from '#lib/cms.ts'
 
 export async function load() {
   const nav = await loadContent('globals', 'navigation')
@@ -429,7 +424,7 @@ ${tailwindImport}  import type { Snippet } from 'svelte'
 }
 
 function homePageServer(): string {
-  return `import { loadContent } from '$lib/cms'
+  return `import { loadContent } from '#lib/cms.ts'
 import { error } from '@sveltejs/kit'
 
 export async function load() {
@@ -464,7 +459,7 @@ function homePage(): string {
 }
 
 function dynamicPageServer(): string {
-  return `import { loadContent } from '$lib/cms'
+  return `import { loadContent } from '#lib/cms.ts'
 import { error } from '@sveltejs/kit'
 
 export async function load({ params }: { params: { slug: string } }) {

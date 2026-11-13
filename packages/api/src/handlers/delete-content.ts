@@ -8,7 +8,7 @@ export const deleteContent: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const slugResult = requireParam(req.params, 'slug')

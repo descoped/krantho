@@ -151,7 +151,7 @@ describe('signed-url site preview', () => {
   it('reports the mode as a capability', async () => {
     const response = await handler.handle(new Request('http://localhost/api/capabilities'))
     const { features } = (await response.json()) as { features: Record<string, string> }
-    expect(features['sitePreview']).toBe('signed-url')
+    expect(features.sitePreview).toBe('signed-url')
   })
 
   it('verifies a link signed with the ephemeral secret when none is configured', async () => {

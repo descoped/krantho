@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit'
-import { loadContent, loadJsonLd, loadSection } from '$lib/cms'
+import { loadContent, loadJsonLd, loadSection } from '#lib/cms.ts'
 
 export async function load() {
   const about = await loadContent('pages', 'about')

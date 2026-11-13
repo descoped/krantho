@@ -13,7 +13,7 @@ describe('PostgresLockAdapter.listLocks (integration)', () => {
   let locks: PostgresLockAdapter
 
   beforeAll(async () => {
-    const connectionUri = process.env['KRANTHO_TEST_POSTGRES_URL']
+    const connectionUri = process.env.KRANTHO_TEST_POSTGRES_URL
     if (!connectionUri) {
       throw new Error('KRANTHO_TEST_POSTGRES_URL not set — globalSetup did not run.')
     }

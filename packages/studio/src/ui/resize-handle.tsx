@@ -39,7 +39,7 @@ export function ResizeHandle(props: ResizeHandleProps): ReactElement {
     const element = event.currentTarget
     if (typeof element.setPointerCapture === 'function') element.setPointerCapture(event.pointerId)
     drag.current = { x: event.clientX, width: value }
-    document.body.dataset['resizing'] = 'true'
+    document.body.dataset.resizing = 'true'
   }
   function onPointerMove(event: PointerEvent<HTMLDivElement>): void {
     const start = drag.current
@@ -47,7 +47,7 @@ export function ResizeHandle(props: ResizeHandleProps): ReactElement {
   }
   function onPointerEnd(): void {
     drag.current = null
-    delete document.body.dataset['resizing']
+    delete document.body.dataset.resizing
   }
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>): void {
     const step = event.shiftKey ? STEP * 4 : STEP

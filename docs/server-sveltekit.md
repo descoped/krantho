@@ -95,7 +95,7 @@ export const { GET } = createStudioHandler()
 Serve every page through the page cache hook in `src/hooks.server.ts`:
 
 ```typescript
-import type { Handle } from '@sveltejs/kit'
+import type { Handle } from '@sveltejs/kit/hooks'
 import { createPageCacheHandle } from '@krantho/server-sveltekit'
 import config from '../krantho.config'
 
@@ -145,7 +145,7 @@ export async function loadContent(collection: string, slug: string) {
 ```typescript
 // src/routes/+page.server.ts
 import { error } from '@sveltejs/kit'
-import { loadContent } from '$lib/cms'
+import { loadContent } from '#lib/cms.ts'
 
 export async function load() {
   const page = await loadContent('pages', 'home')

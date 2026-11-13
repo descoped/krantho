@@ -45,10 +45,10 @@ interface Result {
   reply: string
 }
 
-const base = process.env['LIVE_BASE_URL'] ?? 'http://localhost:4402'
+const base = process.env.LIVE_BASE_URL ?? 'http://localhost:4402'
 const headers: Record<string, string> = { 'content-type': 'application/json' }
-const token = process.env['LIVE_TOKEN']
-if (token) headers['authorization'] = `Bearer ${token}`
+const token = process.env.LIVE_TOKEN
+if (token) headers.authorization = `Bearer ${token}`
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -67,9 +67,9 @@ function parseRecord(text: string): Record<string, unknown> | undefined {
 /** An activity event the rest of the run can read: a tool, a status and, when pending, a token */
 function isActivity(value: unknown): value is Activity {
   if (!isRecord(value)) return false
-  if (typeof value['tool'] !== 'string' || typeof value['status'] !== 'string') return false
-  const pending = value['pending']
-  return pending === undefined || (isRecord(pending) && typeof pending['token'] === 'string')
+  if (typeof value.tool !== 'string' || typeof value.status !== 'string') return false
+  const pending = value.pending
+  return pending === undefined || (isRecord(pending) && typeof pending.token === 'string')
 }
 
 interface ApiReply {
@@ -92,7 +92,7 @@ async function chat(
   context?: { collection: string; slug?: string },
 ): Promise<Outcome> {
   const body: Record<string, unknown> = { messages: [{ role: 'user', content: prompt }] }
-  if (context) body['context'] = context
+  if (context) body.context = context
   const res = await fetch(`${base}/api/assistant/chat`, {
     method: 'POST',
     headers,
@@ -130,27 +130,27 @@ function fold(outcome: Outcome, block: string): void {
   // A keep-alive or a marker that is not a JSON event is skipped, not fatal
   const event = parseRecord(line.slice(5).trim())
   if (event === undefined) return
-  switch (event['type']) {
+  switch (event.type) {
     case 'text':
-      outcome.text += String(event['text'])
+      outcome.text += String(event.text)
       break
     case 'tool':
-      outcome.tools.push(String(event['tool']))
+      outcome.tools.push(String(event.tool))
       break
     case 'activity':
-      if (isActivity(event['activity'])) outcome.activities.push(event['activity'])
+      if (isActivity(event.activity)) outcome.activities.push(event.activity)
       break
     case 'usage':
       outcome.usage = {
-        inputTokens: Number(event['inputTokens']),
-        outputTokens: Number(event['outputTokens']),
+        inputTokens: Number(event.inputTokens),
+        outputTokens: Number(event.outputTokens),
       }
       break
     case 'error':
-      outcome.errors.push(`${String(event['code'])}: ${String(event['message'])}`)
+      outcome.errors.push(`${String(event.code)}: ${String(event.message)}`)
       break
     case 'done':
-      outcome.done = String(event['reason'])
+      outcome.done = String(event.reason)
       break
   }
 }
@@ -163,17 +163,17 @@ interface StoredDocument {
 async function readDocument(collection: string, slug: string): Promise<StoredDocument | null> {
   const res = await api('GET', `/api/content/${collection}/${slug}`)
   if (res.status !== 200) return null
-  const fields = isRecord(res.json['fields']) ? res.json['fields'] : {}
-  const version = typeof res.json['version'] === 'number' ? res.json['version'] : undefined
+  const fields = isRecord(res.json.fields) ? res.json.fields : {}
+  const version = typeof res.json.version === 'number' ? res.json.version : undefined
   return { fields, version }
 }
 
 async function slugsOf(collection: string): Promise<string[]> {
   const res = await api('GET', `/api/content/${collection}`)
-  const items = Array.isArray(res.json['items']) ? res.json['items'] : []
+  const items = Array.isArray(res.json.items) ? res.json.items : []
   return items.flatMap((item: unknown) => {
-    const meta = isRecord(item) ? item['meta'] : undefined
-    const slug = isRecord(meta) ? meta['slug'] : undefined
+    const meta = isRecord(item) ? item.meta : undefined
+    const slug = isRecord(meta) ? meta.slug : undefined
     return typeof slug === 'string' ? [slug] : []
   })
 }
@@ -229,7 +229,7 @@ const scenarios: readonly Scenario[] = [
     name: 'reads a document with a tool',
     async run() {
       const stored = await readDocument('pages', 'about')
-      const title = String(stored?.fields['title'] ?? '')
+      const title = String(stored?.fields.title ?? '')
       const o = await chat('What is the title of the About page? Answer in one sentence.', {
         collection: 'pages',
         slug: 'about',
@@ -282,7 +282,7 @@ const scenarios: readonly Scenario[] = [
       const checks: Check[] = [
         { ok: proposal !== undefined, what: 'the replacement was proposed (update_draft pending)' },
         {
-          ok: untouched?.fields['title'] === before?.fields['title'],
+          ok: untouched?.fields.title === before?.fields.title,
           what: 'nothing was written before the confirmation',
         },
       ]
@@ -297,7 +297,7 @@ const scenarios: readonly Scenario[] = [
         checks.push(
           { ok: confirmed.status === 200, what: 'the confirmation was accepted' },
           {
-            ok: after?.fields['title'] === TITLE,
+            ok: after?.fields.title === TITLE,
             what: `the confirmed title is stored ("${TITLE}")`,
           },
         )
@@ -411,7 +411,7 @@ async function main(): Promise<number> {
     console.error('The assistant is not enabled or has no model configured.')
     return 2
   }
-  const expected = process.env['LIVE_EXPECT_PROVIDER']
+  const expected = process.env.LIVE_EXPECT_PROVIDER
   if (expected && expected !== provider) {
     console.error(`Expected provider ${expected}, the server runs ${String(provider)}.`)
     return 2

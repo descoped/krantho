@@ -512,7 +512,7 @@ export function buildEkConfigMap(
 
     const nodeType = typeString(node['@type'])
     const nodeId = typeof node['@id'] === 'string' ? node['@id'] : undefined
-    const nodeRole = typeof node['role'] === 'string' ? (node['role'] as string) : undefined
+    const nodeRole = typeof node.role === 'string' ? (node.role as string) : undefined
 
     let matchIdx = -1
 

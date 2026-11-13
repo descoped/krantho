@@ -23,7 +23,7 @@ export const saveRuntimeField: ApiHandler = async (req, ctx) => {
   const denied = requireRole(ctx.auth, 'admin')
   if (denied) return denied
 
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   if (!hasRuntimeSchema(ctx.adapter)) {
@@ -34,8 +34,8 @@ export const saveRuntimeField: ApiHandler = async (req, ctx) => {
   if (!bodyCheck.isValid) return bodyCheck.response
 
   const body = bodyCheck.body
-  const fieldName = body['name']
-  const fieldType = body['type']
+  const fieldName = body.name
+  const fieldType = body.type
 
   if (!fieldName || typeof fieldName !== 'string') {
     return { status: 400, body: { error: 'Field "name" is required' } }
@@ -66,7 +66,7 @@ export const saveRuntimeField: ApiHandler = async (req, ctx) => {
     }
   }
 
-  const enumValues = body['enumValues']
+  const enumValues = body.enumValues
   if (enumValues !== undefined && !isTextList(enumValues)) {
     return { status: 400, body: { error: 'An enum’s values are a list of text.' } }
   }
@@ -80,15 +80,15 @@ export const saveRuntimeField: ApiHandler = async (req, ctx) => {
   const normalized: RuntimeFieldDefinition = {
     name: fieldName,
     type: fieldType as RuntimeFieldDefinition['type'],
-    required: body['required'] === true,
-    default: body['default'],
-    description: typeof body['description'] === 'string' ? body['description'] : undefined,
+    required: body.required === true,
+    default: body.default,
+    description: typeof body.description === 'string' ? body.description : undefined,
     enumValues: isTextList(enumValues) ? enumValues : undefined,
-    isArray: body['isArray'] === true,
-    refCollection: typeof body['refCollection'] === 'string' ? body['refCollection'] : undefined,
-    min: typeof body['min'] === 'number' ? body['min'] : undefined,
-    max: typeof body['max'] === 'number' ? body['max'] : undefined,
-    pattern: typeof body['pattern'] === 'string' ? body['pattern'] : undefined,
+    isArray: body.isArray === true,
+    refCollection: typeof body.refCollection === 'string' ? body.refCollection : undefined,
+    min: typeof body.min === 'number' ? body.min : undefined,
+    max: typeof body.max === 'number' ? body.max : undefined,
+    pattern: typeof body.pattern === 'string' ? body.pattern : undefined,
   }
 
   const invalid = runtimeFieldError(normalized, new Set(ctx.contentConfig.collections.keys()))

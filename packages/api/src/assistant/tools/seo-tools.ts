@@ -117,7 +117,7 @@ const seoFillMetaTool = defineTool({
       fields: { ...current.fields, [field]: description },
       body: current.body,
     })
-    if (outcome.result['ok'] !== true || outcome.result['pending']) return outcome
+    if (outcome.result.ok !== true || outcome.result.pending) return outcome
     // Generated from the document's text, so it reaches the model framed like that text
     return {
       ...outcome,

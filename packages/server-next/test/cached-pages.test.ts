@@ -97,7 +97,7 @@ describe('createContentLoader with next-isr', () => {
     await loader.listPublished('pages')
     await loader.jsonLd({ collection: 'pages', slug: 'about' })
 
-    expect(home?.fields['title']).toBe('Home')
+    expect(home?.fields.title).toBe('Home')
     expect(home?.publishedAt).toBeInstanceOf(Date)
     expect(cachedReads.map((read) => read.tags)).toEqual([
       ['k:site', 'k:d:pages:home'],
@@ -139,7 +139,7 @@ describe('createContentLoader with next-isr', () => {
     await loader.jsonLd(ref)
 
     const list = graph['@graph'].find((node) => node['@type'] === 'BreadcrumbList')
-    expect(list?.['itemListElement']).toEqual([
+    expect(list?.itemListElement).toEqual([
       { '@type': 'ListItem', position: 1, name: 'Company', item: 'http://localhost:4002/company' },
       { '@type': 'ListItem', position: 2, name: 'About', item: 'http://localhost:4002/about' },
     ])
@@ -160,7 +160,7 @@ describe('createContentLoader with next-isr', () => {
 
     const home = await loader.getPublished({ collection: 'pages', slug: 'home' })
 
-    expect(home?.fields['title']).toBe('Home')
+    expect(home?.fields.title).toBe('Home')
     expect(cachedReads).toEqual([])
   })
 })

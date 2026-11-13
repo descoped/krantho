@@ -168,7 +168,7 @@ export const contentChanges: ApiHandler = async (req, ctx) => {
     return { status: 409, body: { error: 'The database has no content import to compare with' } }
   }
 
-  const only = req.query['collection']
+  const only = req.query.collection
   const collections = [...ctx.contentConfig.collections.values()].filter(
     (collection) => collection.directory && (only === undefined || collection.name === only),
   )
@@ -176,8 +176,8 @@ export const contentChanges: ApiHandler = async (req, ctx) => {
     return { status: 400, body: { error: `No collection ${only} is kept in files` } }
   }
 
-  const limit = pageLimit(req.query['limit'])
-  const cursor = parseCursor(req.query['cursor'])
+  const limit = pageLimit(req.query.limit)
+  const cursor = parseCursor(req.query.cursor)
   const changes: ContentChange[] = []
   let looked = 0
   for (let c = cursor.collection; c < collections.length; c++) {

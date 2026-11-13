@@ -21,7 +21,7 @@ function documentTarget(
 ): DocumentTarget {
   const denied = requireRole(ctx.auth, 'viewer')
   if (denied) return { ok: false, response: denied }
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return { ok: false, response: validated.response }
   const slug = requireParam(req.params, 'slug')
   if (!slug.isValid) return { ok: false, response: slug.response }
@@ -29,7 +29,7 @@ function documentTarget(
     ok: true,
     collection: validated.collection,
     slug: slug.value,
-    locale: parseLocaleParam(req.query['locale']),
+    locale: parseLocaleParam(req.query.locale),
     path: documentPath(validated.collectionDef, slug.value),
   }
 }

@@ -7,7 +7,7 @@ import { listPage } from './list-query.js'
  * `{ items, hasMore }`; an unknown collection is a 400.
  */
 export const listContent: ApiHandler = async (req, ctx) => {
-  const names = (req.query['collections'] ?? '')
+  const names = (req.query.collections ?? '')
     .split(',')
     .map((name) => name.trim())
     .filter((name) => name !== '')

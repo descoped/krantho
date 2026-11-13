@@ -298,7 +298,7 @@ describe('Unified Content Loading and Caching System', () => {
       const html: string = result.html
       const sections: Record<string, string> = result.sections
 
-      expect(frontmatter['title']).toBe('Home Page')
+      expect(frontmatter.title).toBe('Home Page')
       expect(content).toContain('Welcome to our site')
       expect(html).toContain('<h1>Welcome to our site</h1>')
       expect(sections).toHaveProperty('hero-section')
@@ -317,7 +317,7 @@ describe('Unified Content Loading and Caching System', () => {
       expect(result.sections['company-history']).toContain(
         'Founded in 2020, we have grown significantly.',
       )
-      expect(result.sections['team']).toContain(
+      expect(result.sections.team).toContain(
         'Our team consists of John Doe and other professionals.',
       )
     })
@@ -470,7 +470,7 @@ describe('Unified Content Loading and Caching System', () => {
 
       // All should have the same content
       results.forEach((result) => {
-        expect(result.fields['title']).toBe('Home Page')
+        expect(result.fields.title).toBe('Home Page')
         expect(result.error).toBe(null)
       })
 

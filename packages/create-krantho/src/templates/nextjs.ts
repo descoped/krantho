@@ -44,20 +44,20 @@ function packageJson(options: ProjectOptions): string {
   }
 
   if (options.ui === 'tailwind') {
-    deps['tailwindcss'] = '^4.2.2'
-    deps['@tailwindcss/postcss'] = '^4.2.2'
+    deps.tailwindcss = '^4.3.5'
+    deps['@tailwindcss/postcss'] = '^4.3.5'
   }
 
   if (options.ui === 'mui') {
-    deps['@mui/material'] = '^7.3.0'
+    deps['@mui/material'] = '^9.5.0'
     deps['@emotion/react'] = '^11.14.0'
-    deps['@emotion/styled'] = '^11.14.0'
+    deps['@emotion/styled'] = '^11.14.1'
   }
 
   const devDeps: Record<string, string> = {
-    '@types/node': '^25.5.0',
+    '@types/node': '^26.6.6',
     '@types/react': '^19.3.0',
-    typescript: '^6.0.2',
+    typescript: '^7.0.2',
   }
 
   const pkg = {

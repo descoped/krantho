@@ -10,7 +10,7 @@ describe('publication metadata', () => {
   it('keeps the date as a UTC date-time with a Z', () => {
     expect(schema.safeParse({ date: '2026-10-10T09:30:00Z' }).success).toBe(true)
     expect(
-      (z.toJSONSchema(schema).properties as Record<string, { format?: string }>)['date']?.format,
+      (z.toJSONSchema(schema).properties as Record<string, { format?: string }>).date?.format,
     ).toBe('date-time')
   })
 
@@ -32,11 +32,11 @@ describe('a document saved with a date written alone', () => {
   it('is stored as midnight UTC', () => {
     const result = save('2026-10-10')
     expect(result.success).toBe(true)
-    expect(result.data?.metadata['publication']).toEqual({ date: '2026-10-10T00:00:00Z' })
+    expect(result.data?.metadata.publication).toEqual({ date: '2026-10-10T00:00:00Z' })
   })
 
   it('is stored as UTC when written with an offset', () => {
-    expect(save('2026-10-10T11:30:00+02:00').data?.metadata['publication']).toEqual({
+    expect(save('2026-10-10T11:30:00+02:00').data?.metadata.publication).toEqual({
       date: '2026-10-10T09:30:00Z',
     })
   })

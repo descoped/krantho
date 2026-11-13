@@ -8,7 +8,7 @@ import type { ApiHandler } from '../types.js'
  * all content references (slug, sections, collection) in parallel.
  */
 export const resolvePageRoute: ApiHandler = async (req, ctx) => {
-  const route = req.query['route']
+  const route = req.query.route
   if (!route) {
     return { status: 400, body: { error: 'Missing "route" query parameter' } }
   }
@@ -113,7 +113,7 @@ function extractParams(pattern: string, path: string): Record<string, string> {
   for (let i = 0; i < patternParts.length; i++) {
     const pp = patternParts[i]
     const value = pathParts[i]
-    if (pp && pp.startsWith(':') && value) {
+    if (pp?.startsWith(':') && value) {
       params[pp.slice(1)] = value
     }
   }

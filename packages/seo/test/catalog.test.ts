@@ -73,13 +73,13 @@ describe('Type Properties', () => {
     const article = Object.fromEntries(
       getTypeProperties('Article').map((p) => [p.property, p.importance]),
     )
-    expect(article['headline']).toBe('recommended')
-    expect(article['author']).toBe('recommended')
+    expect(article.headline).toBe('recommended')
+    expect(article.author).toBe('recommended')
     const event = Object.fromEntries(
       getTypeProperties('Event').map((p) => [p.property, p.importance]),
     )
-    expect(event['startDate']).toBe('required')
-    expect(event['location']).toBe('required')
+    expect(event.startDate).toBe('required')
+    expect(event.location).toBe('required')
   })
 
   it('makes no property important for a feature Google retired', () => {

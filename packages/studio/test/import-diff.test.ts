@@ -282,12 +282,8 @@ describe('applySelectedChanges', () => {
     ]
     const idMap = new Map<string, string>()
     const buffer = applySelectedChanges(createBuffer(), changes, idMap)
-    expect(buffer.overrides.get('https://example.com/#article')?.['headline']).toBe(
-      'Imported Title',
-    )
-    expect(buffer.overrides.get('https://example.com/#article')?.['dateModified']).toBe(
-      '2026-03-01',
-    )
+    expect(buffer.overrides.get('https://example.com/#article')?.headline).toBe('Imported Title')
+    expect(buffer.overrides.get('https://example.com/#article')?.dateModified).toBe('2026-03-01')
   })
 
   it('falls back to type key when entityId is undefined', () => {
@@ -302,7 +298,7 @@ describe('applySelectedChanges', () => {
       },
     ]
     const buffer = applySelectedChanges(createBuffer(), changes, new Map())
-    expect(buffer.overrides.get('Article')?.['headline']).toBe('Imported')
+    expect(buffer.overrides.get('Article')?.headline).toBe('Imported')
   })
 
   it('rewrites @id values in applied changes', () => {
@@ -318,7 +314,7 @@ describe('applySelectedChanges', () => {
     ]
     const idMap = new Map([['https://old.com/#person', 'https://example.com/#person']])
     const buffer = applySelectedChanges(createBuffer(), changes, idMap)
-    expect(buffer.overrides.get('https://example.com/#article')?.['author']).toEqual({
+    expect(buffer.overrides.get('https://example.com/#article')?.author).toEqual({
       '@id': 'https://example.com/#person',
     })
   })
@@ -335,6 +331,6 @@ describe('applySelectedChanges', () => {
       },
     ]
     const buffer = applySelectedChanges(createBuffer(), changes, new Map())
-    expect(buffer.overrides.get('Person:author')?.['name']).toBe('New Author')
+    expect(buffer.overrides.get('Person:author')?.name).toBe('New Author')
   })
 })

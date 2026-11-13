@@ -10,14 +10,14 @@ import { parseLocaleParam, requireParam, validateCollectionParam } from '../vali
  * site's default when absent; 400 when it is not a locale code)
  */
 export const seoPreview: ApiHandler = async (req, ctx) => {
-  const validated = validateCollectionParam(req.params['collection'], ctx)
+  const validated = validateCollectionParam(req.params.collection, ctx)
   if (!validated.isValid) return validated.response
 
   const slugResult = requireParam(req.params, 'slug')
   if (!slugResult.isValid) return slugResult.response
   const slug = slugResult.value
   const collection = validated.collection
-  const requestedLocale = req.query['locale']
+  const requestedLocale = req.query.locale
   const locale = parseLocaleParam(requestedLocale)
   if (requestedLocale !== undefined && locale === undefined) {
     return {

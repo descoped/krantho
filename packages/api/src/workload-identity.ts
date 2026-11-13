@@ -75,7 +75,7 @@ function timeClaim(value: unknown): number {
 /** exp is required and must lie ahead; nbf and iat, when present, must not lie ahead */
 function checkTimes(claims: Record<string, unknown>): void {
   const now = Math.floor(Date.now() / 1000)
-  if (timeClaim(claims['exp']) + CLOCK_SKEW_SEC <= now) throw new Error('Token expired')
+  if (timeClaim(claims.exp) + CLOCK_SKEW_SEC <= now) throw new Error('Token expired')
   for (const name of ['nbf', 'iat']) {
     const value = claims[name]
     if (value !== undefined && timeClaim(value) - CLOCK_SKEW_SEC > now) {
@@ -98,15 +98,15 @@ async function verifyWorkloadToken(token: string, workload: ConfiguredWorkload):
   }
 
   const claims = await verifySignedJwt(token, discovery.jwks_uri)
-  if (claims['iss'] !== workload.issuer) throw new Error('Issuer mismatch')
+  if (claims.iss !== workload.issuer) throw new Error('Issuer mismatch')
 
-  const aud = claims['aud']
+  const aud = claims.aud
   const audiences = Array.isArray(aud) ? aud : [aud]
   if (!audiences.includes(workload.audience)) throw new Error('Audience mismatch')
 
   checkTimes(claims)
 
-  const subject = claims['sub']
+  const subject = claims.sub
   if (typeof subject !== 'string' || subject === '') throw new Error('Missing subject')
   if (!workload.subjects.some((pattern) => matchesSubject(subject, pattern))) {
     throw new Error('Subject not allowed')

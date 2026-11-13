@@ -191,7 +191,7 @@ export async function runContentQuery<P extends QueryProjection>(
   const page = hasMore ? rows.slice(0, spec.limit) : rows
   const items = page.map((row) => {
     const item = rowItem(spec.projection, row) as QueryItem<P> & { snippet?: string | undefined }
-    if (typeof row['snippet'] === 'string') item.snippet = collapseWhitespace(row['snippet'])
+    if (typeof row.snippet === 'string') item.snippet = collapseWhitespace(row.snippet)
     return item
   })
   return { items, hasMore }

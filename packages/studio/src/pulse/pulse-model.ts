@@ -29,7 +29,7 @@ export interface PulseDocument {
 }
 
 export function toPulseDocument({ meta, fields }: ContentSummaryItem): PulseDocument {
-  const title = fields['title']
+  const title = fields.title
   return {
     collection: meta.collection,
     slug: meta.slug,

@@ -31,12 +31,12 @@ export const mediaFolderCreate: ApiHandler = async (req, ctx) => {
   if (!bodyCheck.isValid) return bodyCheck.response
 
   const payload = bodyCheck.body as Record<string, unknown>
-  const name = payload['name']
+  const name = payload.name
   if (typeof name !== 'string' || name.trim().length === 0) {
     return { status: 400, body: { error: 'Folder name is required' } }
   }
 
-  const parentId = typeof payload['parentId'] === 'string' ? payload['parentId'] : null
+  const parentId = typeof payload.parentId === 'string' ? payload.parentId : null
 
   try {
     const folder = await ctx.mediaFolderStorage.createFolder(name, parentId)
@@ -64,7 +64,7 @@ export const mediaFolderRename: ApiHandler = async (req, ctx) => {
   if (!bodyCheck.isValid) return bodyCheck.response
 
   const payload = bodyCheck.body as Record<string, unknown>
-  const name = payload['name']
+  const name = payload.name
   if (typeof name !== 'string' || name.trim().length === 0) {
     return { status: 400, body: { error: 'Folder name is required' } }
   }
@@ -115,7 +115,7 @@ export const mediaMove: ApiHandler = async (req, ctx) => {
   if (!bodyCheck.isValid) return bodyCheck.response
 
   const payload = bodyCheck.body as Record<string, unknown>
-  const folderId = typeof payload['folderId'] === 'string' ? payload['folderId'] : null
+  const folderId = typeof payload.folderId === 'string' ? payload.folderId : null
 
   // Validate folder exists (if moving to a folder, not root)
   if (folderId && ctx.mediaFolderStorage) {

@@ -60,6 +60,6 @@ export function isSecureRequest(
   if (forwardedProto?.split(',')[0]?.trim().toLowerCase() === 'https') return true
   if (headers?.['x-forwarded-ssl']?.toLowerCase() === 'on') return true
 
-  const forwarded = headers?.['forwarded']
+  const forwarded = headers?.forwarded
   return forwarded !== undefined && /(?:^|[;,\s])proto="?https"?(?:$|[;,\s])/i.test(forwarded)
 }
