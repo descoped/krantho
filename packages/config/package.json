@@ -1,6 +1,6 @@
 {
   "name": "@krantho/config",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "krantho's typed configuration: defaults, krantho.config.ts and the environment, resolved once into one tree.",
   "license": "MIT",
   "homepage": "https://krantho.com",

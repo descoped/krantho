@@ -1,6 +1,6 @@
 {
   "name": "@krantho/next",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "One-install krantho bundle for Next.js — server adapter, React UI, Studio, media, and SEO.",
   "license": "MIT",
   "homepage": "https://krantho.com",

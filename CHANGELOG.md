@@ -3,6 +3,24 @@
 Every krantho release, newest first. Versions follow [semver.org](https://semver.org); a release's tag is
 `vMAJOR.MINOR.PATCH`.
 
+## 1.0.2 - 2026-11-13
+
+### Fixed
+
+- A content file removed from the repository deletes its document on the next deploy, unless an editor changed the
+  document in Studio; a collection directory without files deletes nothing, and a checkpoint is taken first.
+  Before, deleted and renamed files left their pages live and in the sitemap.
+- `create-krantho` allows `better-sqlite3`'s native build under pnpm 10 (`onlyBuiltDependencies`) and pnpm 11+
+  (`allowBuilds`), so a scaffolded pnpm project builds SQLite.
+
+### Changed
+
+- SvelteKit 3: the scaffolder and examples configure SvelteKit in its Vite plugin; `@krantho/ui-svelte` publishes a
+  compiled `dist/`.
+- postgres.js 4 is the supported Postgres client (`@krantho/server`'s peer range).
+- Every dependency and tool is at its latest version: pnpm 12, TypeScript 7 (6 for the SvelteKit packages),
+  Vitest 5, Node 26.
+
 ## 1.0.1 - 2026-11-13
 
 ### Fixed

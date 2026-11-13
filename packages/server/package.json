@@ -1,6 +1,6 @@
 {
   "name": "@krantho/server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The krantho server runtime: persistence, the content engine, the API handlers, Studio serving and the in-process content loader.",
   "license": "MIT",
   "homepage": "https://krantho.com",

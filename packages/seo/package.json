@@ -1,6 +1,6 @@
 {
   "name": "@krantho/seo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Schema.org structured data for krantho: archetypes composed into one JSON-LD graph, checked against the vocabulary and search engine rules.",
   "license": "MIT",
   "homepage": "https://krantho.com",

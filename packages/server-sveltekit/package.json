@@ -1,6 +1,6 @@
 {
   "name": "@krantho/server-sveltekit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The krantho adapter for SvelteKit: API and Studio endpoints, the content loader and CDN page caching.",
   "license": "MIT",
   "homepage": "https://krantho.com",

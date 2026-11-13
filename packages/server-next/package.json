@@ -1,6 +1,6 @@
 {
   "name": "@krantho/server-next",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The krantho adapter for the Next.js App Router: API and Studio route handlers, the content loader and page caching.",
   "license": "MIT",
   "homepage": "https://krantho.com",
