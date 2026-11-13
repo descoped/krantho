@@ -12,13 +12,13 @@ import type {
   QueryPage,
   QueryProjection,
 } from '@krantho/persistence'
+import { SQLiteAdapter, SqliteContentMigrationAdapter } from '@krantho/persistence-sqlite'
 import {
   compileContentContract,
   defineCollection,
   defineConfig,
   documentChecksum,
 } from '@krantho/schema'
-import { SQLiteAdapter, SqliteContentMigrationAdapter } from '@krantho/persistence-sqlite'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import {
