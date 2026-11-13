@@ -85,6 +85,24 @@ describe('renderContent', () => {
       expect(html).toContain('<span title="images/c">')
     })
 
+    it('reads raw tags attribute by attribute, and leaves unquoted and based URLs as written', async () => {
+      const resolveUrl = (url: string): string => (url.startsWith('images/') ? `/${url}` : url)
+      const body = [
+        '<img alt="a > b" src="images/gt.png">',
+        '<img alt=\'see src="images/no.png"\' src="images/yes.png">',
+        '<img src=images/bare.png> <a href="/repo/setup/">based</a>',
+      ].join('\n')
+
+      const { html } = await renderContent({}, body, { basePath: '/repo', resolveUrl })
+      const { html: plain } = await renderContent({}, body)
+
+      expect(html).toContain('src="/repo/images/gt.png"')
+      expect(html).toContain('alt=\'see src="images/no.png"\' src="/repo/images/yes.png"')
+      expect(html).toContain('src=images/bare.png')
+      expect(html).toContain('href="/repo/setup/"')
+      expect(plain).toContain('src="images/gt.png"')
+    })
+
     it('leaves URLs as written without a base path, also after a render with one', async () => {
       await renderContent({}, links, { basePath: '/repo' })
       const { html } = await renderContent({}, links)
