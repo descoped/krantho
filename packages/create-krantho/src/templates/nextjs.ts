@@ -558,7 +558,7 @@ function postcssConfig(): string {
 `
 }
 
-function sortObject(obj: Record<string, string>): Record<string, string> {
+export function sortObject(obj: Record<string, string>): Record<string, string> {
   const sorted: Record<string, string> = {}
   for (const key of Object.keys(obj).sort()) {
     const value = obj[key]

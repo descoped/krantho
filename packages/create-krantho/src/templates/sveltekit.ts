@@ -1,5 +1,6 @@
 import type { ProjectOptions } from '../prompts.js'
 import { KRANTHO_RANGE } from '../version.js'
+import { sortObject } from './nextjs.js'
 
 export function generateSveltekitFiles(options: ProjectOptions): Map<string, string> {
   const files = new Map<string, string>()
@@ -491,13 +492,4 @@ function dynamicPage(): string {
   <div class="prose">{@html data.html}</div>
 </article>
 `
-}
-
-function sortObject(obj: Record<string, string>): Record<string, string> {
-  const sorted: Record<string, string> = {}
-  for (const key of Object.keys(obj).sort()) {
-    const value = obj[key]
-    if (value !== undefined) sorted[key] = value
-  }
-  return sorted
 }

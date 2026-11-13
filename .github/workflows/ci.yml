@@ -133,7 +133,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        framework: [nextjs, sveltekit]
+        framework: [nextjs, sveltekit, nextjs-static]
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6

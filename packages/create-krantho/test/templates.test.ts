@@ -151,16 +151,82 @@ describe('sveltekit template sitemap and robots.txt', () => {
   })
 })
 
-describe.each<Framework>(['nextjs', 'sveltekit'])('%s template krantho versions', (framework) => {
-  it('depends on the krantho release the scaffolder belongs to', () => {
-    const own = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf-8')) as {
-      version: string
-    }
-    const deps = JSON.parse(file(generateFiles(options(framework, false)), 'package.json'))
-      .dependencies as Record<string, string>
+describe.each<Framework>(['nextjs', 'sveltekit', 'nextjs-static'])(
+  '%s template krantho versions',
+  (framework) => {
+    it('depends on the krantho release the scaffolder belongs to', () => {
+      const own = JSON.parse(
+        readFileSync(new URL('../package.json', import.meta.url), 'utf-8'),
+      ) as {
+        version: string
+      }
+      const deps = JSON.parse(file(generateFiles(options(framework, false)), 'package.json'))
+        .dependencies as Record<string, string>
 
-    const krantho = Object.entries(deps).filter(([name]) => name.startsWith('@krantho/'))
-    expect(krantho.length).toBeGreaterThan(0)
-    for (const [, range] of krantho) expect(range).toBe(`^${own.version}`)
+      const krantho = Object.entries(deps).filter(([name]) => name.startsWith('@krantho/'))
+      expect(krantho.length).toBeGreaterThan(0)
+      for (const [, range] of krantho) expect(range).toBe(`^${own.version}`)
+    })
+  },
+)
+
+describe('nextjs-static template', () => {
+  const files = generateFiles({
+    ...options('nextjs-static', false),
+    packageManagerSpec: 'pnpm@12.1.0',
+  })
+
+  it('builds the site to static files under the path of its address', () => {
+    const config = file(files, 'next.config.ts')
+
+    expect(config).toContain("output: 'export'")
+    expect(config).toContain(
+      'basePath: basePathOf(resolveConfig(kranthoConfig, process.env).site.baseUrl)',
+    )
+    expect(config).toContain('trailingSlash: true')
+    expect(file(files, 'krantho.config.ts')).toContain("persistence: { provider: 'filesystem' }")
+    expect(file(files, 'krantho.collections.ts')).toContain("path: '/:slug/'")
+  })
+
+  it('has no API, Studio or database', () => {
+    const paths = [...files.keys()]
+
+    expect(
+      paths.some((path) => path.startsWith('app/api/') || path.startsWith('app/studio/')),
+    ).toBe(false)
+    expect(paths.some((path) => path.startsWith('content/pages/'))).toBe(false)
+    const deps = JSON.parse(file(files, 'package.json')).dependencies as Record<string, string>
+    expect(Object.keys(deps)).toContain('@krantho/static')
+    expect(Object.keys(deps)).not.toContain('@krantho/next')
+  })
+
+  it('publishes to GitHub Pages from the whole history, with the address Pages gives', () => {
+    const workflow = file(files, '.github/workflows/pages.yml')
+
+    expect(workflow).toContain('fetch-depth: 0')
+    expect(workflow).toContain('uses: pnpm/action-setup@v6')
+    expect(workflow).toContain('KRANTHO_SITE_BASE_URL: ${{ steps.pages.outputs.base_url }}')
+    expect(workflow).toContain('uses: actions/upload-pages-artifact@v5')
+    expect(workflow).toContain('uses: actions/deploy-pages@v5')
+    expect(JSON.parse(file(files, 'package.json')).packageManager).toBe('pnpm@12.1.0')
+  })
+
+  it('installs with npm in the workflow of an npm project', () => {
+    const npm = generateFiles({ ...options('nextjs-static', false), packageManager: 'npm' })
+    const workflow = file(npm, '.github/workflows/pages.yml')
+
+    expect(workflow).toContain('run: npm ci')
+    expect(workflow).not.toContain('pnpm/action-setup')
+    expect(JSON.parse(file(npm, 'package.json')).packageManager).toBeUndefined()
+  })
+
+  it('writes the sitemap, llms.txt and robots.txt at build', () => {
+    for (const route of [
+      'app/sitemap.xml/route.ts',
+      'app/llms.txt/route.ts',
+      'app/robots.txt/route.ts',
+    ]) {
+      expect(file(files, route)).toContain("export const dynamic = 'force-static'")
+    }
   })
 })
