@@ -99,7 +99,7 @@ Editors work in one Studio, the same for every framework, served by your app at 
 
 - You want a page builder or a visual site designer. In krantho, editors change content; layout is code.
 - You want a hosted service that someone else runs. Krantho runs inside your app, on your infrastructure.
-- The site must be purely static files. The API and Studio need a Node.js server runtime.
+- Editors must change a site that is served as static files. The API and Studio need a Node.js server runtime; a static build, such as project docs on GitHub Pages, is edited in the repository.
 - Your frontend is built on a framework krantho has no adapter for.
 
 ## Get started

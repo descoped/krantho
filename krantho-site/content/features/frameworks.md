@@ -44,4 +44,4 @@ Studio is the same React application in each of them, the SvelteKit apps include
 
 - `@krantho/server-next` is built for the Next.js App Router.
 - Astro, Nuxt, Remix and other frameworks have no adapter. The Node handler works with any server that speaks Web `Request` and `Response`, but you write the glue.
-- The scaffolder, `create-krantho`, sets up Next.js and SvelteKit projects. Express projects are set up by hand. A scaffolded project does not add the Studio route yet, so you add it yourself.
+- The scaffolder, `create-krantho`, sets up Next.js and SvelteKit projects, and a static Next.js site for GitHub Pages. Express projects are set up by hand. A scaffolded project does not add the Studio route yet, so you add it yourself.

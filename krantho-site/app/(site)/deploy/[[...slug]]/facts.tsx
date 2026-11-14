@@ -6,7 +6,7 @@ import { type Summary, list, text } from '../../../../lib/content'
 // so they live with the template rather than in each document.
 
 export const CACHE_STRATEGIES: Record<string, string> = {
-  none: 'Every request renders the page.',
+  none: 'No page cache: a server renders every request, a static build each page once.',
   'next-isr': 'Next.js keeps each page until a change invalidates it.',
   cdn: 'The CDN keeps each page until a change purges it.',
 }

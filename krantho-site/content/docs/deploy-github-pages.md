@@ -175,7 +175,7 @@ Links between your markdown files work too, so the same folder reads well on Git
 
 ## Publish a repository's existing docs
 
-The site can live in a folder of a project's repository, such as `site/`, and read the project's `docs/`. Point the collection at that folder, and read `README.md` as its home page:
+The site can live in a folder of a project's repository, such as `site/`, and read the project's `docs/`; the [dedupd](https://github.com/descoped/dedupd) repository is an example. Point the collection at that folder, and read `README.md` as its home page:
 
 ```ts title="site/krantho.collections.ts"
 const docs = defineCollection({
