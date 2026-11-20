@@ -17,7 +17,7 @@ import config from '../krantho.config'
 import { collections } from '../krantho.collections'
 
 export const site = createStaticSite({ config, collections })
-initServerLoader(site.loader, { basePath: site.basePath })
+initServerLoader(site.loader, site.rendering)
 ```
 
 ```ts

@@ -52,6 +52,10 @@ document's **published (live) version**.
 | Studio at `/studio` | editors, and any change to a running site by hand | a new version in history; live only once published |
 | The REST API at `/api` | scripts, bulk changes, agents | the same versions Studio writes |
 
+A static site (`@krantho/static`, published to GitHub Pages) has one channel: the markdown files.
+It has no database, Studio or API, so nothing is imported and no manifest is needed: edit the file
+and push, and the next build publishes it.
+
 ## Writing a markdown file
 
 ```markdown

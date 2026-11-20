@@ -10,6 +10,7 @@
 - Vercel with SvelteKit
 - A CDN in front of your own server
 - Several Next.js instances without Vercel
+- A static site on GitHub Pages
 
 Pick the row that matches the target, then apply its section. Settings are environment
 variables unless noted; every one is listed at https://krantho.com/docs/configuration.
@@ -18,6 +19,7 @@ variables unless noted; every one is listed at https://krantho.com/docs/configur
 |---|---|---|---|
 | One server or container with a persistent disk | SQLite (default) | `local` | `none`, or `cdn` behind CloudFront / Cloud CDN; Next.js: `next-isr` |
 | Several instances (containers, VMs) | Postgres | `s3`, `gcs` or `vercel-blob` | Next.js: `next-isr` + `cache.shared: 'database'`; others: `cdn` |
+| GitHub Pages or any file host (no Studio, no API) | `filesystem` (the markdown) | files in `public/` | `none` |
 | Vercel, Next.js | Postgres | `vercel-blob` (or `s3`, `gcs`) | `next-isr` |
 | Vercel, SvelteKit | Postgres | `vercel-blob` | `cdn` with provider `vercel` |
 
@@ -146,3 +148,24 @@ A self-hosted Next.js app keeps `next-isr` and names CloudFront or Cloud CDN in
 `KRANTHO_CACHE_SHARED=database` and the `cacheHandler` from `@krantho/server-next/cache-handler`
 in `next.config.ts` (see `next.md`), so every instance shares the page cache and sees every
 invalidation. The handler reads the database settings from the environment only.
+
+## A static site on GitHub Pages
+
+For a site whose authors edit markdown in the repository and that needs no Studio, API or
+database: project docs, a small documentation site. Full guide:
+https://krantho.com/docs/deploy-github-pages.
+
+- **New site:** `npx create-krantho` → **Static site (Next.js, GitHub Pages)**. It writes the pages,
+  `krantho.config.ts` (`persistence.provider: 'filesystem'`, `cache.pages: 'none'`),
+  `lib/krantho.ts` with `createStaticSite()` from `@krantho/static`, and
+  `.github/workflows/pages.yml`. In the repository's **Settings → Pages**, set **Source** to
+  **GitHub Actions**; every push to `main` then builds and publishes the site.
+- **A project's existing docs:** put the site in a subfolder (`site/`) and point the collection at
+  the docs folder in `krantho.collections.ts`: `directory: join(process.cwd(), '..', 'docs')` and
+  `indexFile: 'README.md'`; in `krantho.config.ts`, `paths.contentDir: '../docs'` so pages are
+  dated by that folder's git history. Links between the `.md` files work on GitHub and on the site
+  alike; images go in `public/` (`images/diagram.png` is served from `public/images/diagram.png`). Run the workflow's steps
+  in `site/` and point the actions at it.
+- The workflow checks out with `fetch-depth: 0` (pages are dated by their files' last commit) and
+  passes `actions/configure-pages`'s `base_url` to the build as `KRANTHO_SITE_BASE_URL`.
+- The build writes `out/`: plain files, so any static host serves it.
