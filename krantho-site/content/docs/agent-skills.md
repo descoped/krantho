@@ -46,7 +46,7 @@ Projects created with `create-krantho` will include these settings.
 
 ### start
 
-Adds krantho to a new or existing Next.js, SvelteKit or Express/Vite project: the packages, `krantho.config.ts`, `krantho.collections.ts`, the API and Studio routes, the content loader pages read through, persistence (SQLite by default, Postgres), the media store, page caching (`none`, `next-isr` or `cdn`) and deployment. It carries one reference per framework, grounded in the example apps, and one for hosting.
+Adds krantho to a new or existing Next.js, SvelteKit or Express/Vite project: the packages, `krantho.config.ts`, `krantho.collections.ts`, the API and Studio routes, the content loader pages read through, persistence (SQLite by default, Postgres), the media store, page caching (`none`, `next-isr` or `cdn`) and deployment. It carries one reference per framework, grounded in the example apps, and one for hosting. For a site whose authors work in the repository, such as project docs, it sets up a static site for GitHub Pages instead.
 
 > Add krantho to this Next.js app. Keep my existing pages, and make the blog posts in `posts/` editable in Studio.
 

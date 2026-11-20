@@ -5,7 +5,8 @@ description: >
   SvelteKit or Express/Vite project, and gets it running. Use when someone wants to "add krantho",
   "set up krantho", "install the CMS", scaffold a krantho site, wire the krantho API and Studio
   routes, connect page rendering to krantho content, choose SQLite or Postgres, pick a media store,
-  turn on page caching, or deploy a krantho site. Covers krantho.config.ts, krantho.collections.ts,
+  turn on page caching, deploy a krantho site, or build a static site from a repository's markdown
+  for GitHub Pages. Covers krantho.config.ts, krantho.collections.ts,
   the API and /studio routes, the in-process content loader, persistence, media, page caching,
   authentication and hosting, per framework.
 compatibility: krantho 1.x; Claude Code
@@ -64,7 +65,10 @@ writes the pnpm setting itself. A site on Postgres only does not need it.
    which framework, or suggest `npx create-krantho`. A site whose authors edit markdown in the
    repository and that needs no Studio or server (project docs on GitHub Pages) is a static site:
    `npx create-krantho` → **Static site (Next.js, GitHub Pages)**, built on `@krantho/static`
-   (krantho.com/docs/deploy-github-pages); the steps below are for a site with a server.
+   (krantho.com/docs/deploy-github-pages). It can also publish a project's existing `docs/`
+   folder from a site in a subfolder, with `README.md` as the home page; see
+   `${CLAUDE_SKILL_DIR}/references/hosting.md` → "A static site on GitHub Pages". The steps below
+   are for a site with a server.
 2. **Load the stack reference** and follow it for every file:
    - Next.js (App Router): `${CLAUDE_SKILL_DIR}/references/next.md`
    - SvelteKit 2: `${CLAUDE_SKILL_DIR}/references/sveltekit.md`

@@ -9,7 +9,7 @@ that render them, write content, and set up SEO.
 
 | Skill | Invoke | Use it to |
 |---|---|---|
-| `start` | `/krantho:start` | Add krantho to a new or existing project: configuration, collections, API and Studio routes, the page loader, persistence, media, page caching, deployment |
+| `start` | `/krantho:start` | Add krantho to a new or existing project: configuration, collections, API and Studio routes, the page loader, persistence, media, page caching, deployment; or a static site for GitHub Pages |
 | `site-design` | `/krantho:site-design` | Design the site itself: page structure, navigation, a token design system with light and dark themes, accessibility, performance, motion |
 | `content-model` | `/krantho:content-model` | Design content templates (collections, which are Studio's forms) together with the page templates that render them |
 | `content` | `/krantho:content` | Create and edit content in markdown files, Studio or the REST API; drafts, publishing, preview and history |
