@@ -161,9 +161,10 @@ https://krantho.com/docs/deploy-github-pages.
   `.github/workflows/pages.yml`. In the repository's **Settings → Pages**, set **Source** to
   **GitHub Actions**; every push to `main` then builds and publishes the site.
 - **A project's existing docs:** put the site in a subfolder (`site/`) and point the collection at
-  the docs folder: `directory: join(process.cwd(), '..', 'docs')`, `indexFile: 'README.md'`, and
-  `paths.contentDir: '../docs'` so pages are dated by that folder's git history. Links between the
-  `.md` files and relative images work on GitHub and on the site alike. Run the workflow's steps
+  the docs folder in `krantho.collections.ts`: `directory: join(process.cwd(), '..', 'docs')` and
+  `indexFile: 'README.md'`; in `krantho.config.ts`, `paths.contentDir: '../docs'` so pages are
+  dated by that folder's git history. Links between the `.md` files work on GitHub and on the site
+  alike; images go in `public/` (`images/diagram.png` is served from `public/images/diagram.png`). Run the workflow's steps
   in `site/` and point the actions at it.
 - The workflow checks out with `fetch-depth: 0` (pages are dated by their files' last commit) and
   passes `actions/configure-pages`'s `base_url` to the build as `KRANTHO_SITE_BASE_URL`.
