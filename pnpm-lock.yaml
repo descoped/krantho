@@ -1095,8 +1095,8 @@ importers:
         specifier: ^26.6.6
         version: 26.6.6
       '@vercel/functions':
-        specifier: ^3.11.2
-        version: 3.11.2(@aws-sdk/credential-provider-web-identity@3.972.90)
+        specifier: ^3.11.3
+        version: 3.11.3(@aws-sdk/credential-provider-web-identity@3.972.90)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -3006,8 +3006,8 @@ packages:
     resolution: {integrity: sha512-g9XerViJ/paZujufXYcu5XYI2vU2rtB4sgdpjUHde5RnOkdmpu0ngH46LCFGHoPXO/C+qDPSczIHIRN+8Q2YKQ==}
     engines: {node: '>= 18'}
 
-  '@vercel/functions@3.11.2':
-    resolution: {integrity: sha512-SFC8w2S9p39HMe3EFWjH2wY3IJUOTxPI7Ypn9MzPShqTbpUE2arV+AkklE90chi+2s3tda3nDMiy7CkGaPMVSg==}
+  '@vercel/functions@3.11.3':
+    resolution: {integrity: sha512-WOOYeJXbA1CeqQzCu9JLCJQnNdisrGpNgS3K5qSTyMPsXlfs4y47S3EiRCyDPYw6vajPoqQffbFI05zgjYIJcQ==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -6694,7 +6694,7 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/functions@3.11.2(@aws-sdk/credential-provider-web-identity@3.972.90)':
+  '@vercel/functions@3.11.3(@aws-sdk/credential-provider-web-identity@3.972.90)':
     dependencies:
       '@vercel/oidc': 4.0.9
     optionalDependencies:
