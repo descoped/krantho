@@ -3,10 +3,11 @@
 import { init } from '@plausible-analytics/tracker'
 import { useEffect } from 'react'
 
-// First-party endpoint (app/k/e/route.ts) that forwards events to Plausible. The
-// path avoids the words filter lists match on any domain — plausible, analytics,
-// stats, track, event, collect — so ad blockers have nothing to recognise.
-const ANALYTICS_ENDPOINT = '/k/e'
+// A relay on the site's own subdomain forwards events to Plausible: same-site, so
+// blockers that refuse third-party requests do not apply. The name avoids the words
+// filter lists match on any domain — plausible, analytics, stats, track, event,
+// collect — so ad blockers have nothing to recognise.
+const ANALYTICS_ENDPOINT = 'https://k.krantho.com/e'
 
 let started = false
 
