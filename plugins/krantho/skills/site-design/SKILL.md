@@ -9,7 +9,7 @@ description: >
   shifts on load, or fails an accessibility or Lighthouse check.
 compatibility: krantho 1.x; Claude Code
 metadata:
-  krantho-version: 1.1.2
+  krantho-version: 1.1.3
 ---
 
 # Site design for krantho sites
