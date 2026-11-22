@@ -38,6 +38,14 @@ describe('pictureImages', () => {
     )
   })
 
+  it('keeps the column sizes and the height for a width that is not in pixels', () => {
+    const html = pictureImages('<img src="/images/diagram.png" width="50%">', lookup)
+
+    expect(html).toContain('sizes="100vw"')
+    expect(html).not.toContain('sizes="50px"')
+    expect(html).toContain('<img src="/images/diagram.png" width="50%" decoding="async">')
+  })
+
   it('loads every image after the first lazily, with or without copies', () => {
     const html = pictureImages(
       '<img src="/other.png"><img src="/images/diagram.png"><img src="/images/diagram.png" loading="eager">',

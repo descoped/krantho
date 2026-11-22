@@ -110,6 +110,14 @@ function withAttribute(
   return `${tag.slice(0, end).trimEnd()} ${name}="${value}"${tag.slice(end)}`
 }
 
+/** The width the markdown gives an image in pixels (`width="340"`); a percentage or unit is not one */
+function pixelWidth(attributes: Map<string, string>): number | undefined {
+  const value = attributes.get('width')?.trim() ?? ''
+  if (!/^\d+$/.test(value)) return undefined
+  const width = Number.parseInt(value, 10)
+  return width > 0 ? width : undefined
+}
+
 /**
  * The `<img>` with the size the page reserves for it: its own width and height,
  * or, when the markdown gives a width (`<img width="340">`), that width and the
@@ -117,8 +125,8 @@ function withAttribute(
  */
 function sized(tag: string, attributes: Map<string, string>, image: ResponsiveImage): string {
   if (attributes.has('height')) return tag
-  const width = Number.parseInt(attributes.get('width') ?? '', 10)
-  if (Number.isFinite(width) && width > 0) {
+  const width = pixelWidth(attributes)
+  if (width) {
     return withAttribute(
       tag,
       attributes,
@@ -134,15 +142,15 @@ function sized(tag: string, attributes: Map<string, string>, image: ResponsiveIm
 /** One `<img>` as a `<picture>` when it has copies, or as written */
 function pictureOf(tag: string, lazy: boolean, inPicture: boolean, lookup: ImageLookup): string {
   const attributes = attributesOf(tag)
-  // An image the markdown sizes is shown at that width, whatever the column's
-  const width = Number.parseInt(attributes.get('width') ?? '', 10)
   const src = attributes.get('src')
   const image = src && !inPicture ? lookup(decodeEntities(src)) : undefined
   if (!image) return tag
+  // An image the markdown sizes in pixels is shown at that width, whatever the column's
+  const width = pixelWidth(attributes)
   let img = sized(tag, attributes, image)
   img = withAttribute(img, attributes, 'decoding', 'async')
   if (lazy) img = withAttribute(img, attributes, 'loading', 'lazy')
-  const sizes = Number.isFinite(width) && width > 0 ? `${width}px` : image.sizes
+  const sizes = width ? `${width}px` : image.sizes
   const sources = image.sources
     .map((source) => `<source type="${source.type}" srcset="${source.srcset}" sizes="${sizes}">`)
     .join('')
@@ -153,10 +161,10 @@ function pictureOf(tag: string, lazy: boolean, inPicture: boolean, lookup: Image
  * Turn each `<img>` that has smaller copies into a `<picture>`: one `<source>`
  * per format with its `srcset` and `sizes`, and the image itself as the
  * fallback, sized so the page does not shift as it loads. Images decode off the
- * main thread, and every image after the first loads lazily. An image whose
- * width the markdown gives is shown at that width (`sizes="340px"`). An `<img>` with
- * no copies, or one inside a `<picture>` the markdown writes itself, is left
- * as written.
+ * main thread, and every image after the first loads lazily. An image the
+ * markdown gives a width in pixels is shown at that width (`sizes="340px"`).
+ * An `<img>` with no copies, or one inside a `<picture>` the markdown writes
+ * itself, is left as written.
  */
 export function pictureImages(html: string, lookup: ImageLookup): string {
   const lower = html.toLowerCase()
