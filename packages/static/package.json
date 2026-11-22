@@ -22,6 +22,11 @@
       "types": "./dist/base-path.d.ts",
       "import": "./dist/base-path.js",
       "default": "./dist/base-path.js"
+    },
+    "./images": {
+      "types": "./dist/images.d.ts",
+      "import": "./dist/images.js",
+      "default": "./dist/images.js"
     }
   },
   "files": [
@@ -37,7 +42,8 @@
     "@krantho/config": "workspace:*",
     "@krantho/core": "workspace:*",
     "@krantho/schema": "workspace:*",
-    "@krantho/server": "workspace:*"
+    "@krantho/server": "workspace:*",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

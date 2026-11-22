@@ -1,5 +1,6 @@
 import type {
   ContentRef,
+  ImageLookup,
   IPublishedContentLoader,
   IPublishedSeoLoader,
   PublishedContent,
@@ -39,6 +40,11 @@ export interface ServerLoaderOptions {
   resolveUrl?: ((url: string, document: DocumentRef) => string) | undefined
   /** Substitute `@field` references in the body with field values (default true) */
   atNotation?: boolean | undefined
+  /**
+   * The smaller copies of images by rendered `src` — `createStaticSite()`'s
+   * `rendering.images` — so each such image renders as a `<picture>`
+   */
+  images?: ImageLookup | undefined
 }
 
 /** The loader server components read through */
@@ -101,12 +107,13 @@ async function toCMSContent(
     excerptLength = 160,
   } = options
 
-  const { basePath, resolveUrl, atNotation } = renderOptions
+  const { basePath, resolveUrl, atNotation, images } = renderOptions
   const document = { collection: doc.collection, slug: doc.slug }
   const rendered = await renderContent(doc.fields, doc.body, {
     basePath,
     atNotation,
     resolveUrl: resolveUrl && ((url) => resolveUrl(url, document)),
+    images,
   })
   const sections = extractSections ? rendered.sections : {}
 

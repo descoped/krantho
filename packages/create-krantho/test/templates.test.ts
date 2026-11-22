@@ -184,6 +184,8 @@ describe('nextjs-static template', () => {
       'basePath: basePathOf(resolveConfig(kranthoConfig, process.env).site.baseUrl)',
     )
     expect(config).toContain('trailingSlash: true')
+    expect(config).toContain('await prepareImages({ config: kranthoConfig })')
+    expect(file(files, '.gitignore')).toContain('public/_krantho/')
     expect(file(files, 'krantho.config.ts')).toContain("persistence: { provider: 'filesystem' }")
     expect(file(files, 'krantho.collections.ts')).toContain("path: '/:slug/'")
   })

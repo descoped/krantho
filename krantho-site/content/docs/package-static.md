@@ -32,7 +32,7 @@ export const site = createStaticSite({ config, collections })
 initServerLoader(site.loader, site.rendering)
 ```
 
-It takes the configuration and collections the server takes, and returns:
+It takes the configuration and collections the server takes, and `images`, how the image copies are shown (see Images). It returns:
 
 | Member | What it is |
 |---|---|
@@ -42,7 +42,7 @@ It takes the configuration and collections the server takes, and returns:
 | `llmsTxt()` | `llms.txt`: the site's name and summary, then each published, indexable page under its collection's heading, with a link and its description |
 | `robotsTxt()` | `robots.txt`, allowing every crawler and naming the sitemap |
 | `basePath` | The path of `site.baseUrl` (`/docs-site`), or `''` at a host's root |
-| `rendering` | How pages render their markdown: `basePath`, `resolveUrl` (see Links between files) and `atNotation` (`content.atNotation`). Pass it to `initServerLoader()` |
+| `rendering` | How pages render their markdown: `basePath`, `resolveUrl` (see Links between files), `atNotation` (`content.atNotation`) and `images` (see Images). Pass it to `initServerLoader()` |
 | `config` | The resolved configuration |
 
 Serve each file from a route written once at build:
@@ -81,6 +81,32 @@ Pages are dated by their files' last git commit. Without the repository's full h
 
 The same holds for the `src` and `href` of raw `<img>` and `<a>` tags, such as `<img src="images/flow.png" width="340">`. A link to a markdown file goes to that document's page, in whichever collection reads the file. Any other file inside the collection's directory is served from the site's root, so copy it into `public/` at the same path (`public/images/flow.png`). Absolute URLs, URLs that start with `/` or `#`, and files outside the collection's directory are left as written. `createLinkResolver(collections)` builds the same resolver for a site of your own.
 
+## Images
+
+`prepareImages()` gives each image in `public/` AVIF and WebP copies at the widths the krantho server serves its media at: each preset in `media.image.presets` narrower than the image (48, 96, 256, 512 and 1024 pixels by default), and the image's own width, capped at `media.image.maxWidth`. The copies are encoded at `media.image.quality.avif` and `.webp`, and written with a manifest to `public/_krantho/images/`; keep that folder out of git. A copy is made again when its image changes or those settings do, and the copies of a removed image are deleted. PNG, JPEG and WebP files are copied; SVG and GIF are served as they are.
+
+```ts
+import { prepareImages } from '@krantho/static/images'
+
+await prepareImages({ config: kranthoConfig }) // { images: 12, written: 0 }
+```
+
+Call it before the pages render: the scaffolded `next.config.ts` calls it on `next build` and `next dev` (see Next.js settings). `createStaticSite()` reads the manifest, and each markdown image with copies renders as a `<picture>`: a `<source>` per format with its `srcset`, and the image itself as the fallback, with its width and height so the page does not shift as it loads. A width written in the markdown, `<img src="images/flow.png" width="340">`, is kept and the height follows the image's proportions. Images decode off the main thread, and every image after a page's first loads lazily.
+
+The browser picks a copy by how wide the image is shown, `100vw` unless you say otherwise. Give the width of your content column so a phone or a narrow column gets a smaller copy:
+
+```ts title="lib/krantho.ts"
+export const site = createStaticSite({
+  config,
+  collections,
+  images: { sizes: '(min-width: 800px) 736px, 100vw' },
+})
+```
+
+The copies are made when `next build` or `next dev` starts; an image added while `next dev` runs gets its copies on the next start.
+
+`images.publicDir` names another folder than `public/`, for both `prepareImages()` and `createStaticSite()`.
+
 ## basePathOf
 
 ```ts
@@ -97,18 +123,23 @@ The path a site is served under, from its address. `next.config.ts` takes it as 
 ```ts title="next.config.ts"
 import { resolveConfig } from '@krantho/config'
 import { basePathOf } from '@krantho/static/base-path'
+import { prepareImages } from '@krantho/static/images'
 import type { NextConfig } from 'next'
+import { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } from 'next/constants'
 import kranthoConfig from './krantho.config'
 
-const nextConfig: NextConfig = {
-  output: 'export',
-  basePath: basePathOf(resolveConfig(kranthoConfig, process.env).site.baseUrl),
-  trailingSlash: true,
-  images: { unoptimized: true },
-  serverExternalPackages: ['@krantho/static', '@krantho/server'],
+export default async function config(phase: string): Promise<NextConfig> {
+  if (phase === PHASE_PRODUCTION_BUILD || phase === PHASE_DEVELOPMENT_SERVER) {
+    await prepareImages({ config: kranthoConfig })
+  }
+  return {
+    output: 'export',
+    basePath: basePathOf(resolveConfig(kranthoConfig, process.env).site.baseUrl),
+    trailingSlash: true,
+    images: { unoptimized: true },
+    serverExternalPackages: ['@krantho/static', '@krantho/server'],
+  }
 }
-
-export default nextConfig
 ```
 
-`serverExternalPackages` keeps the server out of the bundle: it loads its optional packages (other databases, media stores) only when a configuration asks for them, and a bundler would look for them all.
+The configuration is a function of Next's phase, so the image copies are made only when the site is built or served in development. `serverExternalPackages` keeps the server out of the bundle: it loads its optional packages (other databases, media stores) only when a configuration asks for them, and a bundler would look for them all.

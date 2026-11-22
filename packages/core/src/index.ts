@@ -36,6 +36,8 @@ export {
 } from './content-engine.js'
 export type { ContentFileNaming } from './content-files.js'
 export { fileNameOf, INDEX_SLUG, slugOfFile } from './content-files.js'
+export type { ImageLookup, ImageSource, ResponsiveImage } from './html-images.js'
+export { pictureImages } from './html-images.js'
 // Client loader
 export { ClientFetchLoader } from './loaders/client-fetch-loader.js'
 export type { KranthoMarks, MarkedDocument } from './marks.js'

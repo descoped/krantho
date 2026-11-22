@@ -1199,6 +1199,9 @@ importers:
       '@krantho/server':
         specifier: workspace:*
         version: link:../server
+      sharp:
+        specifier: ^0.35.5
+        version: 0.35.5(@types/node@26.6.6)
     devDependencies:
       '@types/node':
         specifier: ^26.6.6
