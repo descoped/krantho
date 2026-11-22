@@ -61,6 +61,40 @@ describe('pictureImages', () => {
   })
 })
 
+describe('pictureImages on unusual HTML', () => {
+  it('leaves an image inside a picture the markdown writes itself', () => {
+    const html =
+      '<picture><source srcset="/a.avif"><img src="/images/diagram.png"></picture><img src="/images/diagram.png">'
+
+    const out = pictureImages(html, lookup)
+
+    expect(
+      out.startsWith('<picture><source srcset="/a.avif"><img src="/images/diagram.png"></picture>'),
+    ).toBe(true)
+    expect(out.match(/<picture>/g)).toHaveLength(2)
+  })
+
+  it('looks an image up by its src as the browser reads it, entities decoded', () => {
+    const seen: string[] = []
+    pictureImages('<img src="/a&amp;b.png"><img src="/c&#39;d.png">', (src) => {
+      seen.push(src)
+      return undefined
+    })
+
+    expect(seen).toEqual(['/a&b.png', "/c'd.png"])
+  })
+
+  it('reads a tag whose quoted value holds a >, and stops at a tag that never ends', () => {
+    const quoted = pictureImages('<img alt="a > b" src="/images/diagram.png">', lookup)
+    expect(quoted).toContain('<picture>')
+
+    const open = `${'<img "'.repeat(20000)}`
+    const started = performance.now()
+    expect(pictureImages(open, lookup)).toBe(open)
+    expect(performance.now() - started).toBeLessThan(500)
+  })
+})
+
 describe('renderContent with image copies', () => {
   it('renders a markdown image with copies as a picture, after the base path is added', async () => {
     const atBase: ImageLookup = (src) => (src === '/docs/images/diagram.png' ? diagram : undefined)

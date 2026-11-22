@@ -124,6 +124,16 @@ describe('prepareImages', () => {
     expect(existsSync(join(publicDir, '_krantho'))).toBe(false)
   })
 
+  it('remakes the copies over a manifest it cannot read', async () => {
+    await png('a.png', 100, 100)
+    mkdirSync(join(publicDir, '_krantho/images'), { recursive: true })
+    writeFileSync(join(publicDir, '_krantho/images/manifest.json'), '{"stamp":"x"}')
+
+    expect(imageLookup({ publicDir, basePath: '' })).toBeUndefined()
+    expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 1, written: 6 })
+    expect(imageLookup({ publicDir, basePath: '' })?.('/a.png')).toBeDefined()
+  })
+
   it('gives no lookup before images are prepared', () => {
     expect(imageLookup({ publicDir, basePath: '' })).toBeUndefined()
   })

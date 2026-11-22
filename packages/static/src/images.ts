@@ -96,11 +96,36 @@ async function sourceImages(publicDir: string): Promise<string[]> {
   return images.sort()
 }
 
+function isEntry(value: unknown): value is ManifestEntry {
+  if (typeof value !== 'object' || value === null) return false
+  const entry = value as Record<string, unknown>
+  return (
+    typeof entry.width === 'number' &&
+    typeof entry.height === 'number' &&
+    Array.isArray(entry.widths) &&
+    entry.widths.every((width) => typeof width === 'number')
+  )
+}
+
+function isManifest(value: unknown): value is Manifest {
+  if (typeof value !== 'object' || value === null) return false
+  const manifest = value as Record<string, unknown>
+  const images = manifest.images
+  return (
+    typeof manifest.stamp === 'string' &&
+    typeof images === 'object' &&
+    images !== null &&
+    Object.values(images).every(isEntry)
+  )
+}
+
+/** The manifest, or undefined when there is none or it is not one this version wrote */
 function readManifest(publicDir: string): Manifest | undefined {
   const file = join(publicDir, COPIES, MANIFEST)
   if (!existsSync(file)) return undefined
   try {
-    return JSON.parse(readFileSync(file, 'utf8')) as Manifest
+    const value: unknown = JSON.parse(readFileSync(file, 'utf8'))
+    return isManifest(value) ? value : undefined
   } catch {
     return undefined
   }

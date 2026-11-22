@@ -103,6 +103,8 @@ export const site = createStaticSite({
 })
 ```
 
+The copies are made when `next build` or `next dev` starts; an image added while `next dev` runs gets its copies on the next start.
+
 `images.publicDir` names another folder than `public/`, for both `prepareImages()` and `createStaticSite()`.
 
 ## basePathOf

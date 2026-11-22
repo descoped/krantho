@@ -18,11 +18,71 @@ export interface ResponsiveImage {
 /** The copies of an image by its `src` as rendered, or undefined when it has none */
 export type ImageLookup = (src: string) => ResponsiveImage | undefined
 
-/** An `<img>` start tag; a `>` inside a quoted value does not end it */
-const IMG_TAG = /<img\s(?:"[^"]*"|'[^']*'|[^>"'])*>/gi
+/** One `<img>` start tag in a piece of HTML, and where it starts */
+interface ImgTag {
+  start: number
+  tag: string
+}
 
 /** One attribute of a tag: its name and its value, quoted or not */
 const ATTRIBUTE = /\s([^\s=>"'/]+)(?:\s*=\s*("[^"]*"|'[^']*'|[^\s>"']+))?/g
+
+const ENTITIES: Record<string, string> = { amp: '&', quot: '"', apos: "'", lt: '<', gt: '>' }
+
+/** The index of the `>` that ends a start tag, skipping quoted values, or -1 */
+function tagEnd(html: string, from: number): number {
+  let quote = ''
+  for (let i = from; i < html.length; i++) {
+    const char = html.charAt(i)
+    if (quote) {
+      if (char === quote) quote = ''
+    } else if (char === '"' || char === "'") {
+      quote = char
+    } else if (char === '>') {
+      return i
+    }
+  }
+  return -1
+}
+
+/**
+ * The `<img>` start tags of a piece of HTML, in order, read in one pass: a `>`
+ * inside a quoted value does not end a tag, and a tag that never ends ends the
+ * scan, so the time grows with the length of the HTML alone.
+ */
+function imgTags(html: string, lower: string): ImgTag[] {
+  const tags: ImgTag[] = []
+  let from = 0
+  while (from < html.length) {
+    const start = lower.indexOf('<img', from)
+    if (start < 0) break
+    if (!/\s/.test(html.charAt(start + 4))) {
+      from = start + 4
+      continue
+    }
+    const end = tagEnd(html, start + 4)
+    if (end < 0) break
+    tags.push({ start, tag: html.slice(start, end + 1) })
+    from = end + 1
+  }
+  return tags
+}
+
+/** Whether a position in the HTML is inside a `<picture>` the markdown writes itself */
+function insidePicture(lower: string, position: number): boolean {
+  return lower.lastIndexOf('<picture', position) > lower.lastIndexOf('</picture', position)
+}
+
+/** An attribute value as the browser reads it: `&amp;` is `&`, `&#39;` is `'` */
+function decodeEntities(value: string): string {
+  return value.replace(/&(#\d{1,7}|#x[\da-f]{1,6}|[a-z]{2,4});/gi, (entity, code: string) => {
+    if (code.startsWith('#x') || code.startsWith('#X')) {
+      return String.fromCodePoint(Number.parseInt(code.slice(2), 16))
+    }
+    if (code.startsWith('#')) return String.fromCodePoint(Number.parseInt(code.slice(1), 10))
+    return ENTITIES[code.toLowerCase()] ?? entity
+  })
+}
 
 /** The attributes of a start tag, by lower-case name, with quotes removed */
 function attributesOf(tag: string): Map<string, string> {
@@ -71,30 +131,39 @@ function sized(tag: string, attributes: Map<string, string>, image: ResponsiveIm
   return withAttribute(withWidth, attributes, 'height', String(image.height))
 }
 
+/** One `<img>` as a `<picture>` when it has copies, or as written */
+function pictureOf(tag: string, lazy: boolean, inPicture: boolean, lookup: ImageLookup): string {
+  const attributes = attributesOf(tag)
+  const src = attributes.get('src')
+  const image = src && !inPicture ? lookup(decodeEntities(src)) : undefined
+  if (!image) return tag
+  let img = sized(tag, attributes, image)
+  img = withAttribute(img, attributes, 'decoding', 'async')
+  if (lazy) img = withAttribute(img, attributes, 'loading', 'lazy')
+  const sources = image.sources
+    .map(
+      (source) => `<source type="${source.type}" srcset="${source.srcset}" sizes="${image.sizes}">`,
+    )
+    .join('')
+  return `<picture>${sources}${img}</picture>`
+}
+
 /**
  * Turn each `<img>` that has smaller copies into a `<picture>`: one `<source>`
  * per format with its `srcset` and `sizes`, and the image itself as the
  * fallback, sized so the page does not shift as it loads. Images decode off the
  * main thread, and every image after the first loads lazily. An `<img>` with
- * no copies is left as written.
+ * no copies, or one inside a `<picture>` the markdown writes itself, is left
+ * as written.
  */
 export function pictureImages(html: string, lookup: ImageLookup): string {
-  let first = true
-  return html.replace(IMG_TAG, (tag) => {
-    const attributes = attributesOf(tag)
-    const image = attributes.has('src') ? lookup(attributes.get('src') ?? '') : undefined
-    const lazy = !first
-    first = false
-    if (!image) return tag
-    let img = sized(tag, attributes, image)
-    img = withAttribute(img, attributes, 'decoding', 'async')
-    if (lazy) img = withAttribute(img, attributes, 'loading', 'lazy')
-    const sources = image.sources
-      .map(
-        (source) =>
-          `<source type="${source.type}" srcset="${source.srcset}" sizes="${image.sizes}">`,
-      )
-      .join('')
-    return `<picture>${sources}${img}</picture>`
+  const lower = html.toLowerCase()
+  let out = ''
+  let copied = 0
+  imgTags(html, lower).forEach(({ start, tag }, index) => {
+    out += html.slice(copied, start)
+    out += pictureOf(tag, index > 0, insidePicture(lower, start), lookup)
+    copied = start + tag.length
   })
+  return out + html.slice(copied)
 }
