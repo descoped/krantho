@@ -295,7 +295,8 @@ export async function prepareImages(options: PrepareImagesOptions): Promise<Prep
   }
   await removeStale(publicDir, keep)
 
-  if (images.length === 0 && !previous) return { images: 0, written: 0 }
+  // The manifest is written even without images: the folder then exists for a CI cache to save
+  if (!existsSync(publicDir)) return { images: 0, written: 0 }
   if (JSON.stringify(previous) !== JSON.stringify(manifest)) {
     await writeWhole(join(publicDir, COPIES, MANIFEST), `${JSON.stringify(manifest, null, 2)}\n`)
   }
