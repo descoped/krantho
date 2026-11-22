@@ -38,6 +38,11 @@ export function generateStaticParams() {
   `next.config.ts` reads it without loading the server: `basePathOf()` from
   `@krantho/static/base-path`.
 
+- `prepareImages({ config })` from `@krantho/static/images` gives each image in `public/` AVIF and
+  WebP copies at the widths the krantho server serves (`media.image`), in `public/_krantho/images/`.
+  Run it before the build (from `next.config.ts`); pages then show each markdown image with copies
+  as a `<picture>`. `createStaticSite({ ..., images: { sizes } })` says how wide images are shown.
+
 The configuration must use `persistence.provider: 'filesystem'` and `cache.pages: 'none'`, and each
 collection with pages declares a path ending in `/` (`/docs/:slug/`), the address Next's
 `trailingSlash` export serves the page at. Pages are dated by their files' last git commit: check

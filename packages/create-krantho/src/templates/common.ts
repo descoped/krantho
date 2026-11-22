@@ -20,6 +20,7 @@ out/
 .next/
 .svelte-kit/
 .krantho/
+public/_krantho/
 .env.local
 *.db
 *.db-journal

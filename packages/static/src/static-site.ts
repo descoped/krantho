@@ -7,7 +7,7 @@ import {
 } from '@krantho/api'
 import { type KranthoConfig, KranthoConfigError } from '@krantho/config'
 import { loadConfig } from '@krantho/config/node'
-import { rendersPages } from '@krantho/core'
+import { type ImageLookup, rendersPages } from '@krantho/core'
 import { defineConfig } from '@krantho/schema'
 import {
   type ContentLoader,
@@ -18,10 +18,26 @@ import {
   memorySeoConfig,
 } from '@krantho/server'
 import { basePathOf } from './base-path.js'
+import { imageLookup } from './images.js'
 import { createLinkResolver, type LinkResolver } from './link-resolver.js'
 
 /** The site a static build renders: its configuration and collections */
-export type StaticSiteOptions = Pick<KranthoHandlerOptions, 'config' | 'collections'>
+export interface StaticSiteOptions extends Pick<KranthoHandlerOptions, 'config' | 'collections'> {
+  /** The image copies `prepareImages()` wrote */
+  images?: StaticImageOptions | undefined
+}
+
+/** How a static site finds and shows the image copies `prepareImages()` wrote */
+export interface StaticImageOptions {
+  /** The folder the site serves as its root, `public/` by default */
+  publicDir?: string | undefined
+  /**
+   * How wide images are shown, the `sizes` of each `<source>`: `100vw` by
+   * default. A site whose content column is at most 736 pixels wide says
+   * `(min-width: 800px) 736px, 100vw`, and the browser picks a smaller copy.
+   */
+  sizes?: string | undefined
+}
 
 /** One page of a collection, as a static build lists it (Next's `generateStaticParams`) */
 export interface StaticPageParams {
@@ -36,6 +52,8 @@ export interface StaticRendering {
   readonly resolveUrl: LinkResolver
   /** Substitute `@field` references in the body (`content.atNotation`) */
   readonly atNotation: boolean
+  /** The image copies `prepareImages()` wrote; an image with copies renders as a `<picture>` */
+  readonly images: ImageLookup | undefined
 }
 
 /** What a static build reads: the pages' content and SEO, the pages to write and the site's SEO files */
@@ -152,6 +170,11 @@ export function createStaticSite(options: StaticSiteOptions): StaticSite {
       basePath,
       resolveUrl: createLinkResolver(Object.values(options.collections)),
       atNotation: config.content.atNotation,
+      images: imageLookup({
+        basePath,
+        publicDir: options.images?.publicDir,
+        sizes: options.images?.sizes,
+      }),
     },
     params: async (collection, locale) => {
       if (!Object.hasOwn(options.collections, collection)) {

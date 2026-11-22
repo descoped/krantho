@@ -153,18 +153,23 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 ```ts title="next.config.ts"
 import { resolveConfig } from '@krantho/config'
 import { basePathOf } from '@krantho/static/base-path'
+import { prepareImages } from '@krantho/static/images'
 import type { NextConfig } from 'next'
+import { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } from 'next/constants'
 import kranthoConfig from './krantho.config'
 
-const nextConfig: NextConfig = {
-  output: 'export',
-  basePath: basePathOf(resolveConfig(kranthoConfig, process.env).site.baseUrl),
-  trailingSlash: true,
-  images: { unoptimized: true },
-  serverExternalPackages: ['@krantho/static', '@krantho/server'],
+export default async function config(phase: string): Promise<NextConfig> {
+  if (phase === PHASE_PRODUCTION_BUILD || phase === PHASE_DEVELOPMENT_SERVER) {
+    await prepareImages({ config: kranthoConfig })
+  }
+  return {
+    output: 'export',
+    basePath: basePathOf(resolveConfig(kranthoConfig, process.env).site.baseUrl),
+    trailingSlash: true,
+    images: { unoptimized: true },
+    serverExternalPackages: ['@krantho/static', '@krantho/server'],
+  }
 }
-
-export default nextConfig
 ```
 
 ## Links and images
@@ -172,6 +177,8 @@ export default nextConfig
 A project site is served under `/<repository>`. `next/link` adds that path to the site's own links, and krantho adds it to links and images in your markdown that start at the site's root: `[Setup](/setup/)` and `![Diagram](/diagram.png)` work at `/<repository>/` and at a domain of your own alike. Put images in `public/`. Absolute URLs are left as written.
 
 Links between your markdown files work too, so the same folder reads well on GitHub: `[Setup](setup.md#install)` goes to the setup page, and `![Diagram](images/diagram.png)` to `/images/diagram.png`, which the site serves from `public/images/diagram.png`. An image sized in HTML, `<img src="images/diagram.png" width="340">`, works the same way. See [Links between files](/docs/package-static#links-between-files).
+
+The build gives each image in `public/` AVIF and WebP copies at the widths the krantho server serves (`media.image.presets`, and the image's own width up to `media.image.maxWidth`), in `public/_krantho/images/`, which the scaffolded `.gitignore` leaves out of git. Pages show them through `<picture>`, so a browser loads a copy as wide as the image is shown instead of the full file. Set `images.sizes` on `createStaticSite()` to your content column's width; see [Images](/docs/package-static#images).
 
 ## Publish a repository's existing docs
 

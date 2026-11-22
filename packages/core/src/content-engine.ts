@@ -13,6 +13,7 @@
 import matter from 'gray-matter'
 import { marked } from 'marked'
 import { splitFrontmatter } from './frontmatter-utils.js'
+import { type ImageLookup, pictureImages } from './html-images.js'
 import { rewriteHtmlUrls } from './html-urls.js'
 import { splitSections } from './sections.js'
 import { TypeGuards } from './type-guards.js'
@@ -68,6 +69,11 @@ export interface MarkdownProcessorOptions {
    * The quoted `src` and `href` of raw `<img>` and `<a>` tags are rewritten too.
    */
   resolveUrl?: ((url: string) => string) | undefined
+  /**
+   * The smaller copies of an image by its rendered `src`: an image that has
+   * them becomes a `<picture>` with a `srcset` per format (`pictureImages`).
+   */
+  images?: ImageLookup | undefined
 }
 
 /** A path without the slashes it ends with: `/docs-site/` is `/docs-site` */
@@ -95,8 +101,10 @@ function underBasePath(url: string, basePath: string): string {
  */
 export class MarkdownProcessor implements IMarkdownProcessor {
   private readonly rewrite: ((url: string) => string) | undefined
+  private readonly images: ImageLookup | undefined
 
   constructor(options: MarkdownProcessorOptions = {}) {
+    this.images = options.images
     const basePath = withoutTrailingSlashes(options.basePath ?? '')
     const resolve = options.resolveUrl
     if (basePath && resolve) this.rewrite = (url) => underBasePath(resolve(url), basePath)
@@ -121,7 +129,8 @@ export class MarkdownProcessor implements IMarkdownProcessor {
             }
           : undefined,
       )
-      return typeof result === 'string' ? result : String(result)
+      const html = typeof result === 'string' ? result : String(result)
+      return this.images ? pictureImages(html, this.images) : html
     } catch (error) {
       throw new Error('Failed to parse markdown', { cause: error })
     }
@@ -158,6 +167,8 @@ export interface RenderContentOptions {
   basePath?: string | undefined
   /** Rewrites link and image URLs before the base path is added ({@link MarkdownProcessorOptions}) */
   resolveUrl?: ((url: string) => string) | undefined
+  /** The smaller copies of images, by rendered `src` ({@link MarkdownProcessorOptions}) */
+  images?: ImageLookup | undefined
 }
 
 /**
@@ -173,7 +184,11 @@ export async function renderContent(
 ): Promise<RenderedContent> {
   const processor =
     options.processor ??
-    new MarkdownProcessor({ basePath: options.basePath, resolveUrl: options.resolveUrl })
+    new MarkdownProcessor({
+      basePath: options.basePath,
+      resolveUrl: options.resolveUrl,
+      images: options.images,
+    })
   const content = (options.atNotation ?? true) ? processor.processAtNotation(body, fields) : body
   const [html, sections] = await Promise.all([
     processor.parse(content),
