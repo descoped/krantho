@@ -91,9 +91,9 @@ import { prepareImages } from '@krantho/static/images'
 await prepareImages({ config: kranthoConfig }) // { images: 12, written: 0 }
 ```
 
-Call it before the pages render: the scaffolded `next.config.ts` calls it on `next build` and `next dev` (see Next.js settings). `createStaticSite()` reads the manifest, and each markdown image with copies renders as a `<picture>`: a `<source>` per format with its `srcset`, and the image itself as the fallback, with its width and height so the page does not shift as it loads. A width written in the markdown, `<img src="images/flow.png" width="340">`, is kept and the height follows the image's proportions. Images decode off the main thread, and every image after a page's first loads lazily.
+Call it before the pages render: the scaffolded `next.config.ts` calls it on `next build` and `next dev` (see Next.js settings). `createStaticSite()` reads the manifest, and each markdown image with copies renders as a `<picture>`: a `<source>` per format with its `srcset`, and the image itself as the fallback, with its width and height so the page does not shift as it loads. A width written in the markdown, `<img src="images/flow.png" width="340">`, is kept, the height follows the image's proportions, and the browser picks a copy for that width (`sizes="340px"`). Images decode off the main thread, and every image after a page's first loads lazily.
 
-The browser picks a copy by how wide the image is shown, `100vw` unless you say otherwise. Give the width of your content column so a phone or a narrow column gets a smaller copy:
+For every other image, the browser picks a copy by how wide it is shown, `100vw` unless you say otherwise. Give the width of your content column so a phone or a narrow column gets a smaller copy:
 
 ```ts title="lib/krantho.ts"
 export const site = createStaticSite({

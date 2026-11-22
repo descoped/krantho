@@ -134,16 +134,17 @@ function sized(tag: string, attributes: Map<string, string>, image: ResponsiveIm
 /** One `<img>` as a `<picture>` when it has copies, or as written */
 function pictureOf(tag: string, lazy: boolean, inPicture: boolean, lookup: ImageLookup): string {
   const attributes = attributesOf(tag)
+  // An image the markdown sizes is shown at that width, whatever the column's
+  const width = Number.parseInt(attributes.get('width') ?? '', 10)
   const src = attributes.get('src')
   const image = src && !inPicture ? lookup(decodeEntities(src)) : undefined
   if (!image) return tag
   let img = sized(tag, attributes, image)
   img = withAttribute(img, attributes, 'decoding', 'async')
   if (lazy) img = withAttribute(img, attributes, 'loading', 'lazy')
+  const sizes = Number.isFinite(width) && width > 0 ? `${width}px` : image.sizes
   const sources = image.sources
-    .map(
-      (source) => `<source type="${source.type}" srcset="${source.srcset}" sizes="${image.sizes}">`,
-    )
+    .map((source) => `<source type="${source.type}" srcset="${source.srcset}" sizes="${sizes}">`)
     .join('')
   return `<picture>${sources}${img}</picture>`
 }
@@ -152,7 +153,8 @@ function pictureOf(tag: string, lazy: boolean, inPicture: boolean, lookup: Image
  * Turn each `<img>` that has smaller copies into a `<picture>`: one `<source>`
  * per format with its `srcset` and `sizes`, and the image itself as the
  * fallback, sized so the page does not shift as it loads. Images decode off the
- * main thread, and every image after the first loads lazily. An `<img>` with
+ * main thread, and every image after the first loads lazily. An image whose
+ * width the markdown gives is shown at that width (`sizes="340px"`). An `<img>` with
  * no copies, or one inside a `<picture>` the markdown writes itself, is left
  * as written.
  */
