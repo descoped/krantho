@@ -27,12 +27,23 @@ describe('pictureImages', () => {
     )
   })
 
-  it('keeps a width the markdown gives and derives the height from the proportions', () => {
+  it('keeps a width the markdown gives, derives the height, and shows it at that width', () => {
     const html = pictureImages('<img src="/images/diagram.png" width="340">', lookup)
+
+    expect(html).toContain('sizes="340px"')
+    expect(html).not.toContain('sizes="100vw"')
 
     expect(html).toContain(
       '<img src="/images/diagram.png" width="340" height="170" decoding="async">',
     )
+  })
+
+  it('keeps the column sizes and the height for a width that is not in pixels', () => {
+    const html = pictureImages('<img src="/images/diagram.png" width="50%">', lookup)
+
+    expect(html).toContain('sizes="100vw"')
+    expect(html).not.toContain('sizes="50px"')
+    expect(html).toContain('<img src="/images/diagram.png" width="50%" decoding="async">')
   })
 
   it('loads every image after the first lazily, with or without copies', () => {
