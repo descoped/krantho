@@ -85,9 +85,9 @@ check sitemap.xml '<loc>https://example.github.io/site/writing/</loc>'
 check sitemap.xml '<lastmod>2025-04-05T06:07:08.000Z</lastmod>'
 check llms.txt '(https://example.github.io/site/publishing/)'
 check 404.html '/site/_next/'
-check writing/index.html '<source type="image/avif" srcset="/site/_krantho/images/diagram-48.avif 48w'
+check writing/index.html '<source type="image/avif" srcset="/site/_krantho/images/diagram-320.avif 320w, /site/_krantho/images/diagram-480.avif 480w, /site/_krantho/images/diagram-600.avif 600w"'
 check writing/index.html '<img src="/site/diagram.png" alt="Diagram" width="600" height="300" decoding="async">'
-for file in _krantho/images/diagram-256.avif _krantho/images/diagram-600.webp; do
+for file in _krantho/images/diagram-480.avif _krantho/images/diagram-600.webp; do
   [ -f "out/$file" ] || { echo "FAIL out/$file is missing"; failed=1; }
 done
 

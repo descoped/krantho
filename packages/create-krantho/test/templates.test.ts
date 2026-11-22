@@ -216,6 +216,7 @@ describe('nextjs-static template', () => {
     expect(workflow).toContain('uses: pnpm/action-setup@v6')
     expect(workflow).toContain('KRANTHO_SITE_BASE_URL: ${{ steps.pages.outputs.base_url }}')
     expect(workflow).toContain('uses: actions/upload-pages-artifact@v5')
+    expect(workflow).toContain('path: public/_krantho')
     expect(workflow).toContain('uses: actions/deploy-pages@v5')
     expect(JSON.parse(file(files, 'package.json')).packageManager).toBe('pnpm@12.1.0')
   })

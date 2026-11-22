@@ -5,14 +5,15 @@ import {
   readFileSync,
   rmSync,
   statSync,
+  utimesSync,
   writeFileSync,
 } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { type KranthoConfigInput, resolveConfig } from '@krantho/config'
+import type { KranthoConfigInput } from '@krantho/config'
 import sharp from 'sharp'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { copyWidths, imageLookup, prepareImages } from '../src/images.js'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { copyWidths, imageLookup, prepareImages, STATIC_IMAGE_WIDTHS } from '../src/images.js'
 
 let publicDir: string
 
@@ -45,62 +46,99 @@ afterEach(() => {
 })
 
 describe('copyWidths', () => {
-  const settings = resolveConfig(site).media.image
-
-  it('uses the server presets narrower than the image, and the full width', () => {
-    expect(copyWidths(700, settings)).toEqual([48, 96, 256, 512, 700])
+  it('uses the widths narrower than the image, and its own width', () => {
+    expect(copyWidths(900)).toEqual([320, 480, 640, 750, 828, 900])
   })
 
-  it('caps the full width at media.image.maxWidth', () => {
-    expect(copyWidths(4000, settings)).toEqual([48, 96, 256, 512, 1024, 2048])
+  it('caps the own width at the widest of the list', () => {
+    expect(copyWidths(4000)).toEqual(STATIC_IMAGE_WIDTHS)
   })
 
-  it('copies an image narrower than every preset at its own width', () => {
-    expect(copyWidths(40, settings)).toEqual([40])
+  it('copies an image narrower than every width at its own width', () => {
+    expect(copyWidths(200)).toEqual([200])
+  })
+
+  it('takes a list of its own', () => {
+    expect(copyWidths(1000, [400, 800])).toEqual([400, 800])
   })
 })
 
 describe('prepareImages', () => {
   it('writes AVIF and WebP copies at each width, and a manifest the lookup reads', async () => {
-    await png('images/diagram.png', 600, 300)
+    await png('images/diagram.png', 900, 450)
 
     const result = await prepareImages({ config: site, publicDir })
 
-    expect(result).toEqual({ images: 1, written: 10 })
-    for (const width of [48, 96, 256, 512, 600]) {
+    expect(result).toEqual({ images: 1, written: 12 })
+    for (const width of [320, 480, 640, 750, 828, 900]) {
       for (const ext of ['avif', 'webp']) {
         expect(existsSync(join(publicDir, `_krantho/images/images/diagram-${width}.${ext}`))).toBe(
           true,
         )
       }
     }
-    const webp = await sharp(join(publicDir, '_krantho/images/images/diagram-256.webp')).metadata()
-    expect([webp.format, webp.width, webp.height]).toEqual(['webp', 256, 128])
+    const webp = await sharp(join(publicDir, '_krantho/images/images/diagram-640.webp')).metadata()
+    expect([webp.format, webp.width, webp.height]).toEqual(['webp', 640, 320])
 
     const lookup = imageLookup({ publicDir, basePath: '/site', sizes: '736px' })
     const image = lookup?.('/site/images/diagram.png')
-    expect(image).toMatchObject({ width: 600, height: 300, sizes: '736px' })
+    expect(image).toMatchObject({ width: 900, height: 450, sizes: '736px' })
     expect(image?.sources.map((source) => source.type)).toEqual(['image/avif', 'image/webp'])
     expect(image?.sources[0]?.srcset).toBe(
-      '/site/_krantho/images/images/diagram-48.avif 48w, /site/_krantho/images/images/diagram-96.avif 96w, ' +
-        '/site/_krantho/images/images/diagram-256.avif 256w, /site/_krantho/images/images/diagram-512.avif 512w, ' +
-        '/site/_krantho/images/images/diagram-600.avif 600w',
+      [320, 480, 640, 750, 828, 900]
+        .map((width) => `/site/_krantho/images/images/diagram-${width}.avif ${width}w`)
+        .join(', '),
     )
     expect(lookup?.('/site/images/missing.png')).toBeUndefined()
     expect(lookup?.('https://example.com/images/diagram.png')).toBeUndefined()
   })
 
-  it('keeps copies that are up to date, and remakes them when the settings change', async () => {
-    await png('a.png', 300, 300)
+  it('keeps the copies of an unchanged image, and remakes them when the quality changes', async () => {
+    await png('a.png', 500, 500)
     await prepareImages({ config: site, publicDir })
-    const copy = join(publicDir, '_krantho/images/a-256.avif')
+    const copy = join(publicDir, '_krantho/images/a-480.avif')
     const before = statSync(copy).mtimeMs
 
     expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 1, written: 0 })
     expect(statSync(copy).mtimeMs).toBe(before)
 
     const changed: KranthoConfigInput = { ...site, media: { image: { quality: { avif: 40 } } } }
-    expect((await prepareImages({ config: changed, publicDir })).written).toBe(8)
+    expect((await prepareImages({ config: changed, publicDir })).written).toBe(6)
+  })
+
+  it('decides by content: a touched image keeps its copies, an edited one gets new ones', async () => {
+    await png('a.png', 500, 500)
+    await prepareImages({ config: site, publicDir })
+    // A fresh checkout gives every file a new modification time
+    const later = new Date(Date.now() + 60_000)
+    utimesSync(join(publicDir, 'a.png'), later, later)
+
+    expect((await prepareImages({ config: site, publicDir })).written).toBe(0)
+
+    await png('a.png', 400, 200)
+    expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 1, written: 4 })
+    expect(existsSync(join(publicDir, '_krantho/images/a-500.avif'))).toBe(false)
+  })
+
+  it('makes only the copies that are missing', async () => {
+    await png('a.png', 500, 500)
+    await prepareImages({ config: site, publicDir })
+    rmSync(join(publicDir, '_krantho/images/a-320.webp'))
+
+    expect((await prepareImages({ config: site, publicDir })).written).toBe(1)
+  })
+
+  it('copies at the widths a site gives, and refuses widths that are not positive whole numbers', async () => {
+    await png('a.png', 1000, 500)
+
+    expect(await prepareImages({ config: site, publicDir, widths: [400, 800] })).toEqual({
+      images: 1,
+      written: 4,
+    })
+    await expect(prepareImages({ config: site, publicDir, widths: [0] })).rejects.toThrow(
+      'widths must be positive whole numbers',
+    )
+    await expect(prepareImages({ config: site, publicDir, widths: [] })).rejects.toThrow()
   })
 
   it('removes the copies of an image that is gone', async () => {
@@ -130,8 +168,100 @@ describe('prepareImages', () => {
     writeFileSync(join(publicDir, '_krantho/images/manifest.json'), '{"stamp":"x"}')
 
     expect(imageLookup({ publicDir, basePath: '' })).toBeUndefined()
-    expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 1, written: 6 })
+    expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 1, written: 2 })
     expect(imageLookup({ publicDir, basePath: '' })?.('/a.png')).toBeDefined()
+  })
+
+  it('gives no lookup over a manifest that is not JSON, and rewrites it', async () => {
+    await png('a.png', 100, 100)
+    mkdirSync(join(publicDir, '_krantho/images'), { recursive: true })
+    writeFileSync(join(publicDir, '_krantho/images/manifest.json'), '{ not json')
+
+    expect(imageLookup({ publicDir, basePath: '' })).toBeUndefined()
+    await prepareImages({ config: site, publicDir })
+    expect(imageLookup({ publicDir, basePath: '' })?.('/a.png')).toBeDefined()
+  })
+
+  it('finds an image by a src with a query, and none for a src it cannot decode', async () => {
+    await png('a b.png', 100, 100)
+    await prepareImages({ config: site, publicDir })
+    const lookup = imageLookup({ publicDir, basePath: '' })
+
+    expect(lookup?.('/a%20b.png?v=2')?.sources[0]?.srcset).toBe(
+      '/_krantho/images/a%20b-100.avif 100w',
+    )
+    expect(lookup?.('/a%E0%A4%A.png')).toBeUndefined()
+    expect(lookup?.('//cdn.example.com/a b.png')).toBeUndefined()
+  })
+
+  it('sizes a photo by how its EXIF orientation shows it', async () => {
+    const photo = await sharp({
+      create: { width: 900, height: 400, channels: 3, background: { r: 200, g: 80, b: 40 } },
+    })
+      .jpeg()
+      .withMetadata({ orientation: 6 })
+      .toBuffer()
+    writeFileSync(join(publicDir, 'photo.jpg'), photo)
+
+    await prepareImages({ config: site, publicDir })
+
+    expect(imageLookup({ publicDir, basePath: '' })?.('/photo.jpg')).toMatchObject({
+      width: 400,
+      height: 900,
+    })
+    const copy = await sharp(join(publicDir, '_krantho/images/photo-320.webp')).metadata()
+    expect([copy.width, copy.height]).toEqual([320, 720])
+  })
+
+  it('serves an image it cannot read as it is, and goes on with the others', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    writeFileSync(join(publicDir, 'broken.png'), 'not a png')
+    await png('a.png', 100, 100)
+
+    expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 2, written: 2 })
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('/broken.png is served as it is'))
+    const lookup = imageLookup({ publicDir, basePath: '' })
+    expect(lookup?.('/broken.png')).toBeUndefined()
+    expect(lookup?.('/a.png')).toBeDefined()
+    warn.mockRestore()
+  })
+
+  it('names what it wrote, for one image and for several', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+    await png('a.png', 100, 100)
+    await prepareImages({ config: site, publicDir })
+    await png('b.png', 100, 100)
+    await png('c.png', 100, 100)
+    await prepareImages({ config: site, publicDir })
+
+    expect(log.mock.calls.map((call) => call[0])).toEqual([
+      '[krantho] 2 copies of 1 image written to public/_krantho/images',
+      '[krantho] 4 copies of 3 images written to public/_krantho/images',
+    ])
+    log.mockRestore()
+  })
+
+  it('reads no manifest whose entries are not image entries', async () => {
+    mkdirSync(join(publicDir, '_krantho/images'), { recursive: true })
+    const manifest = join(publicDir, '_krantho/images/manifest.json')
+    for (const body of [
+      'null',
+      '{"stamp":"x","images":null}',
+      '{"stamp":"x","images":{"/a.png":5}}',
+    ]) {
+      writeFileSync(manifest, body)
+      expect(imageLookup({ publicDir, basePath: '' })).toBeUndefined()
+    }
+  })
+
+  it('does nothing for a site without a public folder', async () => {
+    const missing = join(publicDir, 'none')
+
+    expect(await prepareImages({ config: site, publicDir: missing })).toEqual({
+      images: 0,
+      written: 0,
+    })
+    expect(existsSync(missing)).toBe(false)
   })
 
   it('gives no lookup before images are prepared', () => {

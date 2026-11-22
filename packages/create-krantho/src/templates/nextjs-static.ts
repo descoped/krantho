@@ -100,9 +100,9 @@ import kranthoConfig from './krantho.config'
 // none on a custom domain. Each page is a folder (about/index.html), which
 // every static host serves at /about/.
 export default async function config(phase: string): Promise<NextConfig> {
-  // The images in public/ get AVIF and WebP copies at the widths the krantho
-  // server serves (media.image), in public/_krantho/images; pages show them
-  // through <picture>. Only changed images are copied again.
+  // The images in public/ get AVIF and WebP copies at widths from phones to 2×
+  // desktop screens, in public/_krantho/images; pages show them through
+  // <picture>. Only new and changed images are encoded again.
   if (phase === PHASE_PRODUCTION_BUILD || phase === PHASE_DEVELOPMENT_SERVER) {
     await prepareImages({ config: kranthoConfig })
   }

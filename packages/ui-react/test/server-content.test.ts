@@ -65,6 +65,29 @@ describe('server content', () => {
     expect(intro.html).toContain('href="/repo/docs/setup/"')
   })
 
+  it('renders a markdown image with copies as a picture when the loader is given images', async () => {
+    const doc = published('docs', 'intro', 'Intro')
+    initServerLoader(loaderOf([{ ...doc, body: '![Flow](/flow.png)' }]), {
+      basePath: '/repo',
+      images: (src) =>
+        src === '/repo/flow.png'
+          ? {
+              width: 800,
+              height: 400,
+              sources: [{ type: 'image/avif', srcset: '/repo/flow-320.avif 320w' }],
+              sizes: '100vw',
+            }
+          : undefined,
+    })
+
+    const intro = await loadContent({ collection: 'docs', slug: 'intro' })
+
+    expect(intro.html).toContain(
+      '<picture><source type="image/avif" srcset="/repo/flow-320.avif 320w" sizes="100vw">',
+    )
+    expect(intro.html).toContain('width="800" height="400" decoding="async"')
+  })
+
   it('renders the published document of the named collection', async () => {
     const home = await loadContent({ collection: 'pages', slug: 'home' })
 

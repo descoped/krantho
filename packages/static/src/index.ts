@@ -4,7 +4,7 @@ export type {
   PreparedImages,
   PrepareImagesOptions,
 } from './images.js'
-export { copyWidths, imageLookup, prepareImages } from './images.js'
+export { copyWidths, imageLookup, prepareImages, STATIC_IMAGE_WIDTHS } from './images.js'
 export type { LinkCollection, LinkResolver, LinkSource } from './link-resolver.js'
 export { createLinkResolver } from './link-resolver.js'
 export type {

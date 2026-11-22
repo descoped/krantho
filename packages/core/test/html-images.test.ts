@@ -106,6 +106,54 @@ describe('pictureImages on unusual HTML', () => {
   })
 })
 
+describe('pictureImages on the forms an img tag takes', () => {
+  it('reads single-quoted and unquoted src values', () => {
+    expect(pictureImages("<img src='/images/diagram.png'>", lookup)).toContain('<picture>')
+    expect(pictureImages('<img src=/images/diagram.png>', lookup)).toContain('<picture>')
+  })
+
+  it('keeps an attribute without a value, such as hidden', () => {
+    expect(pictureImages('<img hidden src="/images/diagram.png">', lookup)).toContain(
+      '<img hidden src="/images/diagram.png" width="1000"',
+    )
+  })
+
+  it('keeps a self-closing tag self-closing', () => {
+    expect(pictureImages('<img src="/images/diagram.png" />', lookup)).toContain(
+      '<img src="/images/diagram.png" width="1000" height="500" decoding="async"/>',
+    )
+  })
+
+  it('reads an upper-case tag', () => {
+    expect(pictureImages('<IMG SRC="/images/diagram.png">', lookup)).toContain('<picture>')
+  })
+
+  it('skips a tag that only starts like img', () => {
+    const html = '<image src="/images/diagram.png"><imgx>'
+
+    expect(pictureImages(html, lookup)).toBe(html)
+  })
+
+  it('keeps a height the markdown gives, and the image width for a zero width', () => {
+    expect(pictureImages('<img src="/images/diagram.png" height="90">', lookup)).toContain(
+      '<img src="/images/diagram.png" height="90" decoding="async">',
+    )
+    const zero = pictureImages('<img src="/images/diagram.png" width="0">', lookup)
+    expect(zero).toContain('sizes="100vw"')
+    expect(zero).toContain('width="0" decoding="async">')
+  })
+
+  it('decodes hex references and leaves unknown entities as written', () => {
+    const seen: string[] = []
+    pictureImages('<img src="/a&#x27;b.png"><img src="/c&nbsp;d.png">', (src) => {
+      seen.push(src)
+      return undefined
+    })
+
+    expect(seen).toEqual(["/a'b.png", '/c&nbsp;d.png'])
+  })
+})
+
 describe('renderContent with image copies', () => {
   it('renders a markdown image with copies as a picture, after the base path is added', async () => {
     const atBase: ImageLookup = (src) => (src === '/docs/images/diagram.png' ? diagram : undefined)

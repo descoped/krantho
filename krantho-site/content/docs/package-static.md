@@ -83,12 +83,15 @@ The same holds for the `src` and `href` of raw `<img>` and `<a>` tags, such as `
 
 ## Images
 
-`prepareImages()` gives each image in `public/` AVIF and WebP copies at the widths the krantho server serves its media at: each preset in `media.image.presets` narrower than the image (48, 96, 256, 512 and 1024 pixels by default), and the image's own width, capped at `media.image.maxWidth`. The copies are encoded at `media.image.quality.avif` and `.webp`, and written with a manifest to `public/_krantho/images/`; keep that folder out of git. A copy is made again when its image changes or those settings do, and the copies of a removed image are deleted. PNG, JPEG and WebP files are copied; SVG and GIF are served as they are.
+`prepareImages()` gives each image in `public/` AVIF and WebP copies at the widths of `STATIC_IMAGE_WIDTHS` narrower than the image, and at the image's own width, up to 2048 pixels. The widths are 320, 480, 640, 750, 828, 1080, 1200, 1536, 1920 and 2048: about 1.2–1.5× apart, from a phone in portrait to a content column on a 2× laptop or desktop screen, in either orientation. They are the static site's own; the server's `media.image.presets` do not apply. The copies are encoded at `media.image.quality.avif` and `.webp`, and written with a manifest to `public/_krantho/images/`; keep that folder out of git.
+
+An image is decoded once for all its copies. Its copies are kept while its content is the same, judged by a hash of its bytes rather than its date, so a CI checkout that restores the folder from a cache encodes only new and changed images. They are made again when the image changes or the quality or widths do, and the copies of a removed image are deleted. PNG, JPEG and WebP files are copied; SVG and GIF are served as they are.
 
 ```ts
 import { prepareImages } from '@krantho/static/images'
 
 await prepareImages({ config: kranthoConfig }) // { images: 12, written: 0 }
+await prepareImages({ config: kranthoConfig, widths: [480, 960, 1440] }) // widths of your own
 ```
 
 Call it before the pages render: the scaffolded `next.config.ts` calls it on `next build` and `next dev` (see Next.js settings). `createStaticSite()` reads the manifest, and each markdown image with copies renders as a `<picture>`: a `<source>` per format with its `srcset`, and the image itself as the fallback, with its width and height so the page does not shift as it loads. A width written in the markdown, `<img src="images/flow.png" width="340">`, is kept, the height follows the image's proportions, and the browser picks a copy for that width (`sizes="340px"`). Images decode off the main thread, and every image after a page's first loads lazily.

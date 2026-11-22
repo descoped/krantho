@@ -1,13 +1,21 @@
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync } from 'node:fs'
-import { mkdir, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { dirname, extname, join, posix, relative, sep } from 'node:path'
-import { type KranthoConfigInput, type MediaSection, resolveConfig } from '@krantho/config'
+import { type KranthoConfigInput, resolveConfig } from '@krantho/config'
 import type { ImageLookup } from '@krantho/core'
 import type sharp from 'sharp'
 
-type ImageSettings = MediaSection['image']
 type SharpFn = typeof sharp
+
+/**
+ * The widths a static site's images are copied at: about 1.2–1.5× apart, from
+ * a phone in portrait to a content column on a 2× laptop or desktop screen.
+ * The server's `media.image.presets` are its own and do not apply here.
+ */
+export const STATIC_IMAGE_WIDTHS: readonly number[] = [
+  320, 480, 640, 750, 828, 1080, 1200, 1536, 1920, 2048,
+]
 
 /** Where the copies are written, under the public folder */
 const COPIES = '_krantho/images'
@@ -20,11 +28,24 @@ const FORMATS = [
 /** The images that are copied; SVG and GIF are served as they are */
 const SOURCE_TYPES = new Set(['.png', '.jpg', '.jpeg', '.webp'])
 
-/** An image's own size and the widths it is copied at */
+/** An image's own size, the widths it is copied at, and the content they were made from */
 interface ManifestEntry {
   width: number
   height: number
   widths: number[]
+  /**
+   * A hash of the source's bytes. Its content, not its modification time,
+   * decides: a fresh checkout in CI with the copies restored from a cache
+   * reuses them.
+   */
+  hash: string
+}
+
+/** What shapes the copies: the widths and the quality per format */
+interface CopySettings {
+  widths: readonly number[]
+  avif: number
+  webp: number
 }
 
 /** The copies written, by the image's path under the public folder (`/images/a.png`) */
@@ -36,10 +57,12 @@ interface Manifest {
 
 /** Options for {@link prepareImages} */
 export interface PrepareImagesOptions {
-  /** The site's configuration, as `krantho.config.ts` exports it; `media.image` sets widths and quality */
+  /** The site's configuration, as `krantho.config.ts` exports it; `media.image.quality` sets the quality */
   config: KranthoConfigInput
   /** The folder the site serves as its root, `public/` by default */
   publicDir?: string | undefined
+  /** The widths to copy at, instead of {@link STATIC_IMAGE_WIDTHS} */
+  widths?: readonly number[] | undefined
 }
 
 /** What {@link prepareImages} did */
@@ -56,26 +79,31 @@ function publicDirOf(publicDir: string | undefined): string {
 }
 
 /**
- * The widths an image is copied at: the server's presets (`media.image.presets`)
- * narrower than the image, and the full width, capped at `media.image.maxWidth`
+ * The widths an image is copied at: those of the list narrower than the image,
+ * and its own width, capped at the widest of the list
  */
-export function copyWidths(width: number, settings: ImageSettings): number[] {
-  const full = Math.min(width, settings.maxWidth)
-  const presets = Object.values(settings.presets).filter(
-    (preset): preset is number => typeof preset === 'number' && preset < full,
-  )
-  return [...new Set([...presets, full])].sort((a, b) => a - b)
+export function copyWidths(
+  width: number,
+  widths: readonly number[] = STATIC_IMAGE_WIDTHS,
+): number[] {
+  const full = Math.min(width, Math.max(...widths))
+  return [...new Set([...widths.filter((each) => each < full), full])].sort((a, b) => a - b)
+}
+
+/** The widths a site asked for, checked: positive whole numbers, at least one */
+function widthsOf(widths: readonly number[] | undefined): readonly number[] {
+  if (widths === undefined) return STATIC_IMAGE_WIDTHS
+  if (widths.length === 0 || !widths.every((width) => Number.isInteger(width) && width > 0)) {
+    throw new Error(
+      `prepareImages: widths must be positive whole numbers, got ${JSON.stringify(widths)}`,
+    )
+  }
+  return widths
 }
 
 /** The settings that shape the copies, as one value */
-function stampOf(settings: ImageSettings): string {
-  const shape = {
-    maxWidth: settings.maxWidth,
-    presets: settings.presets,
-    avif: settings.quality.avif,
-    webp: settings.quality.webp,
-  }
-  return createHash('sha256').update(JSON.stringify(shape)).digest('hex').slice(0, 12)
+function stampOf(settings: CopySettings): string {
+  return createHash('sha256').update(JSON.stringify(settings)).digest('hex').slice(0, 12)
 }
 
 /** The path of a copy under the public folder, without the leading slash */
@@ -102,6 +130,7 @@ function isEntry(value: unknown): value is ManifestEntry {
   return (
     typeof entry.width === 'number' &&
     typeof entry.height === 'number' &&
+    typeof entry.hash === 'string' &&
     Array.isArray(entry.widths) &&
     entry.widths.every((width) => typeof width === 'number')
   )
@@ -139,51 +168,89 @@ async function writeWhole(file: string, data: Uint8Array | string): Promise<void
   await rename(temporary, file)
 }
 
-/** Whether a copy exists and is newer than its source */
-async function upToDate(copy: string, sourceTime: number): Promise<boolean> {
-  try {
-    return (await stat(copy)).mtimeMs >= sourceTime
-  } catch {
-    return false
-  }
+/** Every copy of an image, by format and width */
+function copiesOf(image: string, widths: readonly number[]): string[] {
+  return widths.flatMap((width) => FORMATS.map((format) => copyPath(image, width, format.ext)))
+}
+
+/** The previous entry, when the image's content is the same and every copy is still there */
+function unchanged(
+  previous: ManifestEntry | undefined,
+  hash: string,
+  publicDir: string,
+  image: string,
+): ManifestEntry | undefined {
+  if (previous?.hash !== hash) return undefined
+  const present = copiesOf(image, previous.widths).every((copy) =>
+    existsSync(join(publicDir, copy)),
+  )
+  return present ? previous : undefined
+}
+
+interface CopyResult {
+  entry: ManifestEntry | undefined
+  copies: string[]
+  written: number
 }
 
 async function copyImage(
   sharpFn: SharpFn,
   publicDir: string,
   image: string,
-  settings: ImageSettings,
-  remake: boolean,
-): Promise<{ entry: ManifestEntry | undefined; copies: string[]; written: number }> {
-  const file = join(publicDir, image.slice(1))
-  const bytes = await readFile(file)
-  const meta = await sharpFn(bytes).metadata()
+  settings: CopySettings,
+  previous: ManifestEntry | undefined,
+): Promise<CopyResult> {
+  const bytes = await readFile(join(publicDir, image.slice(1)))
+  const hash = createHash('sha256').update(bytes).digest('hex').slice(0, 16)
+  const kept = unchanged(previous, hash, publicDir, image)
+  if (kept) return { entry: kept, copies: copiesOf(image, kept.widths), written: 0 }
+
+  try {
+    return await encodeCopies(sharpFn, bytes, hash, publicDir, image, settings, previous)
+  } catch (error) {
+    // A file sharp cannot read is served as it is; it does not stop the build
+    console.warn(
+      `[krantho] ${image} is served as it is: its copies could not be made (${String(error)})`,
+    )
+    return { entry: undefined, copies: [], written: 0 }
+  }
+}
+
+async function encodeCopies(
+  sharpFn: SharpFn,
+  bytes: Buffer,
+  hash: string,
+  publicDir: string,
+  image: string,
+  settings: CopySettings,
+  previous: ManifestEntry | undefined,
+): Promise<CopyResult> {
+  // Decoded once; each copy is a clone of the oriented image
+  const same = previous?.hash === hash
+  const oriented = sharpFn(bytes).rotate()
+  const meta = await oriented.metadata()
   // EXIF orientation 5–8 turns the image a quarter: its shown width is its height
   const turned = (meta.orientation ?? 1) >= 5
   const width = turned ? meta.height : meta.width
   const height = turned ? meta.width : meta.height
-  if (!width || !height) return { entry: undefined, copies: [], written: 0 }
 
-  const widths = copyWidths(width, settings)
-  const sourceTime = (await stat(file)).mtimeMs
-  const copies: string[] = []
+  const widths = copyWidths(width, settings.widths)
   let written = 0
   for (const copyWidth of widths) {
     for (const format of FORMATS) {
-      const path = copyPath(image, copyWidth, format.ext)
-      const target = join(publicDir, path)
-      copies.push(path)
-      if (!remake && (await upToDate(target, sourceTime))) continue
-      const resized = sharpFn(bytes).rotate().resize({ width: copyWidth, withoutEnlargement: true })
+      const target = join(publicDir, copyPath(image, copyWidth, format.ext))
+      // A copy of the same content is kept; only the missing ones are made
+      if (same && existsSync(target)) continue
+      const resized = oriented.clone().resize({ width: copyWidth, withoutEnlargement: true })
       const encoded =
         format.ext === 'avif'
-          ? resized.avif({ quality: settings.quality.avif })
-          : resized.webp({ quality: settings.quality.webp })
+          ? resized.avif({ quality: settings.avif })
+          : resized.webp({ quality: settings.webp })
       await writeWhole(target, await encoded.toBuffer())
       written++
     }
   }
-  return { entry: { width, height, widths }, copies, written }
+  return { entry: { width, height, widths, hash }, copies: copiesOf(image, widths), written }
 }
 
 /** Remove the copies no image needs any more: of a deleted image, or at a width no longer used */
@@ -199,21 +266,23 @@ async function removeStale(publicDir: string, keep: ReadonlySet<string>): Promis
 }
 
 /**
- * Copy each image in the site's public folder to AVIF and WebP at the widths
- * the server's image pipeline serves (`media.image.presets`, and the full
- * width capped at `media.image.maxWidth`), at `media.image.quality`. The copies
- * and their manifest go to `public/_krantho/images/`; `createStaticSite()`
- * reads the manifest, and each markdown image with copies renders as a
- * `<picture>`. A copy is remade when its image changes or the settings do.
- * Run it before the build: the template calls it from `next.config.ts`.
+ * Copy each image in the site's public folder to AVIF and WebP at
+ * {@link STATIC_IMAGE_WIDTHS} (or `widths`), at `media.image.quality`. The
+ * copies and their manifest go to `public/_krantho/images/`;
+ * `createStaticSite()` reads the manifest, and each markdown image with copies
+ * renders as a `<picture>`. An image whose content is unchanged keeps its
+ * copies, also after a fresh checkout that restores them from a cache; they
+ * are remade when it changes or the widths or quality do. Run it before the
+ * build: the template calls it from `next.config.ts`.
  */
 export async function prepareImages(options: PrepareImagesOptions): Promise<PreparedImages> {
-  const settings = resolveConfig(options.config, process.env).media.image
+  const quality = resolveConfig(options.config, process.env).media.image.quality
+  const settings = { widths: widthsOf(options.widths), avif: quality.avif, webp: quality.webp }
   const publicDir = publicDirOf(options.publicDir)
   const images = await sourceImages(publicDir)
   const stamp = stampOf(settings)
   const previous = readManifest(publicDir)
-  const remake = previous?.stamp !== stamp
+  const reuse = previous?.stamp === stamp ? previous : undefined
 
   const manifest: Manifest = { stamp, images: {} }
   const keep = new Set<string>()
@@ -221,7 +290,7 @@ export async function prepareImages(options: PrepareImagesOptions): Promise<Prep
   if (images.length > 0) {
     const sharpFn = (await import('sharp')).default
     for (const image of images) {
-      const result = await copyImage(sharpFn, publicDir, image, settings, remake)
+      const result = await copyImage(sharpFn, publicDir, image, settings, reuse?.images[image])
       if (result.entry) manifest.images[image] = result.entry
       for (const copy of result.copies) keep.add(copy)
       written += result.written
@@ -257,7 +326,7 @@ function imagePathOf(src: string, basePath: string): string | undefined {
   const path = basePath && src.startsWith(`${basePath}/`) ? src.slice(basePath.length) : src
   if (!path.startsWith('/') || path.startsWith('//')) return undefined
   try {
-    return decodeURI(path.split(/[?#]/, 1)[0] ?? path)
+    return decodeURI(path.replace(/[?#].*$/s, ''))
   } catch {
     return undefined
   }
