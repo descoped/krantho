@@ -228,11 +228,8 @@ async function encodeCopies(
   // Decoded once; each copy is a clone of the oriented image
   const same = previous?.hash === hash
   const oriented = sharpFn(bytes).rotate()
-  const meta = await oriented.metadata()
-  // EXIF orientation 5–8 turns the image a quarter: its shown width is its height
-  const turned = (meta.orientation ?? 1) >= 5
-  const width = turned ? meta.height : meta.width
-  const height = turned ? meta.width : meta.height
+  // The size as shown: an EXIF orientation that turns the image a quarter swaps width and height
+  const { width, height } = (await oriented.metadata()).autoOrient
 
   const widths = copyWidths(width, settings.widths)
   let written = 0

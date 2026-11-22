@@ -173,7 +173,7 @@ ${pm.setup}      - uses: actions/setup-node@v7
       - uses: actions/cache@v6
         with:
           path: public/_krantho
-          key: krantho-images-\${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp') }}
+          key: krantho-images-\${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP') }}
           restore-keys: krantho-images-
       - run: ${pm.build}
         env:
