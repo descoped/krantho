@@ -209,8 +209,9 @@ export async function prepareImages(options: PrepareImagesOptions): Promise<Prep
     await writeWhole(join(publicDir, COPIES, MANIFEST), `${JSON.stringify(manifest, null, 2)}\n`)
   }
   if (written > 0) {
+    const noun = images.length === 1 ? 'image' : 'images'
     console.log(
-      `[krantho] ${written} image copies written to ${COPIES} for ${images.length} images`,
+      `[krantho] ${written} copies of ${images.length} ${noun} written to public/${COPIES}`,
     )
   }
   return { images: images.length, written }
