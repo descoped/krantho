@@ -217,6 +217,7 @@ describe('nextjs-static template', () => {
     expect(workflow).toContain('KRANTHO_SITE_BASE_URL: ${{ steps.pages.outputs.base_url }}')
     expect(workflow).toContain('uses: actions/upload-pages-artifact@v5')
     expect(workflow).toContain('path: public/_krantho')
+    expect(workflow).toContain("'krantho.config.ts', 'pnpm-lock.yaml') }}")
     expect(workflow).toContain('uses: actions/deploy-pages@v5')
     expect(JSON.parse(file(files, 'package.json')).packageManager).toBe('pnpm@12.1.0')
   })
@@ -227,6 +228,7 @@ describe('nextjs-static template', () => {
 
     expect(workflow).toContain('run: npm ci')
     expect(workflow).not.toContain('pnpm/action-setup')
+    expect(workflow).toContain("'krantho.config.ts', 'package-lock.json') }}")
     expect(JSON.parse(file(npm, 'package.json')).packageManager).toBeUndefined()
   })
 

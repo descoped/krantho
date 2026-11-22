@@ -81,7 +81,7 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: public/_krantho
-          key: krantho-images-${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP') }}
+          key: krantho-images-${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP', 'krantho.config.ts', 'pnpm-lock.yaml') }}
           restore-keys: krantho-images-
       - run: pnpm run build
         env:
@@ -102,7 +102,7 @@ jobs:
 ```
 
 - `configure-pages` reports the address Pages serves the site at, and the build takes it as `KRANTHO_SITE_BASE_URL`, the site's `site.baseUrl`. Canonical URLs, the sitemap and the structured data name that address.
-- `actions/cache` keeps the image copies of earlier builds. Copies are reused by the content of their image, not its date, so a fresh checkout keeps them; see [Images](/docs/package-static#images).
+- `actions/cache` keeps the image copies of earlier builds. Copies are reused by the content of their image, not its date, so a fresh checkout keeps them; see [Images](/docs/package-static#images). The key follows the images, `krantho.config.ts` (the quality) and the lockfile (krantho's widths; the scaffolder writes the one of your package manager: `pnpm-lock.yaml`, `package-lock.json` or `yarn.lock`): when any of them changes, the remade copies are saved under a new key. A site that copies its images into `public/` during the build, such as one that publishes a repository's `docs/`, hashes the images where they are committed instead: `hashFiles('docs/images/**', 'site/krantho.config.ts', 'site/pnpm-lock.yaml')`.
 - `fetch-depth: 0` checks out the whole history: each page is dated by its file's last commit. A shallow checkout dates every page by the checkout, and the build says so.
 - `pnpm/action-setup` reads the pnpm version from `packageManager` in `package.json` (`"packageManager": "pnpm@12.16.1"`), which the scaffolder writes. A project set up by hand needs it too. An npm project runs `npm ci` and has no such step.
 

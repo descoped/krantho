@@ -116,20 +116,28 @@ krantho.collections.ts  # the fields each page has
 /** How the workflow sets up and runs each package manager */
 const MANAGERS: Record<
   PackageManager,
-  { setup: string; cache: string; install: string; build: string }
+  { setup: string; cache: string; install: string; build: string; lockfile: string }
 > = {
   pnpm: {
     setup: '      - uses: pnpm/action-setup@v6\n',
     cache: 'pnpm',
     install: 'pnpm install --frozen-lockfile',
     build: 'pnpm run build',
+    lockfile: 'pnpm-lock.yaml',
   },
-  npm: { setup: '', cache: 'npm', install: 'npm ci', build: 'npm run build' },
+  npm: {
+    setup: '',
+    cache: 'npm',
+    install: 'npm ci',
+    build: 'npm run build',
+    lockfile: 'package-lock.json',
+  },
   yarn: {
     setup: '',
     cache: 'yarn',
     install: 'yarn install --frozen-lockfile',
     build: 'yarn build',
+    lockfile: 'yarn.lock',
   },
 }
 
@@ -169,11 +177,13 @@ ${pm.setup}      - uses: actions/setup-node@v7
       - run: ${pm.install}
       - id: pages
         uses: actions/configure-pages@v6
-      # The image copies of earlier builds: only new and changed images are encoded again
+      # The image copies of earlier builds: only new and changed images are encoded again.
+      # The key follows the images, the configuration (quality) and the lockfile (krantho's
+      # widths), so copies remade after any of them change are saved for the next run
       - uses: actions/cache@v6
         with:
           path: public/_krantho
-          key: krantho-images-\${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP') }}
+          key: krantho-images-\${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP', 'krantho.config.ts', '${pm.lockfile}') }}
           restore-keys: krantho-images-
       - run: ${pm.build}
         env:
