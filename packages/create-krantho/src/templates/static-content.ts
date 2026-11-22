@@ -116,20 +116,28 @@ krantho.collections.ts  # the fields each page has
 /** How the workflow sets up and runs each package manager */
 const MANAGERS: Record<
   PackageManager,
-  { setup: string; cache: string; install: string; build: string }
+  { setup: string; cache: string; install: string; build: string; lockfile: string }
 > = {
   pnpm: {
     setup: '      - uses: pnpm/action-setup@v6\n',
     cache: 'pnpm',
     install: 'pnpm install --frozen-lockfile',
     build: 'pnpm run build',
+    lockfile: 'pnpm-lock.yaml',
   },
-  npm: { setup: '', cache: 'npm', install: 'npm ci', build: 'npm run build' },
+  npm: {
+    setup: '',
+    cache: 'npm',
+    install: 'npm ci',
+    build: 'npm run build',
+    lockfile: 'package-lock.json',
+  },
   yarn: {
     setup: '',
     cache: 'yarn',
     install: 'yarn install --frozen-lockfile',
     build: 'yarn build',
+    lockfile: 'yarn.lock',
   },
 }
 
@@ -175,7 +183,7 @@ ${pm.setup}      - uses: actions/setup-node@v7
       - uses: actions/cache@v6
         with:
           path: public/_krantho
-          key: krantho-images-\${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP', 'krantho.config.ts', 'pnpm-lock.yaml', 'package-lock.json') }}
+          key: krantho-images-\${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP', 'krantho.config.ts', '${pm.lockfile}') }}
           restore-keys: krantho-images-
       - run: ${pm.build}
         env:
