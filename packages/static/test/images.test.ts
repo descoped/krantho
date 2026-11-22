@@ -159,7 +159,16 @@ describe('prepareImages', () => {
     writeFileSync(join(publicDir, 'logo.svg'), '<svg xmlns="http://www.w3.org/2000/svg"/>')
 
     expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 0, written: 0 })
-    expect(existsSync(join(publicDir, '_krantho'))).toBe(false)
+    expect(imageLookup({ publicDir, basePath: '' })?.('/logo.svg')).toBeUndefined()
+  })
+
+  it('writes an empty manifest for a site without images, so the folder a CI cache saves exists', async () => {
+    expect(await prepareImages({ config: site, publicDir })).toEqual({ images: 0, written: 0 })
+
+    const manifest = JSON.parse(
+      readFileSync(join(publicDir, '_krantho/images/manifest.json'), 'utf8'),
+    )
+    expect(manifest.images).toEqual({})
   })
 
   it('remakes the copies over a manifest it cannot read', async () => {
