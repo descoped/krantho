@@ -269,7 +269,9 @@ async function removeStale(publicDir: string, keep: ReadonlySet<string>): Promis
  * `createStaticSite()` reads the manifest, and each markdown image with copies
  * renders as a `<picture>`. An image whose content is unchanged keeps its
  * copies, also after a fresh checkout that restores them from a cache; they
- * are remade when it changes or the widths or quality do. Run it before the
+ * are remade when it changes or the widths or quality do. The manifest is
+ * written even when the site has no images, so the folder a CI cache saves
+ * exists; a site without a public folder is left alone. Run it before the
  * build: the template calls it from `next.config.ts`.
  */
 export async function prepareImages(options: PrepareImagesOptions): Promise<PreparedImages> {
