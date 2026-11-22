@@ -3,6 +3,29 @@
 Every krantho release, newest first. Versions follow [semver.org](https://semver.org); a release's tag is
 `vMAJOR.MINOR.PATCH`.
 
+## 1.1.3 - 2026-11-22
+
+### Changed
+
+- `@krantho/static` copies images at its own widths, `STATIC_IMAGE_WIDTHS`: 320, 480, 640, 750, 828, 1080, 1200,
+  1536, 1920 and 2048, from a phone in portrait to a content column on a 2× laptop or desktop. Each image is
+  copied at the widths narrower than itself and its own width, up to 2048. `prepareImages({ widths })` replaces
+  the list. The server's `media.image.presets` and `maxWidth` no longer shape static copies; quality still comes
+  from `media.image.quality`.
+- An image is decoded once for all its copies, and its copies are kept while its content is the same (a hash of
+  its bytes, not its date), so a fresh CI checkout reuses copies restored from a cache. Only missing copies of
+  an unchanged image are made.
+- The static starter's Pages workflow caches `public/_krantho` between runs, so a deploy encodes only new and
+  changed images.
+
+### Fixed
+
+- An image whose markdown gives a width in pixels (`<img width="340">`) gets that width as its `sizes`, so the
+  browser picks a copy for it rather than for the content column. A percentage width keeps the column's.
+- An image sharp cannot read is served as it is, with a warning, and no longer fails the build.
+- Only a static site's `.gitignore` lists `public/_krantho/`; Next.js and SvelteKit projects get the one they had.
+- The image cache key of the Pages workflow reads upper-case extensions (`.PNG`).
+
 ## 1.1.2 - 2026-11-22
 
 ### Added
