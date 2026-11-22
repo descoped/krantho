@@ -169,6 +169,12 @@ ${pm.setup}      - uses: actions/setup-node@v7
       - run: ${pm.install}
       - id: pages
         uses: actions/configure-pages@v6
+      # The image copies of earlier builds: only new and changed images are encoded again
+      - uses: actions/cache@v6
+        with:
+          path: public/_krantho
+          key: krantho-images-\${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP') }}
+          restore-keys: krantho-images-
       - run: ${pm.build}
         env:
           # Where Pages serves the site: https://<owner>.github.io/<repository>, or the custom domain

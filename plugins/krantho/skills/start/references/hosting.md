@@ -169,7 +169,8 @@ https://krantho.com/docs/deploy-github-pages.
 - The workflow checks out with `fetch-depth: 0` (pages are dated by their files' last commit) and
   passes `actions/configure-pages`'s `base_url` to the build as `KRANTHO_SITE_BASE_URL`.
 - Images go in `public/`. The scaffolded `next.config.ts` runs `prepareImages()` from
-  `@krantho/static/images`: AVIF and WebP copies at the server's widths (`media.image`) in
-  `public/_krantho/images/` (gitignored), shown through `<picture>`. Set
-  `createStaticSite({ ..., images: { sizes } })` to the content column's width.
+  `@krantho/static/images`: AVIF and WebP copies at widths from 320 to 2048 pixels
+  (`STATIC_IMAGE_WIDTHS`), in `public/_krantho/images/` (gitignored, cached by the workflow), shown
+  through `<picture>`. Set `createStaticSite({ ..., images: { sizes } })` to the content column's
+  width.
 - The build writes `out/`: plain files, so any static host serves it.

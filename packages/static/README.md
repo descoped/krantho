@@ -39,7 +39,8 @@ export function generateStaticParams() {
   `@krantho/static/base-path`.
 
 - `prepareImages({ config })` from `@krantho/static/images` gives each image in `public/` AVIF and
-  WebP copies at the widths the krantho server serves (`media.image`), in `public/_krantho/images/`.
+  WebP copies at widths from phones to 2× desktop screens (`STATIC_IMAGE_WIDTHS`), in
+  `public/_krantho/images/`.
   Run it before the build (from `next.config.ts`); pages then show each markdown image with copies
   as a `<picture>`. `createStaticSite({ ..., images: { sizes } })` says how wide images are shown.
 

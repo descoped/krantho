@@ -78,6 +78,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - id: pages
         uses: actions/configure-pages@v6
+      - uses: actions/cache@v6
+        with:
+          path: public/_krantho
+          key: krantho-images-${{ hashFiles('public/**/*.png', 'public/**/*.jpg', 'public/**/*.jpeg', 'public/**/*.webp', 'public/**/*.PNG', 'public/**/*.JPG', 'public/**/*.JPEG', 'public/**/*.WEBP') }}
+          restore-keys: krantho-images-
       - run: pnpm run build
         env:
           KRANTHO_SITE_BASE_URL: ${{ steps.pages.outputs.base_url }}
@@ -97,6 +102,7 @@ jobs:
 ```
 
 - `configure-pages` reports the address Pages serves the site at, and the build takes it as `KRANTHO_SITE_BASE_URL`, the site's `site.baseUrl`. Canonical URLs, the sitemap and the structured data name that address.
+- `actions/cache` keeps the image copies of earlier builds. Copies are reused by the content of their image, not its date, so a fresh checkout keeps them; see [Images](/docs/package-static#images).
 - `fetch-depth: 0` checks out the whole history: each page is dated by its file's last commit. A shallow checkout dates every page by the checkout, and the build says so.
 - `pnpm/action-setup` reads the pnpm version from `packageManager` in `package.json` (`"packageManager": "pnpm@12.16.1"`), which the scaffolder writes. A project set up by hand needs it too. An npm project runs `npm ci` and has no such step.
 
@@ -178,7 +184,7 @@ A project site is served under `/<repository>`. `next/link` adds that path to th
 
 Links between your markdown files work too, so the same folder reads well on GitHub: `[Setup](setup.md#install)` goes to the setup page, and `![Diagram](images/diagram.png)` to `/images/diagram.png`, which the site serves from `public/images/diagram.png`. An image sized in HTML, `<img src="images/diagram.png" width="340">`, works the same way. See [Links between files](/docs/package-static#links-between-files).
 
-The build gives each image in `public/` AVIF and WebP copies at the widths the krantho server serves (`media.image.presets`, and the image's own width up to `media.image.maxWidth`), in `public/_krantho/images/`, which the scaffolded `.gitignore` leaves out of git. Pages show them through `<picture>`, so a browser loads a copy as wide as the image is shown instead of the full file. Set `images.sizes` on `createStaticSite()` to your content column's width; see [Images](/docs/package-static#images).
+Each deploy's build gives the images in `public/` AVIF and WebP copies at widths from phones to 2× desktop screens, in `public/_krantho/images/`, so the site is published with its images already optimised. The scaffolded `.gitignore` leaves the folder out of git, and the workflow caches it between runs, so a deploy encodes only new and changed images. Pages show them through `<picture>`, so a browser loads a copy as wide as the image is shown instead of the full file. Set `images.sizes` on `createStaticSite()` to your content column's width; see [Images](/docs/package-static#images).
 
 ## Publish a repository's existing docs
 
