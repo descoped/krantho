@@ -3,6 +3,33 @@
 Every krantho release, newest first. Versions follow [semver.org](https://semver.org); a release's tag is
 `vMAJOR.MINOR.PATCH`.
 
+## 1.1.2 - 2026-11-22
+
+### Added
+
+- `prepareImages()` from `@krantho/static/images` gives each PNG, JPEG and WebP in `public/` AVIF and WebP copies
+  at the widths the server serves its media at (`media.image.presets`, and the image's own width up to
+  `media.image.maxWidth`), at `media.image.quality`, in `public/_krantho/images/` with a manifest. A copy is
+  remade when its image or the settings change.
+- `createStaticSite()` reads the manifest into `site.rendering.images`, and takes `images.sizes` and
+  `images.publicDir`. Each markdown image with copies renders as a `<picture>` with a `<source>` per format,
+  the original as the fallback with its width and height, `decoding="async"`, and `loading="lazy"` after the
+  first image.
+- `pictureImages()` in `@krantho/core`, and an `images` option on `renderContent()`, `MarkdownProcessor` and
+  `initServerLoader()`.
+- The static starter runs `prepareImages()` from `next.config.ts` on build and dev, and ignores
+  `public/_krantho/` in git.
+
+### Changed
+
+- The krantho plugin's `start` and `content` skills cover static sites for GitHub Pages, including publishing a
+  repository's existing `docs/` folder.
+
+### Fixed
+
+- The `@krantho/static` README passes `site.rendering` to `initServerLoader()`, so links between files and
+  `atNotation` apply.
+
 ## 1.1.1 - 2026-11-14
 
 ### Added
