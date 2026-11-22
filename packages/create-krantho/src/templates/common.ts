@@ -3,7 +3,7 @@ import type { ProjectOptions } from '../prompts.js'
 export function generateCommonFiles(options: ProjectOptions): Map<string, string> {
   const files = new Map<string, string>()
 
-  files.set('.gitignore', gitignore())
+  files.set('.gitignore', gitignore(options))
   // A static site reads no environment of its own: the dev script names its port
   if (options.framework !== 'nextjs-static') files.set('.env', envFile(options))
   files.set('README.md', readme(options))
@@ -13,15 +13,16 @@ export function generateCommonFiles(options: ProjectOptions): Map<string, string
   return files
 }
 
-function gitignore(): string {
+function gitignore(options: ProjectOptions): string {
+  // A static site's image copies are written at build
+  const imageCopies = options.framework === 'nextjs-static' ? 'public/_krantho/\n' : ''
   return `node_modules/
 dist/
 out/
 .next/
 .svelte-kit/
 .krantho/
-public/_krantho/
-.env.local
+${imageCopies}.env.local
 *.db
 *.db-journal
 `
