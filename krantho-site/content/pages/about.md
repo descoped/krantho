@@ -5,7 +5,7 @@ eyebrow: 'About'
 status: published
 ---
 
-Krantho is built by Descoped AS. It is a CMS library: it adds content management, an admin and structured SEO to a site you build yourself, in the framework you already use, on the host and database you already have.
+Krantho is built by [Descoped AS](https://descoped.io). It is a CMS library: it adds content management, an admin and structured SEO to a site you build yourself, in the framework you already use, on the host and database you already have.
 
 ## Why it exists
 
