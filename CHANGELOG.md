@@ -3,6 +3,21 @@
 Every krantho release, newest first. Versions follow [semver.org](https://semver.org); a release's tag is
 `vMAJOR.MINOR.PATCH`.
 
+## 1.1.4 - 2026-11-25
+
+### Fixed
+
+- The image cache key of the static starter's Pages workflow also follows `krantho.config.ts` and the project's
+  lockfile, so copies remade after a quality change or a krantho upgrade are saved for the next run instead of
+  being encoded again on every deploy.
+- `prepareImages()` writes its manifest even when `public/` has no images, so the workflow's cache always has a
+  folder to save and no longer warns that the path does not exist.
+
+### Changed
+
+- Dependency updates: `@sveltejs/kit` 3.2.1, `@sveltejs/adapter-node` 6.0.5, `@sveltejs/adapter-vercel` 7.0.5,
+  `@sveltejs/package` 3.0.3, `@vercel/functions` 3.11.3, `dompurify` 3.4.18.
+
 ## 1.1.3 - 2026-11-22
 
 ### Changed

@@ -11,7 +11,7 @@ description: >
   authentication and hosting, per framework.
 compatibility: krantho 1.x; Claude Code
 metadata:
-  krantho-version: 1.1.3
+  krantho-version: 1.1.4
   docs: https://krantho.com/docs/installation
 ---
 
