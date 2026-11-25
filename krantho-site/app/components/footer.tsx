@@ -6,7 +6,8 @@ import { ThemeSwitch } from './theme-switch'
 
 // The shell's footer, from the `footer` document in globals. `links` entries are
 // "Label|/href"; an entry "# Group" starts a new column. The credit line under them is
-// fixed: the company, the year and the licence.
+// fixed: the company, the copyright year of LICENSE (the year of first publication, not
+// today's) and the licence.
 
 const COMPANY_URL = 'https://descoped.io'
 const LICENSE_URL = 'https://github.com/descoped/krantho/blob/main/LICENSE'
