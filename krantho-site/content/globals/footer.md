@@ -16,7 +16,6 @@ links:
   - '# Krantho'
   - 'About|/about'
   - 'Project status|/docs/project-status'
-message: 'This site runs on krantho. Every page is content managed in its Studio.'
 status: published
 ---
 

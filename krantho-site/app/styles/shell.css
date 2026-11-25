@@ -475,6 +475,15 @@
   color: var(--color-text-subtle);
 }
 
+.site-footer__credit a {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.site-footer__credit a:hover {
+  color: var(--color-accent);
+}
+
 @media (max-width: 720px) {
   .site-footer__grid {
     grid-template-columns: 1fr 1fr;

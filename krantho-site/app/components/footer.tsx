@@ -5,7 +5,12 @@ import { Wordmark } from './brand'
 import { ThemeSwitch } from './theme-switch'
 
 // The shell's footer, from the `footer` document in globals. `links` entries are
-// "Label|/href"; an entry "# Group" starts a new column.
+// "Label|/href"; an entry "# Group" starts a new column. The credit line under them is
+// fixed: the company, the copyright year of LICENSE (the year of first publication, not
+// today's) and the licence.
+
+const COMPANY_URL = 'https://descoped.io'
+const LICENSE_URL = 'https://github.com/descoped/krantho/blob/main/LICENSE'
 
 interface Column {
   heading: string
@@ -31,7 +36,6 @@ export async function Footer(): Promise<React.ReactElement> {
   const footer = await global('footer')
   const groups = columns(list(footer, 'links'))
   const tagline = text(footer, 'tagline')
-  const note = text(footer, 'message')
 
   return (
     <footer className="site-footer">
@@ -61,7 +65,9 @@ export async function Footer(): Promise<React.ReactElement> {
           ))}
         </div>
         <div className="site-footer__bottom">
-          <p {...kranthoField(footer, 'message')}>{note}</p>
+          <p className="site-footer__credit">
+            A <a href={COMPANY_URL}>Descoped</a> product · © 2026 · <a href={LICENSE_URL}>MIT License</a>
+          </p>
           <ThemeSwitch />
         </div>
       </div>
