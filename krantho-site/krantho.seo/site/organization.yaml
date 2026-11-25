@@ -1,9 +1,9 @@
 # The organization behind krantho.com. The first site entity: its `name` is the
 # Open Graph site name. Its name, description and logo come from the `site`
 # section of krantho.config.ts. Kept to what is true today — no address, phone or
-# email; the one profile is the GitHub organisation that holds the code.
+# email; the one profile is the website of Descoped, the company that builds it.
 "@type": Organization
 role: primary
 properties:
   sameAs:
-    - https://github.com/descoped
+    - https://descoped.io
