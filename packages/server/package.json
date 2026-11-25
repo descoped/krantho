@@ -83,7 +83,7 @@
     "@krantho/media-local": "workspace:*",
     "@krantho/media-s3": "workspace:*",
     "@krantho/media-vercel-blob": "workspace:*",
-    "@testcontainers/postgresql": "^12.2.1",
+    "@testcontainers/postgresql": "^12.2.2",
     "@types/node": "^26.6.6",
     "@vercel/functions": "^3.11.3",
     "typescript": "^7.0.2",
